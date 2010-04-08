@@ -82,14 +82,19 @@ public class SecretShareUT
         Assert.assertEquals("Secrets do not match", secret, reconstructed);
     }
     
+    public void testBig192()
+    {
+        subtestBigBig(SecretShare.getPrimeUsedFor192bitSecretPayload());
+    }
+    public void testBig384()
+    {
+        subtestBigBig(SecretShare.getPrimeUsedFor384bitSecretPayload());
+    }
     
-    public void testBigBig()
+    public void subtestBigBig(final BigInteger prime)
     {
         final int n = 16;
         final int k = 8;
-        BigInteger prime = null;
-        
-        prime = SecretShare.getPrimeUsedFor192bitSecretPayload();
         
         System.out.println("Generating shares/shards...");
         SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime, "test big big");

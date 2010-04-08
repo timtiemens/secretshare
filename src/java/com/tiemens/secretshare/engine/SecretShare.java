@@ -38,18 +38,44 @@ public class SecretShare
     // ==================================================
     // class static methods
     // ==================================================
+
+    // Both primes were tested via http://www.alpertron.com.ar/ECM.HTM
+    // Both primes were tested with 100,000 iterations of Miller-Rabin
+
+    public static BigInteger getPrimeUsedFor384bitSecretPayload()
+    {
+        // This big integer was created with probablePrime(386-bits)
+        // This prime is bigger than 2^384
+        BigInteger p194one = 
+            new BigInteger("830856716641269388050926147210" +
+                           "378437007763661599988974204336" +
+                           "741171904442622602400099072063" +
+                           "84693584652377753448639527");
+        
+        String bigintcs = 
+            "bigintcs:000002-1bd189-52959f-874f79-3d6cf5-11ac82-e6cea4-46c19c-5f523a-5318c7-" +
+            "e0f379-66f9e1-308c61-2d8d0b-dba253-6f54b0-ec6c27-3198DB";
+        
+        return checkAndReturn("384bit prime", p194one, bigintcs);
+    }
     
     public static BigInteger getPrimeUsedFor192bitSecretPayload()
     {
         // This big integer was created with probablePrime(194-bits)
-        // This prime has been tested via http://www.alpertron.com.ar/ECM.HTM
-        // This prime has been tested with 100,000 iterations of Miller-Rabin
         // This prime is bigger than 2^192
         BigInteger p194one = 
             new BigInteger("14976407493557531125525728362448106789840013430353915016137");
         
         String bigintcs = 
             "bigintcs:000002-62c8fd-6ec81b-3c0584-136789-80ad34-9269af-da237f-8ff3c9-12BCCD";
+        
+        return checkAndReturn("192bit prime", p194one, bigintcs);
+    }
+    
+    private static BigInteger checkAndReturn(String which,
+                                             BigInteger p194one,
+                                             String bigintcs)
+    {
         BigInteger p194two = 
             BigIntStringChecksum.fromString(bigintcs).asBigInteger();
         
@@ -59,7 +85,7 @@ public class SecretShare
         }
         else
         {
-            throw new SecretShareException("192-bit prime failure");
+            throw new SecretShareException(which + " failure");
         }
     }
     // ==================================================

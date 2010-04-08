@@ -121,6 +121,29 @@ public class BigIntUtilitiesUT
             Assert.assertTrue(passesMillerRabin(p194bits, 10000, null));
         }
         
+        
+        //BigInteger p386bits = BigInteger.probablePrime(386, new SecureRandom());
+        BigInteger p386bits = new BigInteger("830856716641269388050926147210" +
+                                             "378437007763661599988974204336" +
+                                             "741171904442622602400099072063" +
+                                             "84693584652377753448639527");
+        cs = BigIntUtilities.createStringMd5CheckSumFromBigInteger(p386bits);
+        System.out.println("p386=" + p386bits);
+        System.out.println("p386=" + cs);
+        expected = 
+            "bigintcs:000002-1bd189-52959f-874f79-3d6cf5-11ac82-e6cea4-46c19c-5f523a-5318c7-" +
+            "e0f379-66f9e1-308c61-2d8d0b-dba253-6f54b0-ec6c27-3198DB";
+
+        Assert.assertEquals("expected='" + expected + "' actual='" + cs + "'", 
+                            expected, cs);
+        if (false)
+        {
+            // 10000 iterations takes 51 seconds for 386 bits:
+            // 100000 iterations takes 392 seconds for 386 bits:
+            Assert.assertTrue(passesMillerRabin(p386bits, 10000, null));
+        }
+        
+
     }
     public void testStringMd5Conversions()
     {

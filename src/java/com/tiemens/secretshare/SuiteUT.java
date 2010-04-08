@@ -1,14 +1,13 @@
 package com.tiemens.secretshare;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import com.tiemens.secretshare.engine.SecretShareUT;
 import com.tiemens.secretshare.math.BigIntStringChecksumUT;
 import com.tiemens.secretshare.math.BigIntUtilitiesUT;
 import com.tiemens.secretshare.math.EasyLinearEquationUT;
 import com.tiemens.secretshare.math.PolyEquationImplUT;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class SuiteUT
 {
