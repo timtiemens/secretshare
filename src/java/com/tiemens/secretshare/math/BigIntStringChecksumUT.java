@@ -12,9 +12,7 @@ import com.tiemens.secretshare.exceptions.SecretShareException;
 public class BigIntStringChecksumUT
     extends TestCase
 {
-
-
- // ==================================================
+    // ==================================================
     // class static data
     // ==================================================
 
@@ -43,6 +41,10 @@ public class BigIntStringChecksumUT
     // ==================================================
     // public methods
     // ==================================================
+    
+    /**
+     * Test negative BigInteger values. 
+     */
     public void testNegativeBigInteger()
     {
         final int val = -100;
@@ -58,6 +60,9 @@ public class BigIntStringChecksumUT
         subtestBad("bigintcs:000064-BBC6EC");
     }
     
+    /**
+     * Test some random strings. 
+     */
     public void testRandomBad()
     {
         subtestBad("bigintcs:0004-BBEC");
@@ -65,6 +70,65 @@ public class BigIntStringChecksumUT
         subtestBad("bigintcs:000004-BBECEF");
     }
 
+    /**
+     * Test having an extra set of "0"s [with the proper checksum]. 
+     */
+    public void testLotsOfLeadingZeros()
+    {
+        String s = "bigintcs:-000000-000064-F913AE";
+        BigInteger b = BigIntStringChecksum.fromString(s).asBigInteger();
+        Assert.assertNotNull(b);
+        s = "bigintcs:-000064-BBC6EC";
+        Assert.assertEquals("leading 0s different value", 
+                            b,
+                            BigIntStringChecksum.fromString(s).asBigInteger());
+    }
+    
+    /**
+     * Test some crazy strings [that have the proper checksum]
+     * that don't actually result in BigIntegers. 
+     */
+    public void testReallyBadInputs()
+    {
+        String[] reallyBad = new String[] {
+                "AB##",    "461C44",
+                "8f4...",   "1750A6",
+                "$",        "7DE9C3",
+                "00abcO",   "E5D568",          // that is abc-letter-O not abc-zero   
+        };
+
+        for (int i = 0, n = reallyBad.length; i < n; i += 2)
+        {
+            if (false)
+            {
+                // This path generates the strings above
+                String s = reallyBad[i]; 
+                System.out.println("\"" + s + "\",    \"" +
+                                   BigIntStringChecksum.computeMd5ChecksumLimit6(s) + "\",");
+            }
+            else
+            {
+                // This path checks the strings above
+                
+                BigIntStringChecksum bisc = new BigIntStringChecksum(reallyBad[i],
+                                                                     reallyBad[i + 1]);
+                try
+                {
+                    bisc.asBigInteger();   // should throw exception
+                    Assert.fail("Really bad input '" + reallyBad[i] + "' failed to fail");
+                }
+                catch (SecretShareException e)
+                {
+                    // we don't need to see every stack trace:
+                    // e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Test a bunch of random BigInteger-to-string-backto-BigInteger: 
+     */
     public void testRandomCoversions()
     {
         Random random = new SecureRandom();
@@ -77,18 +141,30 @@ public class BigIntStringChecksumUT
             subtestGood(bi);
         }
     }
+  
+ 
+    // ==================================================
+    // non public methods
+    // ==================================================
+
     private void subtestBad(String s)
     {
         try
         {
+            // 1st test: this one should throw an exception:
             BigIntStringChecksum bics = BigIntStringChecksum.fromString(s);
             Assert.fail("Checksum failed to throw exception on s='" + s + "' bint=" + bics);
         }
         catch (SecretShareException e)
         {
             // ok, correct
+            
+            // 2nd test: this one should NOT throw an exception; it should return null:
+            BigIntStringChecksum mustbenull = BigIntStringChecksum.fromStringOrNull(s);
+            Assert.assertNull(mustbenull);
         }        
     }
+
 
     private void subtestGood(BigInteger i)
     {
@@ -100,17 +176,11 @@ public class BigIntStringChecksumUT
     {
         subtestGood(BigInteger.valueOf(i), s);
     }
-    private void subtestGood(BigInteger i,
+    private void subtestGood(BigInteger expected,
                              String s)
     {
         BigInteger bint = BigIntStringChecksum.fromString(s).asBigInteger();
-        Assert.assertEquals(i, bint);
+        Assert.assertEquals(expected, bint);
     }
-    
- 
-    // ==================================================
-    // non public methods
-    // ==================================================
-    
-    
+        
 }

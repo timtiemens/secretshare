@@ -5,34 +5,34 @@ import java.math.BigInteger;
 import com.tiemens.secretshare.exceptions.SecretShareException;
 import com.tiemens.secretshare.md5sum.Md5Checksummer;
 import com.tiemens.secretshare.md5sum.Md5ChecksummerFactory;
-import com.tiemens.secretshare.md5sum.Md5ChecksummerImpl;
 
 
 /**
  * Data structure to support a "URI-like" string that allows BigInteger
- * values to be encoded as a hex string with a checksum. Syntax:
- * bigintcs:HHHHHH-HHHHHH-CCCCCC Example:
- * bigintcs:bd2c52-b16d74-d51456-d0f89a-30c932-b2f6c1-3a9ce3-7b4387-0F2CA0
+ * values to be encoded as a hex string with a checksum. 
  * 
- * Note: negative BigIntegers are supported.  This adds a "-" at the front:
- * e.g. -100 is the string 'bigintcs:-000064-BBC6EC'
- * The checksum takes the "-" into account, therefore
- * 'bigintcs:-000064-BBC6EC' = -100
- * 'bigintcs:000064-BBC6EC'  = error
+ * Syntax:
+ *   bigintcs:HHHHHH-HHHHHH-CCCCCC 
+ * Example:
+ *   bigintcs:bd2c52-b16d74-d51456-d0f89a-30c932-b2f6c1-3a9ce3-7b4387-0F2CA0
+ * 
+ * Note: negative BigIntegers are supported.  This adds a "-" at the front, after the "bigintcs:"
+ *   e.g. -100 is the string 'bigintcs:-000064-BBC6EC'
+ * The checksum takes the "-" into account, therefore,
+ *    'bigintcs:-000064-BBC6EC' = -100
+ *    'bigintcs:000064-BBC6EC'  = error
  * 
  * The "HHHHHH-" section is repeated as many times as needed. 
  * The first "HHHHHH-" section is 0-padded as needed. 
  * The first section is either "HHHHHH" or "-HHHHHH" [dash means negative BigInteger].
  * 
- * The case of a-f versus A-F does not matter. 
- * Convention is that the HHHHHH- section is lower case, the CCCCCC-
- * is upper case.
+ * The case of the digits "a-f" versus "A-F" does not matter. 
+ * Convention is that the HHHHHH- section is lower case, 
+ *                    the CCCCCC- section is upper case.
  * 
  */
 public final class BigIntStringChecksum
 {
-
-
     // ==================================================
     // class static data
     // ==================================================
@@ -46,20 +46,21 @@ public final class BigIntStringChecksum
     /**
      * Constant for how many characters/digits are in each "6hex" section.
      */
-    private static final int   DIGITS_PER_GROUP            = 6;
+    private static final int DIGITS_PER_GROUP              = 6;
     
-    
+    // 16 as a constant
     private static final int HEX_RADIX                     = 16;
 
     // ==================================================
     // class static methods
     // ==================================================
-
+    
     // ==================================================
     // instance data
     // ==================================================
+    
     /**
-     * Contains a hex-encoded string of the big integer.
+     * Contains a hex-encoded [i.e. RADIX 16] string of the big integer.
      * Does not contain dashes ("-")
      */
     private final String       asHex;
@@ -75,11 +76,38 @@ public final class BigIntStringChecksum
     // ==================================================
 
     /**
-     * Take this.toString() as input, and create the instance.
+     * Utility to test if the input string can even -possibly- be a BigIntStringChecksum encoded.
+     * This is check is "necessary, but not sufficient" for the input string
+     *   to parse correctly. 
+     * 
+     * @param input the string to check
+     * @return true if the string starts with 
+     *                 BigIntStringChecksum.PREFIX_BIGINT_DASH_CHECKSUM
+     *         false all other cases
+     */
+    public static boolean startsWithPrefix(final String input)
+    {
+        boolean ret = false;
+        if (input != null)
+        {
+            ret = input.startsWith(PREFIX_BIGINT_DASH_CHECKSUM);
+        }
+        else
+        {
+            ret = false;
+        }
+        return ret;
+    }
+    
+    /**
+     * Take input string, and create the instance.
      * 
      * @param bics string in "bigintcs:HHHHHH-HHHHHH-CCCCCC" format
      * @return big integer string checksum object
-     * @throws SecretShareException on error
+     * @throws SecretShareException on error, such as null input, OR 
+     *               input doesn't start with correct prefix OR
+     *               string does not have 0-9a-f digits OR
+     *               checksum doesn't match.
      */
     public static BigIntStringChecksum fromString(String bics)
     {
@@ -89,7 +117,7 @@ public final class BigIntStringChecksum
         {
             createThrow("Input cannot be null", bics);
         }
-        if (bics.startsWith(PREFIX_BIGINT_DASH_CHECKSUM))
+        if (startsWithPrefix(bics))
         {
             String noprefix = bics.substring(PREFIX_BIGINT_DASH_CHECKSUM.length());
             String noprefixnosign = noprefix;
@@ -133,34 +161,111 @@ public final class BigIntStringChecksum
                         PREFIX_BIGINT_DASH_CHECKSUM + "'",
                         bics);
         }
-        // String hex6perdash = convertHexToDash(asHex);
-        // return PREFIX_BIGINT_DASH_CHECKSUM +
-        // hex6perdash +
-        // "-" +
-        // md5checksum;
+        // This should never throw an exception here.
+        // But, if it does, better now than later:
+        ret.asBigInteger();
         
         return ret;
     }
 
+    /**
+     * Take string as input, and either return an instance or return null.
+     * 
+     * @param bics string in "bigintcs:HHHHHH-HHHHHH-CCCCCC" format
+     * @return big integer string checksum object
+     *         OR  null if incorrect format, error parsing, etc.
+     */
+    public static BigIntStringChecksum fromStringOrNull(String bics)
+    {
+        BigIntStringChecksum ret;
+        if (bics == null)
+        {
+            ret = null;
+        }
+        else if (! startsWithPrefix(bics))
+        {
+            ret = null;
+        }
+        else 
+        {
+            try
+            {
+                ret = fromString(bics);
+                
+                // completely test the input: make sure 
+                // asBigInteger will throw a SecretShareException on error
+                if (ret.asBigInteger() == null)
+                {
+                    // asBigInteger() is not allowed to return null.
+                    // but just in case it does:
+                    throw new SecretShareException("Programmer error converting '" +
+                                                   bics + "' to BigInteger");
+                }
+            }
+            catch (SecretShareException e)
+            {
+                ret = null;
+            }
+        }
+        return ret;
+    }
+    
+    
+    
+    /**
+     * Routine to construct an instance that allows you to print the hex strings.
+     * Such as
+     *    String s = BigIntStringChecksum create(biginteger).toString();
+     *    s.equals("bigintcs:00f3ea-CBA3D0");
+     *    
+     * @param in the big integer to hexify and md5 check sum
+     * @return big integer string checksum object
+     */
     public static BigIntStringChecksum create(final BigInteger in)
     {
         if (in == null)
         {
-            throw new SecretShareException("Input biginteger cannot be null");
+            throw new SecretShareException("Input BigInteger cannot be null");
         }
 
         final String inHex = in.toString(HEX_RADIX);
         final String inAsHex = pad(inHex);
 
-
         String md5checksum = computeMd5ChecksumLimit6(inAsHex);
 
         return new BigIntStringChecksum(inAsHex, md5checksum);
-
-
     }
     
 
+    // ==================================================
+    // constructors
+    // ==================================================
+
+    /**
+     * Construct an instance of BISC. 
+     *  Performs NO validation of input.
+     *  
+     * Normally 'private', but Unit Tests need access.
+     * 
+     * @param inAsHex        just the hex, no dashes
+     * @param inMd5checksum  just the hex, no dashes
+     */
+    /*default*/ BigIntStringChecksum(final String inAsHex,
+                                     final String inMd5checksum)
+    {
+        asHex = inAsHex;
+        md5checksum = inMd5checksum;
+    }
+
+    // ==================================================
+    // public methods
+    // ==================================================
+
+
+    /**
+     * @return the formatted string that can be parsed back into this object
+     */
+    @Override
     public String toString()
     {
         String hex6perdash = insertDashesIntoHex(asHex);
@@ -170,6 +275,13 @@ public final class BigIntStringChecksum
                md5checksum;
     }
 
+    /**
+     * Return the original BigInteger.
+     *   (or throw an exception if something went wrong).
+     * 
+     * @return BigInteger or throw exception
+     * @throws SecretShareException if the hex is invalid
+     */
     public BigInteger asBigInteger()
     {
         try
@@ -181,20 +293,6 @@ public final class BigIntStringChecksum
             throw new SecretShareException("Invalid input='" + asHex + "'", e);
         }
     }
-
-    // ==================================================
-    // constructors
-    // ==================================================
-    public BigIntStringChecksum(final String inAsHex,
-                                final String inMd5checksum)
-    {
-        asHex = inAsHex;
-        md5checksum = inMd5checksum;
-    }
-
-    // ==================================================
-    // public methods
-    // ==================================================
 
     // ==================================================
     // non public methods
@@ -259,15 +357,18 @@ public final class BigIntStringChecksum
     }
     
     
+
     private static byte[] computeMd5ChecksumFull(String inAsHex2)
     {
        Md5Checksummer md5summer = null;
        
-       md5summer = new Md5ChecksummerImpl();
+       md5summer = Md5ChecksummerFactory.create();
        
        if (false)
        {
-       // Test over-ride on class name:
+           // Normally, you use a "-D" on the command line to change md5sum class.
+           // This is just for testing over-ride without needing that "-D" argument.
+           // See Md5ChecksummerFactory.create()
            md5summer = Md5ChecksummerFactory
                .createFromClassName("com.tiemens.secretshare.md5sum.Md5ChecksummerImpl");
        }
@@ -276,7 +377,11 @@ public final class BigIntStringChecksum
 
         return bytes;
     }
-    private static String computeMd5ChecksumLimit6(String inAsHex2)
+    
+    /**
+     * Note: only not-private to allow unit tests access.
+     */
+    /*private*/ static String computeMd5ChecksumLimit6(String inAsHex2)
     {
         byte[] bytes = computeMd5ChecksumFull(inAsHex2);
         
