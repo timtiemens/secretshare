@@ -84,14 +84,19 @@ public class SecretShareUT
     
     public void testBig192()
     {
-        subtestBigBig(SecretShare.getPrimeUsedFor192bitSecretPayload());
+        subtestBigBig(SecretShare.getPrimeUsedFor192bitSecretPayload(),
+                      new BigInteger("12345678998765432100112233445566778899"));
     }
     public void testBig384()
     {
-        subtestBigBig(SecretShare.getPrimeUsedFor384bitSecretPayload());
+        subtestBigBig(SecretShare.getPrimeUsedFor384bitSecretPayload(),
+                      new BigInteger("12345678998765432100112233445566778899" +
+                                     "000000000012345678987654321"
+                                     ));
     }
     
-    public void subtestBigBig(final BigInteger prime)
+    public void subtestBigBig(final BigInteger prime,
+                              final BigInteger secret)
     {
         final int n = 16;
         final int k = 8;
@@ -99,7 +104,6 @@ public class SecretShareUT
         System.out.println("Generating shares/shards...");
         SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime, "test big big");
         SecretShare secretShare = new SecretShare(publicInfo);
-        final BigInteger secret = new BigInteger("12345678998765432100112233445566778899");
         Random random = new Random(1234L);
         SecretShare.GenerateSharesOutput generate = secretShare.generate(secret, random);
         System.out.println(generate.debugDump());
@@ -111,8 +115,9 @@ public class SecretShareUT
         
         Assert.assertEquals("Secrets do not match", secret, reconstructed);
     }
+    
     /**
-     * Notice the signatures:  all this routine gets are the ShareInfo objects,
+     * Notice the signature of this method:  all this method gets are the ShareInfo objects,
      *    and it returns the (secret) BigInteger
      *    
      * @param shares shards of the secret
