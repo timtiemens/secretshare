@@ -75,6 +75,9 @@ public class EasyLinearEquation
     // ==================================================
     private final List<Row> rows;
 
+    // 'modulus' can be null, which means do not perform mod() on values
+    private final BigInteger modulus;
+    
     // ==================================================
     // factories
     // ==================================================
@@ -169,10 +172,29 @@ public class EasyLinearEquation
 
     private EasyLinearEquation(final List<Row> inRows)
     {
+        this(inRows, null);
+    }
+    private EasyLinearEquation(final List<Row> inRows,
+                               final BigInteger inModulus)
+    {
         rows = new ArrayList<Row>();
         rows.addAll(inRows);
+        
+        modulus = inModulus;
     }
     
+    public EasyLinearEquation createWithPrimeModulus(BigInteger primeModulus)
+    {
+        if (primeModulus != null)
+        {
+            return new EasyLinearEquation(this.rows, primeModulus);
+        }
+        else
+        {
+            throw new SecretShareException("modulus cannot be null");
+        }
+    }
+
     
     // ==================================================
     // public methods
@@ -207,7 +229,7 @@ public class EasyLinearEquation
         // so, start at the bottom, and solve and cancel the other direction:
         for (int workrowindex = solverows.size() - 1; workrowindex >= 0; workrowindex--)
         {
-            Row reducedToOne = solverows.get(workrowindex).solveThisRow();
+            Row reducedToOne = solverows.get(workrowindex).solveThisRow(modulus);
             logger.fine("reverse, index=" + workrowindex + " is " + reducedToOne.debugRow());
             solverows.set(workrowindex, reducedToOne);
             for (int fixindex = workrowindex - 1; fixindex >= 0; fixindex--)
@@ -296,7 +318,7 @@ public class EasyLinearEquation
          *         throw exception
          * @throws SecretShareException if more than 2 columns [the 1st and 1 other] are non-zero
          */
-        public Row solveThisRow()
+        public Row solveThisRow(final BigInteger useModulus)
         {
             Integer nonZeroColumn = null;
             for (int col = 1, n = cols.length; col < n; col++)
@@ -322,32 +344,84 @@ public class EasyLinearEquation
             
             //    
             Row ret = new Row(this);
+//            if (useModulus != null)
+//            {
+//                 we only want to 'mod' the row if a value has gotten "out of control"
+//                if (ret.anyAbsoluteValuesBiggerThan(useModulus))
+//                {
+//                    logger.finest("Before mod, row=" + ret.debugRow());
+//                    ret = ret.modulus(useModulus);
+//                    logger.finest("After  mod, row=" + ret.debugRow());
+//                }
+//            }
             
             final BigInteger divideby = cols[nonZeroColumn];
-            BigInteger[] vals = ret.cols;  // TODO: refactor out this 'alias'
-            
-            vals[0] = cols[0].divide(divideby);
-            // safety check:
-            safetyCheckDivision("column0", vals[0], divideby, cols[0]);
-            
-            for (int col = 1, n = cols.length; col < n; col++)
+
+            //
+            // This is kind of like 'row.divideby()', except:
+            // a) we know only 2 cols[] are non-zero
+            // b) we absolutely need to make sure the result does not have a remainder
+            //
+            for (int col = 0, n = ret.cols.length; col < n; col++)
             {
-                if (col == nonZeroColumn)
+                if ((col == 0) ||
+                    (col == nonZeroColumn))
                 {
-                    vals[col] = cols[col].divide(divideby);
-                    safetyCheckDivision("column" + col, vals[col], divideby, cols[col]);
+                    BigInteger original = ret.cols[col];
+                    BigInteger result = divideNormallyOrModulus(original, divideby, useModulus); 
+                           // this doesn't always work:  result = original.divide(divideby);
+                    ret.cols[col] = result;
                 }
                 else
                 {
-                    vals[col] = cols[col]; // cols[col] must be ZERO here
+                    // leave alone.  Just do a safety-check:
+                    if (! ret.isColumnZero(col))
+                    {
+                        throw new SecretShareException("Programmer error.  " +
+                                                       "Column " + col + " must be zero, " +
+                                                       "but instead is " + ret.getColumn(col));
+                    }
+
                 }
             }
             
             return ret;
         }
 
-        private void safetyCheckDivision(String string,
-                                         BigInteger result,
+
+        /**
+         * The modulus stuff is really strange.  
+         * Sometimes the divide-by just works.
+         * Sometimes it is negative, and needs modded to positive.
+         * Sometimes it is positive but "too big" and needs modded to a smaller number.
+         * 
+         * This routine just tries both:
+         *     1) original / divideby and
+         *     2) (original mod useModulus) / divideby
+         *     
+         * @param original
+         * @param divideby
+         * @param useModulus
+         * @return
+         */
+        private BigInteger divideNormallyOrModulus(BigInteger original,
+                                                   BigInteger divideby,
+                                                   BigInteger useModulus)
+        {
+            BigInteger result = original.divide(divideby);
+            if (! result.multiply(divideby).equals(original))
+            {
+                if (useModulus != null)
+                {
+                    original = original.mod(useModulus);
+                    result = original.divide(divideby);
+                }
+            }
+            safetyCheckDivision(result, divideby, original);
+            return result;
+        }
+ 
+        private void safetyCheckDivision(BigInteger result,
                                          BigInteger divideby,
                                          BigInteger original)
         {
@@ -512,5 +586,7 @@ public class EasyLinearEquation
             array[i] = current;
         }
     }
+
+
     
 }

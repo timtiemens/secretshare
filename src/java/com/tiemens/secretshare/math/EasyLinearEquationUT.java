@@ -4,12 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.text.MessageFormat;
-import java.util.Random;
 import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -17,10 +12,10 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import com.tiemens.secretshare.math.EasyLinearEquation.EasySolve;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import com.tiemens.secretshare.math.EasyLinearEquation.EasySolve;
 
 public class EasyLinearEquationUT
     extends TestCase
@@ -89,7 +84,7 @@ public class EasyLinearEquationUT
     public void testJavadocExample() 
         throws SecurityException, IOException
     {
-        if (true)
+        if (false)
         {
             enableLogging();
         }
@@ -114,7 +109,7 @@ public class EasyLinearEquationUT
     public void testFromRealSecret() 
         throws SecurityException, IOException
     {
-        if (true)
+        if (false)
         {
             enableLogging();
         }
@@ -149,7 +144,7 @@ public class EasyLinearEquationUT
     public void testFromRealSecretLong() 
         throws SecurityException, IOException
     {
-        if (true)
+        if (false)
         {
             enableLogging();
         }
@@ -158,7 +153,7 @@ public class EasyLinearEquationUT
 
         //    EQ: PolyEqImpl[ 45654 + x^1 * -6519408338692630574 + x^2 * -897291810407650440 
         // mod=59561
-        //  BigInteger modulus = BigInteger.valueOf(59561);
+        BigInteger modulus = BigInteger.valueOf(59561);
         ele = EasyLinearEquation
             .create(new int[][]
                               {
@@ -166,7 +161,7 @@ public class EasyLinearEquationUT
                     { 34394,1,2,4},
                     { 15208,1,3,9}
                               });
-        // ele = ele.convertToModulus(modulus);
+        ele = ele.createWithPrimeModulus(modulus);
         EasySolve solve = ele.solve();
         System.out.println("Output testReal test case.");
         System.out.println("answer(1)=" + solve.getAnswer(1));

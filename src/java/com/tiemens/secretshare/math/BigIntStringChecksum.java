@@ -265,9 +265,12 @@ public final class BigIntStringChecksum
        
        md5summer = new Md5ChecksummerImpl();
        
+       if (false)
+       {
        // Test over-ride on class name:
-//       md5summer = Md5ChecksummerFactory
-//           .createFromClassName("com.tiemens.secretshare.md5sum.Md5ChecksummerImpl");
+           md5summer = Md5ChecksummerFactory
+               .createFromClassName("com.tiemens.secretshare.md5sum.Md5ChecksummerImpl");
+       }
         
         byte[] bytes = md5summer.createMd5Checksum(inAsHex2.toLowerCase().getBytes());
 

@@ -1,9 +1,5 @@
 package com.tiemens.secretshare.exceptions;
 
-import java.math.BigInteger;
-
-import com.tiemens.secretshare.math.BigIntStringChecksum;
-import com.tiemens.secretshare.math.BigIntUtilities;
 
 /**
  * Topmost exception class for secretshare package.

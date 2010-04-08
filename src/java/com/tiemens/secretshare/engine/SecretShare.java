@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 import com.tiemens.secretshare.math.BigIntStringChecksum;
@@ -78,35 +79,35 @@ public class SecretShare
     {
         publicInfo = inPublicInfo;
     }
+    public GenerateSharesOutput generate(final BigInteger secret)
+    {
+        return generate(secret, new SecureRandom());
+    }
     public GenerateSharesOutput generate(final BigInteger secret,
                                          final Random random)
     {
-        
-        //Random random = new SecureRandom();
-        
         BigInteger[] coeffs = new BigInteger[publicInfo.getK()];
 
-
-        // create the equation by setting the coeffs
-        // set the constant coeff to the secret:
+        // create the equation by setting the coefficients:
+        // [a] randomize the coefficients:
+        randomizeCoeffs(coeffs, random);
+        // [b] set the constant coefficient to the secret:
         coeffs[0] = secret;
         
-        // randomize the others:
-        randomizeCoeffs(coeffs, random);
-        final PolyEquationImpl eq = new PolyEquationImpl(coeffs);
+        final PolyEquationImpl equation = new PolyEquationImpl(coeffs);
 
         GenerateSharesOutput ret = new GenerateSharesOutput(this.publicInfo,
-                                                            eq);
+                                                            equation);
         
         for (int x = 1, n = publicInfo.getN() + 1; x < n; x++)
         {
-            final BigInteger fofx = eq.calculateFofX(BigInteger.valueOf(x));
+            final BigInteger fofx = equation.calculateFofX(BigInteger.valueOf(x));
             BigInteger data = fofx;
             if (publicInfo.primeModulus != null)
             {
                 data = data.mod(publicInfo.primeModulus);
             }
-            final ShareInfo share = new ShareInfo(x, data);
+            final ShareInfo share = new ShareInfo(x, data, this.publicInfo);
             ret.sharesInfo.add(share);
         }
         
@@ -133,6 +134,10 @@ public class SecretShare
         }
         EasyLinearEquation ele = 
             EasyLinearEquation.createForPolynomial(xarray, fofxarray);
+        if (publicInfo.getPrimeModulus() != null)
+        {
+            ele = ele.createWithPrimeModulus(publicInfo.getPrimeModulus());
+        }
         EasyLinearEquation.EasySolve solve = ele.solve();
         
         ret = new SolveOutput(solve.getAnswer(1));
@@ -153,23 +158,39 @@ public class SecretShare
             //big = BigInteger.valueOf((random.nextInt() % 20) + 1);
             // TODO: maybe bigger than long?
             big = BigInteger.valueOf(random.nextLong());
+            // TODO: make it even bigger?
+            //big = big.multiply(BigInteger.valueOf(random.nextLong()));
             coeffs[i] = big;
         }
     }
 
     public static class PublicInfo
     {
+        // the required public info: "K" and the modulus
+        private final int k;                         // gives the order of the polynomial
+        private final BigInteger primeModulus;       // can be null
+
+        // useful information: "N" - how many shares/shards were generated?
         private final int n;
-        private final int k;
-        private final BigInteger primeModulus;
+        
+        // just descriptive info:
+        private final String description;   //
+        private final String uuid;          // 
+        
+        
         public PublicInfo(final int inN,
                           final int inK,
-                          final BigInteger inPrimeModulus)
+                          final BigInteger inPrimeModulus,
+                          final String inDescription)
         {
             super();
             this.n = inN;
             this.k = inK;
             this.primeModulus = inPrimeModulus;
+            this.description = inDescription;
+            
+            UUID uuidobj = UUID.randomUUID();
+            uuid =  uuidobj.toString();
          
             
             if (k > n)
@@ -187,7 +208,10 @@ public class SecretShare
         public String toString()
         {
             return "PublicInfo[k=" + k + ", n=" + n + "\n" +
-                "mod=" + primeModulus + "]";
+                "modulus=" + primeModulus + "\n" +
+                "description=" + description + "\n" +
+                "uuid=" + uuid +
+                "]";
         }
         public String debugDump()
         {
@@ -207,23 +231,39 @@ public class SecretShare
         }
     }
     
+    /**
+     * Holds all the info needed to be a "piece" of the secret.
+     * aka a "Share" of the secret.
+     * 
+     * @author tiemens
+     *
+     */
     public static class ShareInfo
     {
         private final int x;              // this is aka "the index"
         private final BigInteger share;   // our piece of the secret
+        private final PublicInfo publicInfo;
         
         public ShareInfo(final int inX,
-                         final BigInteger inShare)
+                         final BigInteger inShare,
+                         final PublicInfo inPublicInfo)
         {
             x = inX;
             share = inShare;
+            publicInfo = inPublicInfo;
         }
         public String debugDump()
         {
             return "ShareInfo[x=" + x + "\n" +
-              "share=" + share + "]";
+              "share=" + share +
+              " public=" + publicInfo.debugDump() +
+              "]";
         }
         public int getIndex()
+        {
+            return x;
+        }
+        public int getX()
         {
             return x;
         }
@@ -234,6 +274,10 @@ public class SecretShare
         public BigInteger getShare()
         {
             return share;
+        }
+        public PublicInfo getPublicInfo()
+        {
+            return publicInfo;
         }
     }
     
