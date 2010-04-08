@@ -9,6 +9,7 @@ import java.util.Random;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 import com.tiemens.secretshare.math.BigIntStringChecksum;
+import com.tiemens.secretshare.math.EasyLinearEquation;
 import com.tiemens.secretshare.math.PolyEquationImpl;
 
 /**
@@ -80,26 +81,31 @@ public class SecretShare
     public GenerateSharesOutput generate(final BigInteger secret,
                                          final Random random)
     {
-        GenerateSharesOutput ret = new GenerateSharesOutput(this.publicInfo);
         
         //Random random = new SecureRandom();
         
         BigInteger[] coeffs = new BigInteger[publicInfo.getK()];
 
-        ret.polynomials.add(null);  // don't use index "0"
+
+        // create the equation by setting the coeffs
+        // set the constant coeff to the secret:
+        coeffs[0] = secret;
+        
+        // randomize the others:
+        randomizeCoeffs(coeffs, random);
+        final PolyEquationImpl eq = new PolyEquationImpl(coeffs);
+
+        GenerateSharesOutput ret = new GenerateSharesOutput(this.publicInfo,
+                                                            eq);
+        
         for (int x = 1, n = publicInfo.getN() + 1; x < n; x++)
         {
-            // create the equation by setting the coeffs
-            // set the constant coeff to the secret:
-            coeffs[0] = secret;
-            
-            // randomize the others:
-            randomizeCoeffs(coeffs, random);
-            final PolyEquationImpl eq = new PolyEquationImpl(coeffs);
-            ret.polynomials.add(eq);
-            
             final BigInteger fofx = eq.calculateFofX(BigInteger.valueOf(x));
-            final BigInteger data = fofx.mod(publicInfo.primeModulus);
+            BigInteger data = fofx;
+            if (publicInfo.primeModulus != null)
+            {
+                data = data.mod(publicInfo.primeModulus);
+            }
             final ShareInfo share = new ShareInfo(x, data);
             ret.sharesInfo.add(share);
         }
@@ -117,8 +123,19 @@ public class SecretShare
                                            " shares to solve.  Only provided " + 
                                            usetheseshares.size());
         }
+        final int size = publicInfo.getK();
+        BigInteger[] xarray = new BigInteger[size];
+        BigInteger[] fofxarray = new BigInteger[size];
+        for (int i = 0, n = size; i < n; i++)
+        {
+            xarray[i] = usetheseshares.get(i).getXasBigInteger();
+            fofxarray[i] = usetheseshares.get(i).getShare();
+        }
+        EasyLinearEquation ele = 
+            EasyLinearEquation.createForPolynomial(xarray, fofxarray);
+        EasyLinearEquation.EasySolve solve = ele.solve();
         
-        ret = new SolveOutput();
+        ret = new SolveOutput(solve.getAnswer(1));
         
         return ret;
     }
@@ -132,7 +149,10 @@ public class SecretShare
     {
         for (int i = 1, n = coeffs.length; i < n; i++)
         {
-            BigInteger big = BigInteger.valueOf(random.nextLong());
+            BigInteger big = null;
+            //big = BigInteger.valueOf((random.nextInt() % 20) + 1);
+            // TODO: maybe bigger than long?
+            big = BigInteger.valueOf(random.nextLong());
             coeffs[i] = big;
         }
     }
@@ -157,10 +177,11 @@ public class SecretShare
                 throw new SecretShareException("k cannot be bigger than n [k=" + k + 
                                                " n=" + n + "]");
             }
-            if (inPrimeModulus == null)
-            {
-                throw new SecretShareException("prime modulus cannot be null");
-            }
+            // enhancement: allow the modulus to be null:
+            //if (inPrimeModulus == null)
+            //{
+            //    throw new SecretShareException("prime modulus cannot be null");
+            //}
         }
         @Override
         public String toString()
@@ -206,6 +227,10 @@ public class SecretShare
         {
             return x;
         }
+        public BigInteger getXasBigInteger()
+        {
+            return BigInteger.valueOf(x);
+        }
         public BigInteger getShare()
         {
             return share;
@@ -216,26 +241,20 @@ public class SecretShare
     {
         private final PublicInfo publicInfo;
         private final List<ShareInfo> sharesInfo = new ArrayList<ShareInfo>();
-        private final List<PolyEquationImpl> polynomials = new ArrayList<PolyEquationImpl>();
+        private final PolyEquationImpl polynomial;
         
-        public GenerateSharesOutput(final PublicInfo inPublicInfo)
+        public GenerateSharesOutput(final PublicInfo inPublicInfo,
+                                    final PolyEquationImpl inPolynomial)
         {
             publicInfo = inPublicInfo;
+            polynomial = inPolynomial;
         }
         public String debugDump()
         {
             String ret = "Public=" + publicInfo.debugDump() + "\n";
-            for (PolyEquationImpl eq : polynomials)
-            {
-                if (eq != null)
-                {
-                    ret += "EQ: " + eq.debugDump() + "\n";
-                }
-                else
-                {
-                    ret += "EQ: <null>\n";
-                }
-            }
+            
+            ret += "EQ: " + polynomial.debugDump() + "\n";
+
             for (ShareInfo share : sharesInfo)
             {
                 ret += "SHARE: " + share.debugDump() + "\n";
@@ -250,10 +269,14 @@ public class SecretShare
     
     public static class SolveOutput
     {
-
+        private final BigInteger secret;
+        public SolveOutput(final BigInteger inSecret)
+        {
+            secret = inSecret;
+        }
         public BigInteger getSecret()
         {
-            return null;
+            return secret;
         }
         
     }

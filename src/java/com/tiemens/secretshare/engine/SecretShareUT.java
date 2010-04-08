@@ -6,8 +6,14 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
+import com.tiemens.secretshare.math.EasyLinearEquation;
+import com.tiemens.secretshare.math.EasyLinearEquationUT;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -57,7 +63,10 @@ public class SecretShareUT
         
         final int n = 6;
         final int k = 3;
-        final BigInteger prime = BigInteger.valueOf(59561); // probablePrime(16, random);
+        final BigInteger prime = null;
+        
+        // later:
+        // prime = BigInteger.valueOf(59561);
         SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime);
         SecretShare secretShare = new SecretShare(publicInfo);
         final BigInteger secret = BigInteger.valueOf(45654L);
@@ -72,9 +81,20 @@ public class SecretShareUT
         {
             usetheseshares.add(shares.get(i));
         }
+        enableAllLogging();
         SecretShare.SolveOutput solved = solver.solve(usetheseshares);
         System.out.println("Reconstructed secret=" + solved.getSecret());
         Assert.assertEquals("Secrets do not match", secret, solved.getSecret());
+    }
+
+    private void enableAllLogging()
+    {
+        EasyLinearEquationUT.enableLogging();
+        // add any other loggers here:
+        //Logger l = Foo.logger;
+        //l.addHandler(lh);
+        //l.setLevel(Level.ALL);        
+        
     }
  
     // ==================================================

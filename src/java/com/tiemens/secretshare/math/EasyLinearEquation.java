@@ -74,7 +74,7 @@ public class EasyLinearEquation
     // instance data
     // ==================================================
     private final List<Row> rows;
-    
+
     // ==================================================
     // factories
     // ==================================================
@@ -155,7 +155,7 @@ public class EasyLinearEquation
         List<Row> rows = new ArrayList<Row>();
         for (BigInteger[] row : inMatrix)
         {
-            Row add = new Row(row);
+            Row add = Row.create(row);
             rows.add(add);
         }
         ret = new EasyLinearEquation(rows);
@@ -172,11 +172,12 @@ public class EasyLinearEquation
         rows = new ArrayList<Row>();
         rows.addAll(inRows);
     }
-
+    
     
     // ==================================================
     // public methods
     // ==================================================
+    
     public EasySolve solve()
     {
         EasySolve ret = null;
@@ -274,8 +275,17 @@ public class EasyLinearEquation
     }
     private static class Row
     {
-        BigInteger[] cols;
-        public Row(BigInteger[] in)
+        private final BigInteger[] cols;
+        
+        public static Row create(BigInteger[] in)
+        {
+            return new Row(in);
+        }
+        public Row(Row copy)
+        {
+            this(copy.cols);
+        }
+        private Row(BigInteger[] in)
         {
             cols = new BigInteger[in.length];
             System.arraycopy(in, 0, cols, 0, cols.length);
@@ -310,9 +320,12 @@ public class EasyLinearEquation
                 throw new SecretShareException("No non-zero column found in row; error");
             }
             
-            //            
-            BigInteger divideby = cols[nonZeroColumn];
-            BigInteger[] vals = new BigInteger[cols.length];
+            //    
+            Row ret = new Row(this);
+            
+            final BigInteger divideby = cols[nonZeroColumn];
+            BigInteger[] vals = ret.cols;  // TODO: refactor out this 'alias'
+            
             vals[0] = cols[0].divide(divideby);
             // safety check:
             safetyCheckDivision("column0", vals[0], divideby, cols[0]);
@@ -330,8 +343,9 @@ public class EasyLinearEquation
                 }
             }
             
-            return new Row(vals);
+            return ret;
         }
+
         private void safetyCheckDivision(String string,
                                          BigInteger result,
                                          BigInteger divideby,
@@ -438,7 +452,7 @@ public class EasyLinearEquation
         }
         public Row multiplyConstant(final BigInteger mult)
         {
-            Row ret = new Row(cols);
+            Row ret = new Row(this);
          
             for (int c = 0, n = cols.length; c < n; c++)
             {
@@ -448,7 +462,7 @@ public class EasyLinearEquation
         }
         public Row addConstant(final BigInteger add)
         {
-            Row ret = new Row(cols);
+            Row ret = new Row(this);
             
             for (int c = 0, n = cols.length; c < n; c++)
             {
@@ -458,7 +472,7 @@ public class EasyLinearEquation
         }
         public Row add(final Row add)
         {
-            Row ret = new Row(cols);
+            Row ret = new Row(this);
             
             for (int c = 0, n = cols.length; c < n; c++)
             {
@@ -466,6 +480,7 @@ public class EasyLinearEquation
             }
             return ret;            
         }
+
         public Row negate()
         {
             return multiplyConstant(BigInteger.valueOf(-1));
