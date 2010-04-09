@@ -214,7 +214,9 @@ public class EasyLinearEquation
             {
                 int columnIndexToCancel = workrowindex + 1;
                 
-                Row cancelrowr = solverows.get(fixindex).cancelColumn(columnIndexToCancel, otherrow);
+                Row cancelrowr = solverows.get(fixindex).cancelColumn(columnIndexToCancel, 
+                                                                      otherrow,
+                                                                      modulus);
                 solverows.set(fixindex, cancelrowr);
             }
             debugRows("after workrowindex=" + workrowindex + " finished", solverows);
@@ -239,7 +241,9 @@ public class EasyLinearEquation
                 logger.finer("  going to cancel fixindex=" + fixindex + " is " + 
                              solverows.get(fixindex).debugRow() + " using row " +
                              reducedToOne.debugRow());
-                Row cancelrowr = solverows.get(fixindex).cancelColumn(columnIndexToCancel, reducedToOne);
+                Row cancelrowr = solverows.get(fixindex).cancelColumn(columnIndexToCancel, 
+                                                                      reducedToOne,
+                                                                      modulus);
                 solverows.set(fixindex, cancelrowr);
             }
             debugRows("After reverse loopindex=" + workrowindex + " finished", solverows);
@@ -295,6 +299,113 @@ public class EasyLinearEquation
         }
         
     }
+    
+    private static class Trial
+    {
+        private final String which;
+        private final BigInteger result;
+        private final boolean correct;
+
+        public Trial(final String inWhich,
+                     final BigInteger inOriginal,
+                     final BigInteger inDivideby)
+        {
+            which = inWhich;
+            result = inOriginal.divide(inDivideby);
+            correct = result.multiply(inDivideby).equals(inOriginal);
+        }
+
+        public BigInteger getResult()
+        {
+            if (correct)
+            {
+                return result;
+            }
+            else
+            {
+                throw new SecretShareException("Tried to get result from non-correct trial");
+            }
+        }
+        public String dumpDebug()
+        {
+            return "Trial[" + which + " result=" + result;
+        }
+
+        /**
+         * Pick the "best" correct result [if any].
+         * 
+         */
+        public static Trial pickSuccess(List<Trial> list)
+        {
+            Trial ret = null;
+            if (list.get(list.size() -1).correct)
+            {
+                return list.get(list.size() - 1);
+            }
+            for (Trial t : list)
+            {
+                if (t.correct)
+                {
+                    if (ret != null)
+                    {
+                        if (t.result.compareTo(ret.result) > 0)
+                        {
+                            ret = t;
+                        }
+                        else
+                        {
+                            System.out.println("Two different correct answers");
+                        }
+                    }
+                    else
+                    {
+                        ret = t;
+                    }
+                }
+            }
+            return ret;
+        }
+
+        /**
+         * Construct all the permutations we need.
+         */
+        public static List<Trial> createList(final BigInteger original,
+                                             final BigInteger divideby,
+                                             final BigInteger useModulus)
+        {
+            List<Trial> list =  new ArrayList<Trial>();
+
+            BigInteger o = original;
+            int c = 0;
+            Trial trial = new Trial("" + c, o, divideby);
+            list.add(trial);
+            while (! trial.correct)
+            {
+                c++;
+                o = o.add(useModulus);
+                trial = new Trial("" + c, o, divideby);
+                list.add(trial);
+            }
+//            list.add(new Trial("original", original, divideby));
+//            list.add(new Trial("modoriginal", original.mod(useModulus), divideby));
+//            list.add(new Trial("moddivide", original, divideby.mod(useModulus)));
+//            list.add(new Trial("mod both", original.mod(useModulus), divideby.mod(useModulus)));
+
+//            BigInteger gcd = original.gcd(divideby);
+//            if ((gcd != null) &&
+//                (gcd.compareTo(BigInteger.ONE) > 0))
+//            {
+//                BigInteger divO = original.divide(gcd);
+//                BigInteger divD = divideby.divide(gcd);
+//                list.add(new Trial("gcd original", divO, divD));
+//                list.add(new Trial("gcd modoriginal", divO.mod(useModulus), divD));
+//                list.add(new Trial("gcd moddivide", divO, divD.mod(useModulus)));
+//                list.add(new Trial("gcd both", divO.mod(useModulus), divD.mod(useModulus)));
+//            }
+            return list;
+        }
+    }
+
     private static class Row
     {
         private final BigInteger[] cols;
@@ -320,6 +431,7 @@ public class EasyLinearEquation
          */
         public Row solveThisRow(final BigInteger useModulus)
         {
+            // Determine non-zero column:
             Integer nonZeroColumn = null;
             for (int col = 1, n = cols.length; col < n; col++)
             {
@@ -342,25 +454,15 @@ public class EasyLinearEquation
                 throw new SecretShareException("No non-zero column found in row; error");
             }
             
-            //    
+
             Row ret = new Row(this);
-//            if (useModulus != null)
-//            {
-//                 we only want to 'mod' the row if a value has gotten "out of control"
-//                if (ret.anyAbsoluteValuesBiggerThan(useModulus))
-//                {
-//                    logger.finest("Before mod, row=" + ret.debugRow());
-//                    ret = ret.modulus(useModulus);
-//                    logger.finest("After  mod, row=" + ret.debugRow());
-//                }
-//            }
-            
             final BigInteger divideby = cols[nonZeroColumn];
 
             //
             // This is kind of like 'row.divideby()', except:
             // a) we know only 2 cols[] are non-zero
-            // b) we absolutely need to make sure the result does not have a remainder
+            // b) we absolutely need to make sure the result does not have a remainder,
+            //    which means we have to "known" about the modulus sometimes
             //
             for (int col = 0, n = ret.cols.length; col < n; col++)
             {
@@ -374,14 +476,13 @@ public class EasyLinearEquation
                 }
                 else
                 {
-                    // leave alone.  Just do a safety-check:
+                    // Leave the column alone.  Just do a safety-check:
                     if (! ret.isColumnZero(col))
                     {
                         throw new SecretShareException("Programmer error.  " +
                                                        "Column " + col + " must be zero, " +
                                                        "but instead is " + ret.getColumn(col));
                     }
-
                 }
             }
             
@@ -392,8 +493,8 @@ public class EasyLinearEquation
         /**
          * The modulus stuff is really strange.  
          * Sometimes the divide-by just works.
-         * Sometimes it is negative, and needs modded to positive.
-         * Sometimes it is positive but "too big" and needs modded to a smaller number.
+         * Sometimes it is negative but "odd", and needs mod() to positive and "even".
+         * Sometimes it is positive but "too big and odd" and needs mod() to a smaller "even" number.
          * 
          * This routine just tries both:
          *     1) original / divideby and
@@ -404,17 +505,59 @@ public class EasyLinearEquation
          * @param useModulus
          * @return
          */
-        private BigInteger divideNormallyOrModulus(BigInteger original,
+        private BigInteger divideNormallyOrModulus(final BigInteger original,
+                                                   final BigInteger divideby,
+                                                   final BigInteger useModulus)
+        {
+            BigInteger result = null;
+        
+            if (useModulus == null)
+            {
+                result = original.divide(divideby);
+            }
+            else
+            {
+                // Create all of the trial "divide by" combinations
+                List<Trial> list = Trial.createList(original, divideby, useModulus); 
+
+                // Pick the "best correct solution"
+                Trial success = Trial.pickSuccess(list);
+                
+                if (success == null)
+                {
+                    throw new SecretShareException("All trial divide bys failed");
+                }
+                else
+                {
+                    result = success.getResult();
+                    result = result.mod(useModulus);
+                }
+            }
+            
+            // safetyCheckDivision(result, divideby, original);
+            return result;
+        }
+
+        private BigInteger divideNormallyOrModulus2(BigInteger original,
                                                    BigInteger divideby,
                                                    BigInteger useModulus)
         {
             BigInteger result = original.divide(divideby);
             if (! result.multiply(divideby).equals(original))
             {
-                if (useModulus != null)
+                final boolean tryAgainWithModulus = true;
+                
+                if (tryAgainWithModulus)
                 {
-                    original = original.mod(useModulus);
-                    result = original.divide(divideby);
+                    if (useModulus != null)
+                    {
+                        original = original.mod(useModulus);
+                        result = original.divide(divideby);
+                    }
+                }
+                else
+                {
+                    // do not try again, thus, the safetyCheck below will fail.
                 }
             }
             safetyCheckDivision(result, divideby, original);
@@ -465,7 +608,8 @@ public class EasyLinearEquation
          * @return row with column value set to "0"
          */
         public Row cancelColumn(final int index,
-                                final Row otherrow)
+                                final Row otherrow,
+                                final BigInteger useModulus)
         {
             // special case: our col[index] is already zero:
             if (this.isColumnZero(index))
@@ -494,6 +638,14 @@ public class EasyLinearEquation
             if (! usethis.sameSign(index, cancel))
             {
                 ret = usethis.add(cancel);
+                
+//                if (useModulus != null)
+//                {
+//                    if (ret.cols[0].signum() == -1)
+//                    {
+//                        ret.cols[0] = ret.cols[0].mod(useModulus);
+//                    }
+//                }
             }
             else
             {

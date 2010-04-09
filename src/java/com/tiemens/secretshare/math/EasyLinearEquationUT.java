@@ -173,8 +173,10 @@ public class EasyLinearEquationUT
         System.out.println("answer(3)=" + solve.getAnswer(3));
         Assert.assertEquals("1 should be 45654",   // the secret
                             BigInteger.valueOf(45654), solve.getAnswer(1));
-        Assert.assertEquals("2 should be -36300", 
-                            BigInteger.valueOf(-36300), solve.getAnswer(2));
+        // without the modulus, the answer would be -36300
+        BigInteger two = BigInteger.valueOf(-36300).mod(modulus);
+        Assert.assertEquals("2 should be " + two,
+                            two, solve.getAnswer(2));
         Assert.assertEquals("3 should be 15335", 
                             BigInteger.valueOf(15335), solve.getAnswer(3));
     }
@@ -184,10 +186,28 @@ public class EasyLinearEquationUT
     {
         BigInteger a = BigInteger.valueOf(-28891);
         BigInteger b = BigInteger.valueOf(59561);
-        System.out.println("a mod b = " + a.mod(b));
+        System.out.println("a mod b = " + a.mod(b));  // 30670
+        
+        a = BigInteger.valueOf(-16689);
+        b = BigInteger.valueOf(59561);
+        System.out.println("a mod b = " + a.mod(b));  // 42872
     }
     
 
+    public void testTrial()
+    {
+        BigInteger original = new BigInteger("-56707112967300178048284537440768814" +
+                                             "86333610354980171978558655397960925457678336000");
+        BigInteger divideby = new BigInteger("1908360529573854283038720000");
+        BigInteger mod  = new BigInteger("14976407493557531125525728362448106789840013430353915016137");
+        BigInteger expect = new BigInteger("4056711593111911745804512723290207574");
+        
+        System.out.println("GCD(original, divideby)=" + original.gcd(divideby));
+        
+        BigInteger c2   = new BigInteger("14976407493557531125503522315394253513660216320718149750143");
+        BigInteger c4   = new BigInteger("14976407493557531125480553635111457689577554428988214795753");
+        BigInteger c5   = new BigInteger("14976407493557531125525440847502616718686555765114601802327");
+    }
     /**
      * Taken from wikipedia example at Shamir's_Secret_Sharing.
      * This is a n=6, k=3 example, with a secret of '1234' 
