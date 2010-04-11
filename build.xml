@@ -14,11 +14,13 @@
         <tstamp />
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}" />
+        <mkdir dir="${classes}" />
     </target>
 
     <target name="compile" depends="init" description="compile the source ">
         <!-- Compile the java code from ${src} into ${build} -->
-        <javac srcdir="${src}" destdir="${classes}" />
+        <javac srcdir="${src}" destdir="${classes}" excludes="**/*UT.java">
+        </javac>
     </target>
 
     <target name="dist" depends="compile" description="generate the distribution">

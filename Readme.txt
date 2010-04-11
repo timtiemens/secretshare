@@ -7,6 +7,11 @@ The following are required to run the application in secretshare.jar:
  
  The following are required to compile the project:
  a - jdk 1.6+
+ b - ant 1.7+
+
+ The following are required to completely compile the project:
+ c - JUnit 3.8
+     This will allow the Unit Test .java files to compile.
  
  
 2. Installation
