@@ -224,7 +224,24 @@ public class BigIntUtilitiesUT
             System.out.println("Iterations, time elapsed=" + (stop - start));
         }
     }
-    
+    public void testModExample()
+    {
+        BigInteger original = new BigInteger("14976407493557530648572935587878871741988301238449789883337");
+        BigInteger divideby = new BigInteger("1658880");
+        BigInteger modulus =  new BigInteger("14976407493557531125525728362448106789840013430353915016137");
+        BigInteger expected = new BigInteger("14976407493557531125525440847502616718686555765114601802327");
+        
+        
+        BigInteger modorig = original.multiply(modulus);
+        BigInteger result = modorig.divide(divideby);
+        result = result.mod(modulus);
+        
+        BigInteger remainder = modorig.subtract(result.multiply(divideby));
+        
+        System.out.println("Expected = " + expected);
+        System.out.println("Actual   = " + result);
+        Assert.assertEquals("Foo, remainder=" + remainder, expected, result);
+    }
     public void testBigMultiply()
     {
         Random rand = new SecureRandom();
@@ -251,7 +268,7 @@ public class BigIntUtilitiesUT
     private void subtest(String in,
                          BigInteger expected)
     {
-        BigInteger actual = BigIntUtilities.createFromString(in);
+        BigInteger actual = BigIntUtilities.createFromStringsBytesAsData(in);
         System.out.println("bi.actual.tohex =" + actual.toString(16));
         System.out.println("bi.actual.tobics=" + 
                            BigIntUtilities.createStringMd5CheckSumFromBigInteger(actual));

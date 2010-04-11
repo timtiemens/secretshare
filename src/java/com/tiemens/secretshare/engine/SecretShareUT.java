@@ -1,6 +1,7 @@
 package com.tiemens.secretshare.engine;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +11,8 @@ import junit.framework.TestCase;
 
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.exceptions.SecretShareException;
+import com.tiemens.secretshare.math.BigIntUtilities;
+import com.tiemens.secretshare.math.BigIntUtilitiesUT;
 import com.tiemens.secretshare.math.EasyLinearEquationUT;
 
 public class SecretShareUT
@@ -54,7 +57,6 @@ public class SecretShareUT
     
     public void testFirst()
     {
-        
         final int n = 6;
         final int k = 3;
         BigInteger prime = null;
@@ -66,6 +68,8 @@ public class SecretShareUT
         final BigInteger secret = BigInteger.valueOf(45654L);
         Random random = new Random(1234L);
         SecretShare.SplitSecretOutput generate = secretShare.split(secret, random);
+       
+        System.out.println("TestFirst, secret=" + secret);
         System.out.println(generate.debugDump());
         
         
@@ -77,6 +81,59 @@ public class SecretShareUT
         
         subtestDuplicateSharesReconstruction(generate.getShareInfos());
     }
+
+    /**
+     * This test takes 65 to 80 seconds to run 1000 trials. 
+     */
+    public void testMassiveLoop384()
+    {
+        final int n = 9;
+        final int k = 4;
+        final BigInteger prime = SecretShare.getPrimeUsedFor384bitSecretPayload();
+        
+        SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime, "massive 384");
+        
+        SecretShare secretShare = new SecretShare(publicInfo);
+        Random random = new Random(1234L);
+        int trials = 1000;
+        for (int i = 0; i < trials; i++)
+        {
+            System.out.println("Trial#" + i);
+            BigInteger secret;
+            if (false)
+            {
+                byte[] bytes = new byte[25];
+                random.nextBytes(bytes);
+                secret = new BigInteger(bytes);
+                if (secret.signum() <= 0)
+                {
+                    secret = secret.negate();
+                }
+            }
+            else
+            {
+                //                   1         2         3         4   
+                //          1234567890123456789012345678901234567890123456
+                String s = "This is a 45 character secret string as input";
+                secret = BigIntUtilities.createFromStringsBytesAsData(s);
+            }
+            
+            if (secret.signum() <= 0)
+            {
+                Assert.fail("Secret cannot be negative");
+            }
+            SecretShare.SplitSecretOutput generate = secretShare.split(secret, random);
+       
+            System.out.println("Trial#" + i + " secret=" + secret);
+            System.out.println(generate.debugDump());
+        
+            BigInteger reconstructed = subtestReconstruction(generate.getShareInfos());
+        
+            Assert.assertEquals("Secrets do not match", secret, reconstructed);
+        }
+    }
+    
+    
     
     private void subtestDuplicateSharesReconstruction(List<SecretShare.ShareInfo> shares)
     {
@@ -122,9 +179,9 @@ public class SecretShareUT
 
     public void testBig192()
     {
-        // This one fails.  No idea why:
-        //subtestBigBig(SecretShare.getPrimeUsedFor192bitSecretPayload(),
-        //              new BigInteger("12345678998765432100112233445566778899"));
+        // This one used to fail:
+        subtestBigBig(SecretShare.getPrimeUsedFor192bitSecretPayload(),
+                      new BigInteger("12345678998765432100112233445566778899"));
         
         // add a '1' after 100 and it works:
         subtestBigBig(SecretShare.getPrimeUsedFor192bitSecretPayload(),
@@ -141,13 +198,19 @@ public class SecretShareUT
     public void subtestBigBig(final BigInteger prime,
                               final BigInteger secret)
     {
+        subtestBigBig2(null, secret);   // test with NO modulus
+        subtestBigBig2(prime, secret);  // test with modulus
+    }
+    
+    public void subtestBigBig2(final BigInteger prime,
+                               final BigInteger secret)
+    {
         final int n = 16;
         final int k = 8;
         
         System.out.println("Generating shares...");
         SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime, "test big big");
         
-        //publicInfo = new SecretShare.PublicInfo(n, k, null, "test big big null modulus");
         SecretShare secretShare = new SecretShare(publicInfo);
         Random random = new Random(1234L);
         SecretShare.SplitSecretOutput generate = secretShare.split(secret, random);

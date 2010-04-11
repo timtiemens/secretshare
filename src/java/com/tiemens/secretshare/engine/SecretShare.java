@@ -1,5 +1,6 @@
 package com.tiemens.secretshare.engine;
 
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
@@ -141,6 +142,10 @@ public class SecretShare
         {
             throw new SecretShareException("Secret cannot be null");
         }
+        if (secret.signum() <= 0)
+        {
+            throw new SecretShareException("Secret cannot be negative");
+        }
         if (publicInfo.getPrimeModulus() != null)
         {
             if (secret.compareTo(publicInfo.getPrimeModulus()) >= 0)
@@ -155,7 +160,7 @@ public class SecretShare
 
         // create the equation by setting the coefficients:
         // [a] randomize the coefficients:
-        randomizeCoeffs(coeffs, random, publicInfo.getPrimeModulus());
+        randomizeCoeffs(coeffs, random, publicInfo.getPrimeModulus(), secret);
         // [b] set the constant coefficient to the secret:
         coeffs[0] = secret;
         
@@ -214,7 +219,13 @@ public class SecretShare
         }
         EasyLinearEquation.EasySolve solve = ele.solve();
         
-        ret = new CombineOutput(solve.getAnswer(1));
+        BigInteger solveSecret = solve.getAnswer(1);
+        if (publicInfo.getPrimeModulus() != null)
+        {
+            solveSecret = solveSecret.mod(publicInfo.getPrimeModulus());
+        }
+        ret = new CombineOutput(solveSecret);
+        
         
         return ret;
     }
@@ -242,7 +253,8 @@ public class SecretShare
 
     private void randomizeCoeffs(final BigInteger[] coeffs,
                                  final Random random,
-                                 final BigInteger modulus)
+                                 final BigInteger modulus,
+                                 final BigInteger secret)
     {
         for (int i = 1, n = coeffs.length; i < n; i++)
         {
@@ -253,6 +265,10 @@ public class SecretShare
             // ENHANCEMENT: provide better control?  make it even bigger?
             // for now, we'll just do long^2:
             big = big.multiply(BigInteger.valueOf(random.nextLong()));
+            
+            // FIX? TODO:? FIX?
+            big = big.abs(); // make it positive
+            
             coeffs[i] = big;
          
             // Book says "all coefficients are smaller than the modulus"
@@ -260,6 +276,9 @@ public class SecretShare
             {
                 coeffs[i] = coeffs[i].mod(modulus);
             }
+            
+            // FIX? TODO: FIX? experiment says "all coefficients are smaller than the secret"
+            coeffs[i] = coeffs[i].mod(secret);
         }
     }
 
@@ -285,7 +304,7 @@ public class SecretShare
         // just descriptive info:
         private final String description;            // any string, including null
         private final String uuid;                   // a "Random" UUID string
-        private final String date;                   // yyyy-MM-dd hh:mm:ss string
+        private final String date;                   // yyyy-MM-dd HH:mm:ss string
         
         public PublicInfo(final int inN,
                           final int inK,
@@ -301,7 +320,7 @@ public class SecretShare
             UUID uuidobj = UUID.randomUUID();
             uuid =  uuidobj.toString();
          
-            date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             
             if (k > n)
             {
@@ -503,6 +522,13 @@ public class SecretShare
 
     public BigInteger combineParanoid(List<ShareInfo> shares)
     {
+        return combineParanoid(shares, null, System.out);
+    }
+    
+    public BigInteger combineParanoid(List<ShareInfo> shares,
+                                     Integer maximumCombinationsToTest,
+                                     PrintStream outstream)
+    {
         BigInteger answer = null;
         PublicInfo publicInfo = shares.get(0).getPublicInfo();
         
@@ -510,21 +536,58 @@ public class SecretShare
             new CombinationGenerator<ShareInfo>(shares,
                                                 publicInfo.getK());
         
+        if (outstream != null)
+        {
+            outstream.println("SecretShare.paranoid(max=" +
+                              maximumCombinationsToTest + 
+                              " combo.total=" +
+                              combo.getTotalNumberOfCombinations() +
+                              ")");
+        }
         
+        final int percentEvery = 30;  // or 10 for every 10%
         int outputEvery = 100;
-        int modCountEvery = 0;
+        if (maximumCombinationsToTest != null)
+        {
+            if (BigInteger.valueOf(maximumCombinationsToTest)
+                    .compareTo(combo.getTotalNumberOfCombinations()) > 0)
+            {
+                maximumCombinationsToTest = combo.getTotalNumberOfCombinations().intValue();
+                outputEvery = (maximumCombinationsToTest * percentEvery ) / 100 + 1;
+            }
+        }
+        else
+        {
+            outputEvery = (combo.getTotalNumberOfCombinations().intValue() * percentEvery ) / 100  + 1;
+        }
+        
+        
+//        outputEvery = 1;
+        int count = -1;
         for (List<SecretShare.ShareInfo> usetheseshares : combo)
         {
-            modCountEvery++;
-            if ((modCountEvery % outputEvery) == 0)
+            count++;
+            if (maximumCombinationsToTest != null)
             {
-                System.out.println("Combination: " + 
-                                   combo.getCurrentCombinationNumber() + 
-                                   " of " +
-                                   combo.getTotalNumberOfCombinations() +
-                                   combo.getIndexesAsString() +
-                                   dumpshares(usetheseshares));
-                modCountEvery = 0;
+                if (count > maximumCombinationsToTest)
+                {
+                    break;
+                }
+            }
+            
+            if ((count % outputEvery) == 0)
+            {
+//                count = 0;
+                
+                if (outstream != null)
+                {
+                    outstream.println("Combination: " + 
+                                      combo.getCurrentCombinationNumber() + 
+                                      " of " +
+                                      combo.getTotalNumberOfCombinations() +
+                                      combo.getIndexesAsString() +
+                                      dumpshares(usetheseshares));
+                }
             }
             
             SecretShare.CombineOutput solved = this.combine(usetheseshares);
@@ -537,7 +600,7 @@ public class SecretShare
             {
                 if (! answer.equals(solve))
                 {
-                    throw new SecretShareException("Failed on combination");
+                    throw new SecretShareException("Failed on combination, count=" + count);
                 }
             }
         }
@@ -553,6 +616,7 @@ public class SecretShare
         }
         return ret;
     }
+
 
     
     // ==================================================

@@ -331,17 +331,98 @@ public class EasyLinearEquation
             return "Trial[" + which + " result=" + result;
         }
 
+
+        /**
+         * Construct all the permutations we need.
+         */
+        public static List<Trial> createList(final BigInteger original,
+                                             final BigInteger divideby,
+                                             final BigInteger useModulus)
+        {
+            List<Trial> list =  new ArrayList<Trial>();
+
+            BigInteger o = original;
+            int c = 0;
+            Trial trial = new Trial("" + c, o, divideby);
+            list.add(trial);
+            while (! trial.correct)
+            {
+                c++;
+                if (c > 10000)
+                {
+                    break;
+                }
+                o = o.add(useModulus);
+                trial = new Trial("" + c, o, divideby);
+            }
+//            c = 0;
+//            while (! trial.correct)
+//            {
+//                c++;
+//                if (c > 10000)
+//                {
+//                    throw new SecretShareException("two loop failure");
+//                }
+//                o = o.subtract(useModulus);
+//                trial = new Trial("" + c, o, divideby);
+//            }
+            
+            list.add(trial);
+            return list;
+        }
         /**
          * Pick the "best" correct result [if any].
          * 
          */
         public static Trial pickSuccess(List<Trial> list)
         {
-            Trial ret = null;
             if (list.get(list.size() -1).correct)
             {
                 return list.get(list.size() - 1);
             }
+            else
+            {
+                throw new SecretShareException("Programmer error, list.size=" + list.size());
+            }
+        }
+
+        
+        
+        /**
+         * Original implementation.  Wrong.
+         */
+        public static List<Trial> createList2(final BigInteger original,
+                                             final BigInteger divideby,
+                                             final BigInteger useModulus)
+        {
+            List<Trial> list =  new ArrayList<Trial>();
+
+            list.add(new Trial("original", original, divideby));
+            list.add(new Trial("modoriginal", original.mod(useModulus), divideby));
+            list.add(new Trial("moddivide", original, divideby.mod(useModulus)));
+            list.add(new Trial("mod both", original.mod(useModulus), divideby.mod(useModulus)));
+
+            BigInteger gcd = original.gcd(divideby);
+            if ((gcd != null) &&
+                (gcd.compareTo(BigInteger.ONE) > 0))
+            {
+                BigInteger divO = original.divide(gcd);
+                BigInteger divD = divideby.divide(gcd);
+                list.add(new Trial("gcd original", divO, divD));
+                list.add(new Trial("gcd modoriginal", divO.mod(useModulus), divD));
+                list.add(new Trial("gcd moddivide", divO, divD.mod(useModulus)));
+                list.add(new Trial("gcd both", divO.mod(useModulus), divD.mod(useModulus)));
+            }
+            return list;
+        }
+        /**
+         * Original implementation.  Wrong.
+         * 
+         */
+        public static Trial pickSuccess2(List<Trial> list)
+        {
+            Trial ret = null;
+
             for (Trial t : list)
             {
                 if (t.correct)
@@ -366,44 +447,6 @@ public class EasyLinearEquation
             return ret;
         }
 
-        /**
-         * Construct all the permutations we need.
-         */
-        public static List<Trial> createList(final BigInteger original,
-                                             final BigInteger divideby,
-                                             final BigInteger useModulus)
-        {
-            List<Trial> list =  new ArrayList<Trial>();
-
-            BigInteger o = original;
-            int c = 0;
-            Trial trial = new Trial("" + c, o, divideby);
-            list.add(trial);
-            while (! trial.correct)
-            {
-                c++;
-                o = o.add(useModulus);
-                trial = new Trial("" + c, o, divideby);
-                list.add(trial);
-            }
-//            list.add(new Trial("original", original, divideby));
-//            list.add(new Trial("modoriginal", original.mod(useModulus), divideby));
-//            list.add(new Trial("moddivide", original, divideby.mod(useModulus)));
-//            list.add(new Trial("mod both", original.mod(useModulus), divideby.mod(useModulus)));
-
-//            BigInteger gcd = original.gcd(divideby);
-//            if ((gcd != null) &&
-//                (gcd.compareTo(BigInteger.ONE) > 0))
-//            {
-//                BigInteger divO = original.divide(gcd);
-//                BigInteger divD = divideby.divide(gcd);
-//                list.add(new Trial("gcd original", divO, divD));
-//                list.add(new Trial("gcd modoriginal", divO.mod(useModulus), divD));
-//                list.add(new Trial("gcd moddivide", divO, divD.mod(useModulus)));
-//                list.add(new Trial("gcd both", divO.mod(useModulus), divD.mod(useModulus)));
-//            }
-            return list;
-        }
     }
 
     private static class Row
@@ -489,16 +532,49 @@ public class EasyLinearEquation
             return ret;
         }
 
+        
+        /**
+         * This _should be_ the implementation.
+         * The problem is, it doesn't work.
+         * 
+         */
+        @SuppressWarnings("unused")
+        private BigInteger divideNormallyOrModulusBroken(final BigInteger original,
+                                                         final BigInteger divideby,
+                                                         final BigInteger useModulus)
+        {
+            BigInteger result = null;
+        
+            if (useModulus == null)
+            {
+                result = original.divide(divideby);
+            }
+            else
+            {
+                result = original.divide(divideby);
+
+                // do the "math check" before the modulus:
+                safetyCheckDivision(result, divideby, original);
+
+                // modfix: not proven to help reduce errors:  mod down the result
+                //result = result.mod(useModulus);
+            }
+            
+            return result;
+        }
 
         /**
          * The modulus stuff is really strange.  
          * Sometimes the divide-by just works.
          * Sometimes it is negative but "odd", and needs mod() to positive and "even".
          * Sometimes it is positive but "too big and odd" and needs mod() to a smaller "even" number.
+         * Sometimes it needs multiple-add-the-modulus, especially for small values of
+         *       the modulus versus large values of the coefficients.
          * 
-         * This routine just tries both:
+         * This routine just tries a bunch of things, including:
          *     1) original / divideby and
          *     2) (original mod useModulus) / divideby
+         *  See class Trial.
          *     
          * @param original
          * @param divideby
@@ -531,6 +607,18 @@ public class EasyLinearEquation
                 {
                     result = success.getResult();
                     result = result.mod(useModulus);
+                    //
+                    // For big (192-bit) modulus, it is almost always "0"
+                    // For small (e.g. 59561) modulus, it ranges from 0 to 20
+                    // run "UT.testFirst()"
+                    if (false)
+                    {
+                        // Debug printing
+                        if (! "0".equals(success.which))
+                        {
+                        System.out.println("Trial.sucess.which=" + success.which);
+                        }
+                    }
                 }
             }
             
@@ -538,32 +626,7 @@ public class EasyLinearEquation
             return result;
         }
 
-        private BigInteger divideNormallyOrModulus2(BigInteger original,
-                                                   BigInteger divideby,
-                                                   BigInteger useModulus)
-        {
-            BigInteger result = original.divide(divideby);
-            if (! result.multiply(divideby).equals(original))
-            {
-                final boolean tryAgainWithModulus = true;
-                
-                if (tryAgainWithModulus)
-                {
-                    if (useModulus != null)
-                    {
-                        original = original.mod(useModulus);
-                        result = original.divide(divideby);
-                    }
-                }
-                else
-                {
-                    // do not try again, thus, the safetyCheck below will fail.
-                }
-            }
-            safetyCheckDivision(result, divideby, original);
-            return result;
-        }
- 
+
         private void safetyCheckDivision(BigInteger result,
                                          BigInteger divideby,
                                          BigInteger original)
@@ -618,7 +681,6 @@ public class EasyLinearEquation
             }
             
             
-            
             boolean samesign = this.sameSign(index, otherrow);
             BigInteger mult = this.getColumn(index);
             if (samesign)
@@ -639,13 +701,19 @@ public class EasyLinearEquation
             {
                 ret = usethis.add(cancel);
                 
-//                if (useModulus != null)
-//                {
-//                    if (ret.cols[0].signum() == -1)
-//                    {
-//                        ret.cols[0] = ret.cols[0].mod(useModulus);
-//                    }
-//                }
+                if (useModulus != null)
+                {
+                    if (ret.cols[0].signum() == -1)
+                    {
+                        // modfix: not proven to reduce errors: mod down the column value
+                        //ret.cols[0] = ret.cols[0].mod(useModulus);
+                        
+                        // modfix: let's try keeping cols[0] positive:
+                        usethis = usethis.negate();
+                        cancel = cancel.negate();
+                        ret = usethis.add(cancel);
+                    }
+                }
             }
             else
             {
