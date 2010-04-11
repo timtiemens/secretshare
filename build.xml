@@ -27,11 +27,18 @@
         <!-- Create the distribution directory -->
         <mkdir dir="${dist}/lib" />
 
-        <!-- Put everything in ${classes} into the secretshare.jar file -->
+        <!-- Create the library jar, put ${classes} into the secretshare.jar file -->
         <jar jarfile="${dist}/lib/secretshare.jar" basedir="${classes}">
             <manifest>
                 <attribute name="Main-Class" value="com.tiemens.secretshare.main.cli.Main" />
             </manifest>
+        </jar>
+        
+        <!-- Create the project-source jar, put dot files and ./src secretshare-src.jar file -->
+        <jar jarfile="${dist}/lib/secretshare-src-v1.0.jar" basedir=".."
+             includes="secretshare/.project secretshare/.classpath secretshare.gitignore secretshare/src/**" 
+            >
+
         </jar>
     </target>
 

@@ -121,7 +121,6 @@ public class MainCombine
         {
             CombineInput ret = new CombineInput();
 
-            boolean calculateModulus = false;
             for (int i = 0, n = args.length; i < n; i++)
             {
                 if (args[i] == null)
@@ -138,7 +137,7 @@ public class MainCombine
                         ret.n = ret.k;
                     }
                 }
-                if ("-n".equals(args[i]))
+                else if ("-n".equals(args[i]))
                 {
                     i++;
                     ret.n = parseInt("n", args, i);
@@ -168,6 +167,16 @@ public class MainCombine
                 else if ("-primeNone".equals(args[i]))
                 {
                     ret.modulus = null;
+                }
+                else if (args[i].startsWith("-s"))
+                {
+                    String number = args[i].substring(2);
+                    i++;
+                    MainSplit.checkIndex("s", args, i);
+                    String line = "Share (x:" + number + ") = " + args[i]; 
+                    SecretShare.ShareInfo share = ret.parseEqualShare("-s", line);
+                    // TODO; better checking for duplicates
+                    ret.addIfNotDuplicate(share);
                 }
                 else if (args[i].startsWith("-"))
                 {
@@ -380,9 +389,9 @@ public class MainCombine
             //field(out, "UUID", publicInfo.getUuid());
             //field(out, "Description", publicInfo.getDescription());
             
-            out.println("secret = " + secret);
+            out.println("secret.number = '" + secret + "'");
             String s = BigIntUtilities.createStringFromBigInteger(secret);
-            out.println("secret = " + s);
+            out.println("secret.string = '" + s + "'");
 
         }
         

@@ -139,9 +139,9 @@ public class MainSplit
     }
     
     
-    private static void checkIndex(String argname,
-                                   String[] args,
-                                   int index)
+    public static void checkIndex(String argname,
+                                  String[] args,
+                                  int index)
     {
         if (index >= args.length)
         {
@@ -225,6 +225,7 @@ public class MainSplit
                 else if ("-d".equals(args[i]))
                 {
                     i++;
+                    checkIndex("d", args, i);
                     ret.description = args[i];
                 }
                 else if ("-sN".equals(args[i]))

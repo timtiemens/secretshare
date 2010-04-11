@@ -1,0 +1,9 @@
+Shamir's Secret Sharing in Java
+
+Release Notes  --  
+
+v1.0
+====
+ o Engine implemented, working with and without modulus
+ o Command-line interface implemented, both 'split' and 'combine'
+
