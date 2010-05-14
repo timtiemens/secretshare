@@ -237,7 +237,7 @@ public class MainSplit
                 {
                     i++;
                     ret.secretArgument = args[i];
-                    ret.secret = BigIntUtilities.createFromStringsBytesAsData(args[i]);
+                    ret.secret = BigIntUtilities.createFromStringBytesAsData(args[i]);
                 }
                 else if ("-r".equals(args[i]))
                 {
@@ -266,7 +266,7 @@ public class MainSplit
                 {
                     calculateModulus = false;
                     i++;
-                    ret.modulus = BigIntUtilities.createFromStringsBytesAsData(args[i]);
+                    ret.modulus = BigIntUtilities.createFromStringBytesAsData(args[i]);
                 }
 
                 else if ("-paranoid".equals(args[i]))

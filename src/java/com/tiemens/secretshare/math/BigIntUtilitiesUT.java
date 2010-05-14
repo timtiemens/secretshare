@@ -285,7 +285,7 @@ public class BigIntUtilitiesUT
     private void subtest(String in,
                          BigInteger expected)
     {
-        BigInteger actual = BigIntUtilities.createFromStringsBytesAsData(in);
+        BigInteger actual = BigIntUtilities.createFromStringBytesAsData(in);
         System.out.println("bi.actual.tohex =" + actual.toString(16));
         System.out.println("bi.actual.tobics=" + 
                            BigIntUtilities.createStringMd5CheckSumFromBigInteger(actual));

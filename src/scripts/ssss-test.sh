@@ -1,0 +1,10 @@
+#!/bin/sh
+
+java -jar secretshare.jar combine -k 3  \
+ -s3 0xfa1c3a9c6df8af0779c36de6c33f6e36e989d0e0b91309 \
+ -s5 0x4756974923c0dce0a55f4774d09ca7a4865f64f56a4eee \
+ -s2 0xfbc74a03a50e14ab406c225afb5f45c40ae11976d2b665
+
+#Share [1/3]: 3-fa1c3a9c6df8af0779c36de6c33f6e36e989d0e0b91309
+#Share [2/3]: 5-4756974923c0dce0a55f4774d09ca7a4865f64f56a4ee0
+#Share [3/3]: 2-fbc74a03a50e14ab406c225afb5f45c40ae11976d2b665

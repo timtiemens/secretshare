@@ -44,7 +44,7 @@ public class BigIntUtilities
      * @param in a string like "This is a secret" or "123FooBar"
      * @return BigInteger
      */
-    public static BigInteger createFromStringsBytesAsData(final String in)
+    public static BigInteger createFromStringBytesAsData(final String in)
     {
         BigInteger ret = null;
         byte[] b = in.getBytes();
@@ -66,7 +66,7 @@ public class BigIntUtilities
 
     
     /**
-     * @param in biginteger to convert
+     * @param in BigInteger to convert
      * @return the bigintcs:hhhhh-CCCCCC string representation
      */
     public static String createStringMd5CheckSumFromBigInteger(final BigInteger in)
@@ -77,7 +77,7 @@ public class BigIntUtilities
 
 
     /**
-     * @param value to test
+     * @param value string to test
      * @return true if this value is a big-int-checksum string (i.e. starts with "bigintcs:")
      */
     public static boolean couldCreateFromStringMd5CheckSum(String value)
@@ -104,6 +104,45 @@ public class BigIntUtilities
         Random random = new SecureRandom();
         BigInteger ret = BigInteger.probablePrime(numbits, random);
         return ret;
+    }
+
+    
+    /**
+     * @param value string to test
+     * @return true if this value is a hex-encoded string (i.e. starts with "0x")
+     */
+    public static boolean couldCreateFromHexString(String value)
+    {
+        if (value != null)
+        {
+            if (value.substring(0, 2).equalsIgnoreCase("0x"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param value string as hex-encoded number
+     * @return BigInteger
+     */
+    public static BigInteger createFromHexString(String value)
+    {
+        final int HEX_RADIX = 16;
+        if (value == null)
+        {
+            throw new SecretShareException("value cannot be null");
+        }
+        if (couldCreateFromHexString(value))
+        {
+            String after = value.substring(2);
+            return new BigInteger(after, HEX_RADIX);
+        }
+        else
+        {
+            throw new SecretShareException("value must start with '0x' (input='" + value + "')");
+        }
     }
 
 

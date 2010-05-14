@@ -132,7 +132,7 @@ public class SecretShareUT
                 //                   1         2         3         4   
                 //          1234567890123456789012345678901234567890123456
                 String s = "This is a 45 character secret string as input";
-                secret = BigIntUtilities.createFromStringsBytesAsData(s);
+                secret = BigIntUtilities.createFromStringBytesAsData(s);
             }
             
             if (secret.signum() <= 0)

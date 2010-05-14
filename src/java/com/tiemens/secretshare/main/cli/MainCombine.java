@@ -314,6 +314,10 @@ public class MainCombine
             {
                 return BigIntUtilities.createFromStringMd5CheckSum(s);
             }
+            else if (BigIntUtilities.couldCreateFromHexString(s))
+            {
+                return BigIntUtilities.createFromHexString(s);
+            }
             else
             {
                 return new BigInteger(s);
