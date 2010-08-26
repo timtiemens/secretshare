@@ -294,7 +294,7 @@ public class BasicBigIntegerChecksumUI
                 switch (target)
                 {
                     case AS_BIGINT_CS:
-                        s = BigIntUtilities.createStringMd5CheckSumFromBigInteger(value.getBigInteger());
+                        s = BigIntUtilities.Checksum.createMd5CheckSumString(value.getBigInteger());
                         outer.getModel().setValueAsBigIntCsString(s);
                         break;
                     case AS_BIG_INTEGER:
@@ -302,11 +302,11 @@ public class BasicBigIntegerChecksumUI
                         outer.getModel().setValueAsBigIntegerString(s);
                         break;
                     case AS_HEX:
-                        s = BigIntUtilities.createHexStringFromBigInteger(value.getBigInteger());
+                        s = BigIntUtilities.Hex.createHexString(value.getBigInteger());
                         outer.getModel().setValueAsHexString(s);
                         break;
                     case AS_HUMAN_STRING:
-                        s = BigIntUtilities.createStringFromBigInteger(value.getBigInteger());
+                        s = BigIntUtilities.Human.createHumanString(value.getBigInteger());
                         outer.getModel().setValueAsHumanString(s);
                         break;
                 }

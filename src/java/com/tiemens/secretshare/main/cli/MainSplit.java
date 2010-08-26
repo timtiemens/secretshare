@@ -89,11 +89,11 @@ public class MainSplit
         
         String value = args[index];
         BigInteger ret = null;
-        if (BigIntUtilities.couldCreateFromStringMd5CheckSum(value))
+        if (BigIntUtilities.Checksum.couldCreateFromStringMd5CheckSum(value))
         {
             try
             {
-                ret = BigIntUtilities.createFromStringMd5CheckSum(value);
+                ret = BigIntUtilities.Checksum.createBigInteger(value);
             }
             catch (SecretShareException e)
             {
@@ -237,7 +237,7 @@ public class MainSplit
                 {
                     i++;
                     ret.secretArgument = args[i];
-                    ret.secret = BigIntUtilities.createFromHumanStringBytes(args[i]);
+                    ret.secret = BigIntUtilities.Human.createBigInteger(args[i]);
                 }
                 else if ("-r".equals(args[i]))
                 {
@@ -266,7 +266,7 @@ public class MainSplit
                 {
                     calculateModulus = false;
                     i++;
-                    ret.modulus = BigIntUtilities.createFromHumanStringBytes(args[i]);
+                    ret.modulus = BigIntUtilities.Human.createBigInteger(args[i]);
                 }
 
                 else if ("-paranoid".equals(args[i]))
@@ -415,7 +415,7 @@ public class MainSplit
             String s;
             if (printAsBigIntCs)
             {
-                s = BigIntUtilities.createStringMd5CheckSumFromBigInteger(number);
+                s = BigIntUtilities.Checksum.createMd5CheckSumString(number);
             }
             else
             {
@@ -451,7 +451,7 @@ public class MainSplit
                 }
                 
                 field(out, label, number.toString());
-                field(out, spaces, BigIntUtilities.createStringMd5CheckSumFromBigInteger(number));
+                field(out, spaces, BigIntUtilities.Checksum.createMd5CheckSumString(number));
             }
             else
             {

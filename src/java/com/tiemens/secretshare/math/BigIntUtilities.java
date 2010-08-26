@@ -31,102 +31,161 @@ public class BigIntUtilities
     // ==================================================
     // class static data
     // ==================================================
+    private static final String UTF8 = "UTF-8";
 
 
     // ==================================================
     // class static methods
     // ==================================================
-    private static final String UTF8 = "UTF-8";
-    
-    /**
-     * Convert a "human string" into a BigInteger by using the string's
-     *   byte[] array.
-     * This is NOT the same as new BigInteger("string").
-     * 
-     * @param in a string like "This is a secret" or "123FooBar"
-     * @return BigInteger
-     */
-    public static BigInteger createFromHumanStringBytes(final String in)
+
+    public static class Human
     {
-        BigInteger ret = null;
-        try
+        /**
+         * Convert a "human string" into a BigInteger by using the string's
+         *   byte[] array.
+         * This is NOT the same as new BigInteger("string").
+         * 
+         * @param in a string like "This is a secret" or "123FooBar"
+         * @return BigInteger
+         */
+        public static BigInteger createBigInteger(final String in)
         {
-            byte[] b = in.getBytes(UTF8);
-            ret = new BigInteger(b);
-            return ret;
+            BigInteger ret = null;
+            try
+            {
+                byte[] b = in.getBytes(UTF8);
+                ret = new BigInteger(b);
+                return ret;
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                // just can't happen, but if it does...
+                e.printStackTrace();
+                return null;
+            }
         }
-        catch (UnsupportedEncodingException e)
+        
+        /**
+         * @param in the BigInteger whose bytes to use for the String
+         *      usually the output of 'createBigInteger()', above.
+         * @return String-ified BigInteger.bytes[]
+         */
+        public static String createHumanString(final BigInteger in)
         {
-            // just can't happen, but if it does...
-            e.printStackTrace();
-            return null;
+            try
+            {
+                byte[] b = in.toByteArray();
+                String s = new String(b, UTF8);
+                return s;
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                // just can't happen, but if it does...
+                e.printStackTrace();
+                return null;
+            }
         }
-    }
-    
-    /**
-     * @param in the BigInteger whose bytes to use for the String
-     * @return String-ified BigInteger.bytes[]
-     */
-    public static String createStringFromBigInteger(final BigInteger in)
+    } 
+        
+    public static class Checksum
     {
-        try
+        /**
+         * @param value string to test
+         * @return true if this value is a big-int-checksum string 
+         *              (i.e. starts with "bigintcs:")
+         *         false otherwise
+         */
+        public static boolean couldCreateFromStringMd5CheckSum(String value)
         {
-            byte[] b = in.toByteArray();
-            String s = new String(b, UTF8);
-            return s;
+            return BigIntStringChecksum.startsWithPrefix(value);
         }
-        catch (UnsupportedEncodingException e)
+
+
+        /**
+         * @param hexStringWithMd5sum the bigintcs:hhhhh-CCCCCC string representation
+         * @return the bigintstringchecksum
+         * @throws SecretShareException on error
+         */
+        public static BigIntStringChecksum createBiscs(final String hexStringWithMd5sum)
         {
-            // just can't happen, but if it does...
-            e.printStackTrace();
-            return null;
+            return BigIntStringChecksum.fromString(hexStringWithMd5sum);
+        }
+
+        /**
+         * @param hexStringWithMd5sum the bigintcs:hhhhh-CCCCCC string representation
+         * @return the biginteger
+         * @throws SecretShareException on error
+         */
+        public static BigInteger createBigInteger(final String hexStringWithMd5sum)
+        {
+            return createBiscs(hexStringWithMd5sum).asBigInteger();
+        }
+        /**
+         * @param in BigInteger to convert
+         * @return the bigintcs:hhhhh-CCCCCC string representation
+         */
+        public static String createMd5CheckSumString(final BigInteger in)
+        {
+            return BigIntStringChecksum.create(in).toString();
         }
     }
-    
 
-    
-    /**
-     * @param in BigInteger to convert
-     * @return the bigintcs:hhhhh-CCCCCC string representation
-     */
-    public static String createStringMd5CheckSumFromBigInteger(final BigInteger in)
+
+    public static class Hex
     {
-        return BigIntStringChecksum.create(in).toString();
+        /**
+         * @param value string to test
+         * @return true if this value is a hex-encoded string (i.e. starts with "0x")
+         */
+        public static boolean couldCreateFromStringHex(String value)
+        {
+            if ((value != null) && (value.length() >= 2))
+            {
+                if (value.substring(0, 2).equalsIgnoreCase("0x"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-    }
+        /**
+         * @param value string as hex-encoded number
+         * @return BigInteger
+         */
+        public static BigInteger createBigInteger(String value)
+        {
+            final int HEX_RADIX = 16;
+            if (value == null)
+            {
+                throw new SecretShareException("value cannot be null");
+            }
+            if (couldCreateFromStringHex(value))
+            {
+                String after = value.substring(2);
+                try
+                {
+                    return new BigInteger(after, HEX_RADIX);
+                }
+                catch (NumberFormatException e)
+                {
+                    throw new SecretShareException("Hex parse failed for '" + value + "'");
+                }
+            }
+            else
+            {
+                throw new SecretShareException("value must start with '0x' (input='" + value + "')");
+            }
+        }
 
-
-    /**
-     * @param value string to test
-     * @return true if this value is a big-int-checksum string (i.e. starts with "bigintcs:")
-     */
-    public static boolean couldCreateFromStringMd5CheckSum(String value)
-    {
-        return BigIntStringChecksum.startsWithPrefix(value);
-    }
-
-    /**
-     * @param hexStringWithMd5sum the bigintcs:hhhhh-CCCCCC string representation
-     * @return the bigintstringchecksum
-     * @throws SecretShareException on error
-     */
-    public static BigIntStringChecksum createBiscsFromString(final String hexStringWithMd5sum)
-    {
-        return BigIntStringChecksum.fromString(hexStringWithMd5sum);
-    }
-
-    /**
-     * @param hexStringWithMd5sum the bigintcs:hhhhh-CCCCCC string representation
-     * @return the biginteger
-     * @throws SecretShareException on error
-     */
-    public static BigInteger createFromStringMd5CheckSum(final String hexStringWithMd5sum)
-    {
-        return createBiscsFromString(hexStringWithMd5sum).asBigInteger();
-    }
-
-
-
+        public static String createHexString(BigInteger bigInteger)
+        {
+            final int HEX_RADIX = 16;
+            return "0x" + bigInteger.toString(HEX_RADIX);
+        }
+    }        
+        
+        
 
     public static BigInteger createPrimeBigger(BigInteger valueThatDeterminesNumberOfBits)
     {
@@ -135,60 +194,6 @@ public class BigIntUtilities
         BigInteger ret = BigInteger.probablePrime(numbits, random);
         return ret;
     }
-
-    
-    public static String createHexStringFromBigInteger(BigInteger bigInteger)
-    {
-        final int HEX_RADIX = 16;
-        return "0x" + bigInteger.toString(HEX_RADIX);
-    }
-
-    
-    /**
-     * @param value string to test
-     * @return true if this value is a hex-encoded string (i.e. starts with "0x")
-     */
-    public static boolean couldCreateFromHexString(String value)
-    {
-        if ((value != null) && (value.length() >= 2))
-        {
-            if (value.substring(0, 2).equalsIgnoreCase("0x"))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param value string as hex-encoded number
-     * @return BigInteger
-     */
-    public static BigInteger createFromHexString(String value)
-    {
-        final int HEX_RADIX = 16;
-        if (value == null)
-        {
-            throw new SecretShareException("value cannot be null");
-        }
-        if (couldCreateFromHexString(value))
-        {
-            String after = value.substring(2);
-            try
-            {
-                return new BigInteger(after, HEX_RADIX);
-            }
-            catch (NumberFormatException e)
-            {
-                throw new SecretShareException("Hex parse failed for '" + value + "'");
-            }
-        }
-        else
-        {
-            throw new SecretShareException("value must start with '0x' (input='" + value + "')");
-        }
-    }
-
 
 
 

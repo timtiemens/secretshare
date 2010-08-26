@@ -148,7 +148,7 @@ public class DefaultBigIntegerChecksumModel
     public void setValueAsBigIntCsString(String s)
     {
         // "check" it
-        /* BigIntStringChecksum bigintcs = */ BigIntUtilities.createBiscsFromString(s);
+        /* BigIntStringChecksum bigintcs = */ BigIntUtilities.Checksum.createBiscs(s);
         // set it
         setTextValue(s);
     }
@@ -166,7 +166,7 @@ public class DefaultBigIntegerChecksumModel
     public void setValueAsHexString(String s)
     {
         // check
-        /* BigInteger v = */ BigIntUtilities.createFromHexString(s);
+        /* BigInteger v = */ BigIntUtilities.Hex.createBigInteger(s);
         // set
         setTextValue(s);
     }
@@ -175,7 +175,7 @@ public class DefaultBigIntegerChecksumModel
     public void setValueAsHumanString(String s)
     {
         // check
-        /* BigInteger v = */ BigIntUtilities.createFromHumanStringBytes(s);
+        /* BigInteger v = */ BigIntUtilities.Human.createBigInteger(s);
         // set
         setTextValue(s);
     }

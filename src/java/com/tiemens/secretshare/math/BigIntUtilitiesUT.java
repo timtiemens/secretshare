@@ -109,7 +109,7 @@ public class BigIntUtilitiesUT
         //  "probablePrime(192-bits)"
         BigInteger p192bits = 
             new BigInteger("4482452815678181799315042254392791676748504508225749365861");
-        String cs = BigIntUtilities.createStringMd5CheckSumFromBigInteger(p192bits);
+        String cs = BigIntUtilities.Checksum.createMd5CheckSumString(p192bits);
         String csexpected = /*"42" + */ "1CB9AC";
         String expected =
             BigIntStringChecksum.PREFIX_BIGINT_DASH_CHECKSUM +
@@ -122,7 +122,7 @@ public class BigIntUtilitiesUT
         // This big integer was created with probablePrime(194-bits)
         BigInteger p194bits = 
             new BigInteger("14976407493557531125525728362448106789840013430353915016137");
-        cs = BigIntUtilities.createStringMd5CheckSumFromBigInteger(p194bits);
+        cs = BigIntUtilities.Checksum.createMd5CheckSumString(p194bits);
         expected = 
             "bigintcs:000002-62c8fd-6ec81b-3c0584-136789-80ad34-9269af-da237f-8ff3c9-12BCCD";
         Assert.assertEquals("expected='" + expected + "' actual='" + cs + "'", 
@@ -144,7 +144,7 @@ public class BigIntUtilitiesUT
                                              "378437007763661599988974204336" +
                                              "741171904442622602400099072063" +
                                              "84693584652377753448639527");
-        cs = BigIntUtilities.createStringMd5CheckSumFromBigInteger(p386bits);
+        cs = BigIntUtilities.Checksum.createMd5CheckSumString(p386bits);
         System.out.println("p386=" + p386bits);
         System.out.println("p386=" + cs);
         expected = 
@@ -169,8 +169,8 @@ public class BigIntUtilitiesUT
         for (int i = 0; i < n; i++)
         {
             BigInteger bi = BigInteger.probablePrime(100, random);
-            String bics = BigIntUtilities.createStringMd5CheckSumFromBigInteger(bi);
-            BigInteger read = BigIntUtilities.createFromStringMd5CheckSum(bics);
+            String bics = BigIntUtilities.Checksum.createMd5CheckSumString(bi);
+            BigInteger read = BigIntUtilities.Checksum.createBigInteger(bics);
             Assert.assertEquals(bi, read);
             
         }
@@ -178,21 +178,21 @@ public class BigIntUtilitiesUT
         for (int i = -500; i < 5000; i++)
         {
             BigInteger bi = BigInteger.valueOf(i);
-            String bics = BigIntUtilities.createStringMd5CheckSumFromBigInteger(bi);
-            BigInteger read = BigIntUtilities.createFromStringMd5CheckSum(bics);
+            String bics = BigIntUtilities.Checksum.createMd5CheckSumString(bi);
+            BigInteger read = BigIntUtilities.Checksum.createBigInteger(bics);
             Assert.assertEquals(bi, read);
         }
         
         for (int c = 0, i = -123456789; c < 10; c++, i--)
         {
             BigInteger bi = BigInteger.valueOf(i);
-            String bics = BigIntUtilities.createStringMd5CheckSumFromBigInteger(bi);
+            String bics = BigIntUtilities.Checksum.createMd5CheckSumString(bi);
             // make sure it is "big enough" to get into 2nd "bucket"
             // i.e. "bigintcs:-123456-123456-ABCDEF"  is good enough for test
             //      "bigintcs:-789ABC-ABCDEF"         is not a good enough test
             Assert.assertTrue("size is wrong", bics.length() > 24);
             
-            BigInteger read = BigIntUtilities.createFromStringMd5CheckSum(bics);
+            BigInteger read = BigIntUtilities.Checksum.createBigInteger(bics);
             Assert.assertEquals("big negative failed, i=" + i,
                                 bi, read);            
         }
@@ -207,7 +207,7 @@ public class BigIntUtilitiesUT
         System.out.println("ProbablePrime(" + bits + ")=" + bi);
         System.out.println("                  =" + bi.toString(16));
         System.out.println("                  =" + 
-                           BigIntUtilities.createStringMd5CheckSumFromBigInteger(bi));
+                           BigIntUtilities.Checksum.createMd5CheckSumString(bi));
         System.out.println("  bitlength=" + bi.bitLength());
         System.out.println("  bitcount =" + bi.bitCount());
         final int certainty = Integer.MAX_VALUE; //10000000;
@@ -285,10 +285,10 @@ public class BigIntUtilitiesUT
     private void subtest(String in,
                          BigInteger expected)
     {
-        BigInteger actual = BigIntUtilities.createFromHumanStringBytes(in);
+        BigInteger actual = BigIntUtilities.Human.createBigInteger(in);
         System.out.println("bi.actual.tohex =" + actual.toString(16));
         System.out.println("bi.actual.tobics=" + 
-                           BigIntUtilities.createStringMd5CheckSumFromBigInteger(actual));
+                           BigIntUtilities.Checksum.createMd5CheckSumString(actual));
         Assert.assertEquals("test s=" + in, expected, actual);
     }
     

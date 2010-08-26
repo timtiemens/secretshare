@@ -310,13 +310,13 @@ public class MainCombine
                                             String line)
         {
             String s = after(line, "=");
-            if (BigIntUtilities.couldCreateFromStringMd5CheckSum(s))
+            if (BigIntUtilities.Checksum.couldCreateFromStringMd5CheckSum(s))
             {
-                return BigIntUtilities.createFromStringMd5CheckSum(s);
+                return BigIntUtilities.Checksum.createBigInteger(s);
             }
-            else if (BigIntUtilities.couldCreateFromHexString(s))
+            else if (BigIntUtilities.Hex.couldCreateFromStringHex(s))
             {
-                return BigIntUtilities.createFromHexString(s);
+                return BigIntUtilities.Hex.createBigInteger(s);
             }
             else
             {
@@ -394,7 +394,7 @@ public class MainCombine
             //field(out, "Description", publicInfo.getDescription());
             
             out.println("secret.number = '" + secret + "'");
-            String s = BigIntUtilities.createStringFromBigInteger(secret);
+            String s = BigIntUtilities.Human.createHumanString(secret);
             out.println("secret.string = '" + s + "'");
 
         }

@@ -83,12 +83,12 @@ public interface BigIntegerChecksumModel
                                    boolean allowHumanString)
         {
             Value ret = null;
-            if (BigIntUtilities.couldCreateFromStringMd5CheckSum(s))
+            if (BigIntUtilities.Checksum.couldCreateFromStringMd5CheckSum(s))
             {
                 System.out.println("Attempting bigintcs on '" + s + "'");
                 try
                 {
-                    BigIntStringChecksum v = BigIntUtilities.createBiscsFromString(s);
+                    BigIntStringChecksum v = BigIntUtilities.Checksum.createBiscs(s);
                     ret = new Value.ValueAsBigIntStringChecksum(v);
                 }
                 catch (SecretShareException e)
@@ -96,12 +96,12 @@ public interface BigIntegerChecksumModel
                     ret = null;
                 }
             }
-            else if (BigIntUtilities.couldCreateFromHexString(s))
+            else if (BigIntUtilities.Hex.couldCreateFromStringHex(s))
             {
                 System.out.println("Attempting hex on '" + s + "'");
                 try
                 {
-                    BigInteger v = BigIntUtilities.createFromHexString(s);
+                    BigInteger v = BigIntUtilities.Hex.createBigInteger(s);
                     ret = new Value.ValueAsHexString(v);
                 }
                 catch (SecretShareException e)
@@ -122,7 +122,7 @@ public interface BigIntegerChecksumModel
                     if (allowHumanString && s.length() > 0)
                     {
                         System.out.println("Attempting humanstring on '" + s + "'");
-                        BigInteger v = BigIntUtilities.createFromHumanStringBytes(s);
+                        BigInteger v = BigIntUtilities.Human.createBigInteger(s);
                         ret = new Value.ValueAsHumanString(v);
                     }
                     else
