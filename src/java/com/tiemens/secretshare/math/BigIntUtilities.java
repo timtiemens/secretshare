@@ -17,6 +17,7 @@
  ******************************************************************************/
 package com.tiemens.secretshare.math;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -35,7 +36,8 @@ public class BigIntUtilities
     // ==================================================
     // class static methods
     // ==================================================
-
+    private static final String UTF8 = "UTF-8";
+    
     /**
      * Convert a "human string" into a BigInteger by using the string's
      *   byte[] array.
@@ -44,12 +46,21 @@ public class BigIntUtilities
      * @param in a string like "This is a secret" or "123FooBar"
      * @return BigInteger
      */
-    public static BigInteger createFromStringBytesAsData(final String in)
+    public static BigInteger createFromHumanStringBytes(final String in)
     {
         BigInteger ret = null;
-        byte[] b = in.getBytes();
-        ret = new BigInteger(b);
-        return ret;
+        try
+        {
+            byte[] b = in.getBytes(UTF8);
+            ret = new BigInteger(b);
+            return ret;
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            // just can't happen, but if it does...
+            e.printStackTrace();
+            return null;
+        }
     }
     
     /**
@@ -58,9 +69,18 @@ public class BigIntUtilities
      */
     public static String createStringFromBigInteger(final BigInteger in)
     {
-       byte[] b = in.toByteArray();
-       String s = new String(b);
-       return s;
+        try
+        {
+            byte[] b = in.toByteArray();
+            String s = new String(b, UTF8);
+            return s;
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            // just can't happen, but if it does...
+            e.printStackTrace();
+            return null;
+        }
     }
     
 
@@ -87,23 +107,40 @@ public class BigIntUtilities
 
     /**
      * @param hexStringWithMd5sum the bigintcs:hhhhh-CCCCCC string representation
+     * @return the bigintstringchecksum
+     * @throws SecretShareException on error
+     */
+    public static BigIntStringChecksum createBiscsFromString(final String hexStringWithMd5sum)
+    {
+        return BigIntStringChecksum.fromString(hexStringWithMd5sum);
+    }
+
+    /**
+     * @param hexStringWithMd5sum the bigintcs:hhhhh-CCCCCC string representation
      * @return the biginteger
      * @throws SecretShareException on error
      */
     public static BigInteger createFromStringMd5CheckSum(final String hexStringWithMd5sum)
     {
-        return BigIntStringChecksum.fromString(hexStringWithMd5sum).asBigInteger();
+        return createBiscsFromString(hexStringWithMd5sum).asBigInteger();
     }
 
 
 
 
-    public static BigInteger createPrimeBigger(BigInteger secret)
+    public static BigInteger createPrimeBigger(BigInteger valueThatDeterminesNumberOfBits)
     {
-        int numbits = secret.bitLength() + 1;
+        int numbits = valueThatDeterminesNumberOfBits.bitLength() + 1;
         Random random = new SecureRandom();
         BigInteger ret = BigInteger.probablePrime(numbits, random);
         return ret;
+    }
+
+    
+    public static String createHexStringFromBigInteger(BigInteger bigInteger)
+    {
+        final int HEX_RADIX = 16;
+        return "0x" + bigInteger.toString(HEX_RADIX);
     }
 
     
@@ -113,7 +150,7 @@ public class BigIntUtilities
      */
     public static boolean couldCreateFromHexString(String value)
     {
-        if (value != null)
+        if ((value != null) && (value.length() >= 2))
         {
             if (value.substring(0, 2).equalsIgnoreCase("0x"))
             {
@@ -137,13 +174,21 @@ public class BigIntUtilities
         if (couldCreateFromHexString(value))
         {
             String after = value.substring(2);
-            return new BigInteger(after, HEX_RADIX);
+            try
+            {
+                return new BigInteger(after, HEX_RADIX);
+            }
+            catch (NumberFormatException e)
+            {
+                throw new SecretShareException("Hex parse failed for '" + value + "'");
+            }
         }
         else
         {
             throw new SecretShareException("value must start with '0x' (input='" + value + "')");
         }
     }
+
 
 
 

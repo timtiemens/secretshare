@@ -37,13 +37,16 @@ package com.tiemens.secretshare.main.gui;
  */
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import net.miginfocom.swing.MigLayout;
+
+import com.tiemens.secretshare.main.gui.bigintegerchecksum.BigIntegerChecksumModel;
+import com.tiemens.secretshare.main.gui.bigintegerchecksum.DefaultBigIntegerChecksumModel;
 import com.tiemens.secretshare.main.gui.bigintegerchecksum.JBigIntegerChecksum;
 
 public class SecretSharePanel 
@@ -107,19 +110,36 @@ public class SecretSharePanel
         //bigintField.setActionCommand(SECRET_NUMBER_COMMAND);
         //bigintField.addActionListener(this);
         
+        BigIntegerChecksumModel nohuman = new DefaultBigIntegerChecksumModel(false);
+        JBigIntegerChecksum bignohuman = 
+            new JBigIntegerChecksum(nohuman); 
+        
         //Lay everything out.
 //        treePanel.setPreferredSize(new Dimension(300, 150));
 //        add(treePanel, BorderLayout.CENTER);
 
-        JPanel panel = new JPanel(new GridLayout(0,2));
-        panel.add(secretStringTextField);
-        panel.add(secretNumberTextField); 
-        panel.add(bigintField);
-        add(panel, BorderLayout.EAST);
+        MigLayout layout = new MigLayout(
+                                         //  layout constraints
+                                         "",  // "debug 3",
+                                         //new LC(),
+                                         //  column constraints
+                                         "[grow, left]",
+                                         //new AC().size("80:100:100").gap("").size("200"),
+                                         // row constraints
+                                         "" 
+                                         // new AC().size("min!")
+        );
+        this.setLayout(layout);
+        
+        this.add(secretStringTextField, "growx, wrap");
+        this.add(secretNumberTextField, "wrap"); 
+        this.add(bigintField, "grow, wrap");
+        this.add(bignohuman, "grow, wrap");
+        
         
         DynamicTreePanel dtp = new DynamicTreePanel(guiFactory);
         dtp.createGUI();
-        add(dtp, BorderLayout.SOUTH);
+        this.add(dtp, "wrap");
     }
 
     private static int actionperformedcount = 0; 

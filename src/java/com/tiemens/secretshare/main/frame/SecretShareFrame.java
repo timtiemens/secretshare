@@ -2,7 +2,6 @@ package com.tiemens.secretshare.main.frame;
 
 import javax.swing.JFrame;
 
-import com.tiemens.secretshare.main.gui.DynamicTreePanel;
 import com.tiemens.secretshare.main.gui.GuiFactory;
 import com.tiemens.secretshare.main.gui.SecretSharePanel;
 

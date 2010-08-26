@@ -1,6 +1,7 @@
 package com.tiemens.secretshare.main.gui.bigintegerchecksum;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
@@ -12,7 +13,7 @@ import com.tiemens.secretshare.main.gui.bigintegerchecksum.ui.BigIntegerChecksum
  * @author Tim Tiemens
  */
 public class JBigIntegerChecksum 
-    extends JComponent 
+    extends JComponent // JPanel // JComponent 
 {
     // ==================================================
     // class static data
@@ -47,10 +48,18 @@ public class JBigIntegerChecksum
                IllegalArgumentException 
     {
 
-        this.model = new DefaultBigIntegerChecksumModel();
-//        this.model.setRanges(ranges);
+        this(new DefaultBigIntegerChecksumModel());
+    }
+    
+    public JBigIntegerChecksum(BigIntegerChecksumModel model)
+        throws NullPointerException,
+               IllegalArgumentException 
+    {
 
-//        this.controlPointIcons = new Icon[controlPointIcons.length];
+        this.model = model;
+        //    this.model.setRanges(ranges);
+
+        //    this.controlPointIcons = new Icon[controlPointIcons.length];
 
         this.updateUI();
     }

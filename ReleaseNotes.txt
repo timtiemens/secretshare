@@ -2,6 +2,10 @@ Shamir's Secret Sharing in Java
 
 Release Notes  --  
 
+v1.1
+====
+ o Added applet and Swing command-line front-ends
+
 v1.0
 ====
  o Engine implemented, working with and without modulus
