@@ -20,7 +20,11 @@ package com.tiemens.secretshare.math;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import com.tiemens.secretshare.exceptions.SecretShareException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -241,24 +245,7 @@ public class BigIntUtilitiesUT
             System.out.println("Iterations, time elapsed=" + (stop - start));
         }
     }
-    public void testModExample()
-    {
-        BigInteger original = new BigInteger("14976407493557530648572935587878871741988301238449789883337");
-        BigInteger divideby = new BigInteger("1658880");
-        BigInteger modulus =  new BigInteger("14976407493557531125525728362448106789840013430353915016137");
-        BigInteger expected = new BigInteger("14976407493557531125525440847502616718686555765114601802327");
-        
-        
-        BigInteger modorig = original.multiply(modulus);
-        BigInteger result = modorig.divide(divideby);
-        result = result.mod(modulus);
-        
-        BigInteger remainder = modorig.subtract(result.multiply(divideby));
-        
-        System.out.println("Expected = " + expected);
-        System.out.println("Actual   = " + result);
-        Assert.assertEquals("Foo, remainder=" + remainder, expected, result);
-    }
+
     public void testBigMultiply()
     {
         Random rand = new SecureRandom();
@@ -278,15 +265,81 @@ public class BigIntUtilitiesUT
         Assert.assertEquals(multex, one.multiply(two));
         
     }
+    private static final int HEX_RADIX = 16;
+    
+    
+    /**
+     * The goal of this test was to find some illegal "biginteger" values,
+     *  which would just be illegal "byte[]" values,
+     *  where "illegal" meant "not following the UTF-8 encoding standard".
+     * It turns out not to be easy to find these "illegal values".
+     *  
+     * @throws Exception
+     */
+    public void testIllegalUTF8()
+        throws Exception
+    {
+        // first test: old Java bugs say this did not run at one time,
+        //             due to "Invalid UTF8 in string constant pool" in .class file
+        String compile = "\u0000\u007F\u0080\u00FF\u0100\u017F\u0180\u024F" +
+                         "\u0250\u02AF\u02B0\u02FF\u0300\u036F\u0370\u03FF" +
+                         "\u0400\u04FF\u0530\u058F\u0590\u05FF\u0600\u06FF" +
+                         "\u0700\u074F\u0780\u07BF";
+        System.out.println("compile='" + compile + "'");
+        
+        // another test: also used to throw runtime exception in old JVMs: 
+        String c2 = "\u0700";
+        System.out.println("c2='" + c2 + "'");
+        
+        subTestIllegalUtf8("this is <null> encoded too long", "C080", "49280", false);
+        subTestIllegalUtf8("this is 'Tim'", "54696d", "5532013", true);
+        subTestIllegalUtf8("this is <null>", "00", "0", true);
+        subTestIllegalUtf8("another C0 illegal", "C0C1C0", "12632512", false);
+        subTestIllegalUtf8("completely too short", "C1", "192", false);
+    }
+    private void subTestIllegalUtf8(String description,
+                                    String asHex,
+                                    String asBigInteger,
+                                    boolean shouldsucceed)
+        throws Exception
+    {
+        final String UTF8 = "UTF8";
+        byte[] hexbytes = HexByteUtilities.hexToBytes(asHex);
+        String fromHex = new String(hexbytes, UTF8);
+        BigInteger biginteger = new BigInteger(asBigInteger);
+        String fromBigInteger = BigIntUtilities.Human.createHumanString(biginteger);
+        System.out.println("fromHex(" + asHex + "):  hex=" +
+                           HexByteUtilities.printAsHex(fromHex.getBytes(UTF8)) +
+                           " orighex='" + HexByteUtilities.printAsHex(hexbytes) + "'");
+        System.out.println("  (messed up) String='" + fromHex + "'");
+        System.out.println("fromBin(" + asBigInteger + "):  hex=" +
+                           HexByteUtilities.printAsHex(fromBigInteger.getBytes(UTF8)) +
+                           " biginteger=" + biginteger);
+        System.out.println("  (messed up) String='" + fromBigInteger + "'");
+        if (shouldsucceed)
+        {
+            Assert.assertEquals(description, fromHex, fromBigInteger);
+            
+        }
+        else
+        {
+            if (fromHex.equals(fromBigInteger))
+            {
+                Assert.fail("Should fail (" + description  +
+                            ")  but didn't on " + fromHex + ", " + fromBigInteger);
+            }     
+        }
+    }
     // ==================================================
     // non public methods
     // ==================================================
+
 
     private void subtest(String in,
                          BigInteger expected)
     {
         BigInteger actual = BigIntUtilities.Human.createBigInteger(in);
-        System.out.println("bi.actual.tohex =" + actual.toString(16));
+        System.out.println("bi.actual.tohex =" + actual.toString(HEX_RADIX));
         System.out.println("bi.actual.tobics=" + 
                            BigIntUtilities.Checksum.createMd5CheckSumString(actual));
         Assert.assertEquals("test s=" + in, expected, actual);

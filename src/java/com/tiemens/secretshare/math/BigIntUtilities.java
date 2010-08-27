@@ -38,15 +38,22 @@ public class BigIntUtilities
     // class static methods
     // ==================================================
 
+    /**
+     * Converter class   : "Human"
+     * Input format      : Any (human readable) string
+     * Example input     : "This is my cat"
+     *  gives BigInteger : 1711994770713785234966317640147316
+     */
     public static class Human
     {
         /**
          * Convert a "human string" into a BigInteger by using the string's
          *   byte[] array.
-         * This is NOT the same as new BigInteger("string").
+         * This is NOT EVEN CLOSE to the same as new BigInteger("string").
          * 
-         * @param in a string like "This is a secret" or "123FooBar"
+         * @param in a string like "This is my cat" or "123FooBar"
          * @return BigInteger
+         * @throws SecretShareException on error
          */
         public static BigInteger createBigInteger(final String in)
         {
@@ -59,9 +66,8 @@ public class BigIntUtilities
             }
             catch (UnsupportedEncodingException e)
             {
-                // just can't happen, but if it does...
-                e.printStackTrace();
-                return null;
+                // just can't happen, but if it does:
+                throw new SecretShareException("UTF8 not found", e);
             }
         }
         
@@ -69,6 +75,7 @@ public class BigIntUtilities
          * @param in the BigInteger whose bytes to use for the String
          *      usually the output of 'createBigInteger()', above.
          * @return String-ified BigInteger.bytes[]
+         * @throws SecretShareException on error
          */
         public static String createHumanString(final BigInteger in)
         {
@@ -81,12 +88,17 @@ public class BigIntUtilities
             catch (UnsupportedEncodingException e)
             {
                 // just can't happen, but if it does...
-                e.printStackTrace();
-                return null;
+                throw new SecretShareException("UTF8 not found", e);
             }
         }
     } 
-        
+       
+    /**
+     * Converter class   : "Bigint Checksum"
+     * Input format      : String that starts with "bigintcs:", contains Hex groups
+     * Example input     : bigintcs:005468-697320-697320-6d7920-636174-D23FBD
+     *  gives BigInteger : 1711994770713785234966317640147316
+     */
     public static class Checksum
     {
         /**
@@ -99,7 +111,6 @@ public class BigIntUtilities
         {
             return BigIntStringChecksum.startsWithPrefix(value);
         }
-
 
         /**
          * @param hexStringWithMd5sum the bigintcs:hhhhh-CCCCCC string representation
@@ -130,7 +141,12 @@ public class BigIntUtilities
         }
     }
 
-
+    /**
+     * Converter class   : "Hex"
+     * Input format      : String that starts with "0x", contains 0-9A-Fa-f only
+     * Example input     : 0x54686973206973206d7920636174 
+     *  gives BigInteger : 1711994770713785234966317640147316
+     */
     public static class Hex
     {
         /**
@@ -152,6 +168,7 @@ public class BigIntUtilities
         /**
          * @param value string as hex-encoded number
          * @return BigInteger
+         * @throws SecretShareException on error
          */
         public static BigInteger createBigInteger(String value)
         {
@@ -178,9 +195,18 @@ public class BigIntUtilities
             }
         }
 
+        /**
+         * @param bigInteger as input
+         * @return "0x" + [hex-value-of-big-integer-input]
+         * @throws SecretShareException on error
+         */
         public static String createHexString(BigInteger bigInteger)
         {
             final int HEX_RADIX = 16;
+            if (bigInteger == null)
+            {
+                throw new SecretShareException("input cannot be null");
+            }
             return "0x" + bigInteger.toString(HEX_RADIX);
         }
     }        

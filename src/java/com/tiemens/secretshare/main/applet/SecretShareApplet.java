@@ -33,9 +33,9 @@ package com.tiemens.secretshare.main.applet;
 import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 
-import com.tiemens.secretshare.main.gui.DynamicTreePanel;
-import com.tiemens.secretshare.main.gui.GuiFactory;
-import com.tiemens.secretshare.main.gui.SecretSharePanel;
+import com.tiemens.secretshare.gui.DynamicTreePanel;
+import com.tiemens.secretshare.gui.GuiFactory;
+import com.tiemens.secretshare.gui.SecretSharePanel;
 
 public class SecretShareApplet 
     extends JApplet 
