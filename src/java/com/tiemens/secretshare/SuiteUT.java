@@ -27,6 +27,7 @@ import com.tiemens.secretshare.math.EasyLinearEquationUT;
 import com.tiemens.secretshare.math.PolyEquationImplUT;
 
 public class SuiteUT
+    extends TestSuite
 {
     // ==================================================
     // class static data
@@ -35,6 +36,10 @@ public class SuiteUT
     // ==================================================
     // class static methods
     // ==================================================
+    public static Test suite()
+    {
+        return createSuite();
+    }
     public static Test createSuite()
     {
         TestSuite ret =
