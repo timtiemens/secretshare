@@ -20,11 +20,7 @@ package com.tiemens.secretshare.math;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-
-import com.tiemens.secretshare.exceptions.SecretShareException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

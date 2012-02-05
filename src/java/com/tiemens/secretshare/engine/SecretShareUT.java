@@ -18,7 +18,6 @@
 package com.tiemens.secretshare.engine;
 
 import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,8 +27,8 @@ import junit.framework.TestCase;
 
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.exceptions.SecretShareException;
+import com.tiemens.secretshare.math.BigIntStringChecksum;
 import com.tiemens.secretshare.math.BigIntUtilities;
-import com.tiemens.secretshare.math.BigIntUtilitiesUT;
 import com.tiemens.secretshare.math.EasyLinearEquationUT;
 
 public class SecretShareUT
@@ -104,9 +103,22 @@ public class SecretShareUT
      */
     public void testMassiveLoop384()
     {
+        subtestMassiveLoop(SecretShare.getPrimeUsedFor384bitSecretPayload());
+    }
+
+    /**
+     * This test takes 65 to 80 seconds to run 1000 trials. 
+     */
+    public void testMassiveLoop4096()
+    {
+        subtestMassiveLoop(SecretShare.getPrimeUsedFor4096bigSecretPayload());
+    }
+
+    
+    private void subtestMassiveLoop(final BigInteger prime)
+    {
         final int n = 9;
         final int k = 4;
-        final BigInteger prime = SecretShare.getPrimeUsedFor384bitSecretPayload();
         
         SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime, "massive 384");
         
@@ -297,6 +309,62 @@ public class SecretShareUT
     }
         
 
+    public void testUntilItFails()
+    {
+        subtestUntilItFails("192", 192, SecretShare.getPrimeUsedFor192bitSecretPayload());
+        subtestUntilItFails("384", 384, SecretShare.getPrimeUsedFor384bitSecretPayload());
+        subtestUntilItFails("4096", 4096, SecretShare.getPrimeUsedFor4096bigSecretPayload());
+    }
+    
+    
+    private void subtestUntilItFails(String which, final int maxbits, BigInteger modulus)
+    {
+        int startNumBits = modulus.bitLength() - 15;
+        boolean ok = false;
+        for (int bits = startNumBits; bits <= maxbits ; bits++)
+        {
+            for (int round = 0; round < 300; round++)
+            {
+                ok = subtestThisModulusThisSizeSecret(modulus, bits, round);
+                if (! ok)
+                {
+                    System.out.println(which + " failed at secret size bits=" + bits);
+                    Assert.fail("just too much output");
+                    break;
+                }
+            }
+        }
+        if (ok)
+        {
+            System.out.println(which + " worked for everything up to bits=" + maxbits);
+        }
+    }
+
+    private boolean subtestThisModulusThisSizeSecret(final BigInteger prime,
+                                                     final int bits,
+                                                     final int round)
+    {
+        Random random;
+        random = new Random(1234L);
+        BigInteger base =     BigInteger.valueOf(2L).pow(bits);
+        BigInteger addto =    BigInteger.probablePrime(155, new Random());
+        BigInteger evenmore = BigInteger.probablePrime(100, new Random()).multiply(BigInteger.valueOf(round));
+        BigInteger secret = base.add(addto.add(evenmore));
+        
+        final int n = 6;
+        final int k = 6;
+
+        SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime, "run until fail test");
+        SecretShare secretShare = new SecretShare(publicInfo);
+
+        random = new Random(1234L);
+        SecretShare.SplitSecretOutput generate = secretShare.split(secret, random);
+       
+        BigInteger reconstructed = subtestReconstruction(generate.getShareInfos());
+        
+        return secret.equals(reconstructed);
+    }
+
     private void enableAllLogging()
     {
         EasyLinearEquationUT.enableLogging();
@@ -307,6 +375,15 @@ public class SecretShareUT
         
     }
  
+    public void testPrint4096bigint()
+    {
+        BigInteger b;
+        //b = BigInteger.valueOf(2L).pow(4100).nextProbablePrime();
+        b = SecretShare.getPrimeUsedFor4096bigSecretPayload();
+        System.out.println(b);
+        String bics = BigIntStringChecksum.create(b).toString();
+        System.out.println(bics);
+    }
     // ==================================================
     // non public methods
     // ==================================================

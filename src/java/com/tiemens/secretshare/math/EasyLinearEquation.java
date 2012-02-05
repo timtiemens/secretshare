@@ -20,6 +20,7 @@ package com.tiemens.secretshare.math;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
@@ -67,6 +68,7 @@ public class EasyLinearEquation
     // ==================================================
     // class static data
     // ==================================================
+    // want to turn on debug?  See EasyLinearEquationUT.enableLogging()
     public static Logger logger = Logger.getLogger(EasyLinearEquation.class.getName());
     
     // ==================================================
@@ -223,7 +225,7 @@ public class EasyLinearEquation
         
         List<Row> solverows = new ArrayList<Row>();
         solverows.addAll(rows);
-        debugRows("Initial rows", solverows);
+        debugRows("Initial rows", solverows, modulus);
         for (int workrowindex = 0, maxindex = solverows.size(); workrowindex < maxindex; workrowindex++)
         {
             Row otherrow = solverows.get(workrowindex);
@@ -236,9 +238,9 @@ public class EasyLinearEquation
                                                                       modulus);
                 solverows.set(fixindex, cancelrowr);
             }
-            debugRows("after workrowindex=" + workrowindex + " finished", solverows);
+            debugRows("after workrowindex=" + workrowindex + " finished", solverows, modulus);
         }
-        debugRows("after all loops", solverows);
+        debugRows("after all loops", solverows, modulus);
         //
         // the matrix should look like this now:
         //
@@ -263,7 +265,7 @@ public class EasyLinearEquation
                                                                       modulus);
                 solverows.set(fixindex, cancelrowr);
             }
-            debugRows("After reverse loopindex=" + workrowindex + " finished", solverows);
+            debugRows("After reverse loopindex=" + workrowindex + " finished", solverows, modulus);
         }
         //
         // the matrix should look like this now:
@@ -281,12 +283,17 @@ public class EasyLinearEquation
         return ret;
     }
     private void debugRows(String where,
-                           List<Row> solverows)
+                           List<Row> solverows,
+                           BigInteger modulus)
     {
-        logger.fine(where);
-        for (Row row : solverows)
+        // want to turn on debug?  See EasyLinearEquationUT.enableLogging()
+        if (logger.isLoggable(Level.FINE))
         {
-            logger.fine(row.debugRow());
+            logger.fine(where + " (modulus=" + modulus + ")");
+            for (Row row : solverows)
+            {
+                logger.fine(row.debugRow());
+            }
         }
     }
     // ==================================================
@@ -362,15 +369,26 @@ public class EasyLinearEquation
             int c = 0;
             Trial trial = new Trial("" + c, o, divideby);
             list.add(trial);
+            boolean somethingBroke = false;
             while (! trial.correct)
             {
                 c++;
                 if (c > 10000)
                 {
+                    somethingBroke = true;
                     break;
                 }
                 o = o.add(useModulus);
                 trial = new Trial("" + c, o, divideby);
+            }
+            if (somethingBroke)
+            {
+                System.out.format("ERROR\noriginal %80s\n" +
+                                        "dividedby %80s\n" +
+                                        "modulus   %80s\n",
+                                        original,
+                                        divideby,
+                                        useModulus);
             }
 //            c = 0;
 //            while (! trial.correct)
@@ -393,13 +411,21 @@ public class EasyLinearEquation
          */
         public static Trial pickSuccess(List<Trial> list)
         {
-            if (list.get(list.size() -1).correct)
+            if (list.get(list.size() - 1).correct)
             {
                 return list.get(list.size() - 1);
             }
             else
             {
-                throw new SecretShareException("Programmer error, list.size=" + list.size());
+                System.out.println("WARN: trial[0] did not succeed.");
+                for (Trial ret : list)
+                {
+                    if (ret.correct)
+                    {
+                        return ret;
+                    }
+                }
+                throw new SecretShareException("Programmer error, no trial correct, list.size=" + list.size());
             }
         }
 
@@ -522,7 +548,7 @@ public class EasyLinearEquation
             // This is kind of like 'row.divideby()', except:
             // a) we know only 2 cols[] are non-zero
             // b) we absolutely need to make sure the result does not have a remainder,
-            //    which means we have to "known" about the modulus sometimes
+            //    which means we have to "know" about the modulus sometimes
             //
             for (int col = 0, n = ret.cols.length; col < n; col++)
             {

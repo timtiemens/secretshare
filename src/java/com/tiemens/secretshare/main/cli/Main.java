@@ -33,7 +33,7 @@ public class Main
      */
     public static String getVersionString()
     {
-        return "1.0";
+        return "1.1";
     }
 
     
@@ -63,7 +63,8 @@ public class Main
             }
             else
             {
-                System.out.println("Error: could not understand argument '" + cmd + "'");
+                System.out.println("Error: could not understand argument '" + cmd + "' - it must be " +
+                                   "either 'split' or 'combine'");
                 usage();
                 System.exit(1);
             }

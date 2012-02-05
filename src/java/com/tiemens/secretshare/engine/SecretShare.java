@@ -62,8 +62,175 @@ public class SecretShare
     // class static methods
     // ==================================================
 
-    // Both primes were tested via http://www.alpertron.com.ar/ECM.HTM
-    // Both primes were tested with 100,000 iterations of Miller-Rabin
+    /**
+     * http://www.cromwell-intl.com/security/crypto/diffie-hellman.html says
+     * "... choosing some prime p which is larger than the largest possible secret key".
+     * 
+     * Sadly, "larger" is not enough for this implementation [for an unknown reason].
+     * 
+     * So, some test data shows:
+     *  for a secret with 103 bits, 115 is not enough    116 is enough
+     *  for a secret with 159 bits,                      160 is enough
+     * 
+     * So - provide this method to provide guidance on the modulus to use
+     *      for a given secret.
+     *      
+     * @param secret number
+     * @return a modulus that (should) work in this library.  
+     *         It may be larger than it needs to be, but it will work. 
+     */
+    public static BigInteger createAppropriateModulusForSecret(BigInteger secret)
+    {
+        final BigInteger ret; 
+        final int originalBitLength = secret.bitLength();
+        System.out.println("Creating appropriate for bits=" + originalBitLength);
+        
+        //
+        // be conservative  192 bits ->  180 cutoff 
+        //                  384 bits ->  370 cutoff
+        //                 4096 bits -> 4024 cutoff
+        //
+        
+        if (originalBitLength < 180)
+        {
+            ret = getPrimeUsedFor192bitSecretPayload();
+        }
+        else if (originalBitLength < 370)
+        {
+            ret = getPrimeUsedFor384bitSecretPayload();
+        }
+        else if (originalBitLength < 4024)
+        {
+            ret = getPrimeUsedFor4096bigSecretPayload();
+        }
+        else
+        {
+            // 
+            // if you make it here, you are 4000+ bits big.
+            // and that probablePrime() call is going to be really expensive
+            //
+            final int numberOfBitsBigger = originalBitLength / 5;
+        
+            final int numbits = originalBitLength + numberOfBitsBigger;
+            System.out.println("Secret.bits=" + originalBitLength + " modulus.bits=" + numbits);
+
+            Random random = new SecureRandom();
+            
+            // This could take a really long time....
+            ret = BigInteger.probablePrime(numbits, random);
+        }
+        return ret;
+    }
+
+    public static boolean isTheModulusAppropriateForSecret(BigInteger modulus,
+                                                           BigInteger secret)
+    {
+        try
+        {
+            checkThatModulusIsAppropriate(modulus, secret);
+            return true;
+        }
+        catch (SecretShareException e)
+        {
+            return false;
+        }
+    }
+
+    public static void checkThatModulusIsAppropriate(BigInteger primeModulus,
+                                                     BigInteger secret)
+        throws SecretShareException
+    {
+        if (secret.compareTo(primeModulus) >= 0)
+        {
+            throw new SecretShareException("Secret cannot be larger than modulus.  " +
+                                           "Secret=" + secret + "\n" +
+                                           "Modulus=" + primeModulus);
+        }
+        
+        // Question - look at other rules?
+
+    }
+
+
+
+    // All primes were tested via http://www.alpertron.com.ar/ECM.HTM
+    // All primes were tested with 100,000 iterations of Miller-Rabin
+
+    public static BigInteger getPrimeUsedFor4096bigSecretPayload()
+    {
+        // This big integer was created with probablePrime(BigInteger.valueOf(2L).pow(4100)).nextProbablePrime()
+        // It took 28 seconds to generate [Run on Core i7 920 2.67Ghz]
+        // It took 25 minutes to check using alpertron.com.ar applet. [Run on Core2Duo E8500 3.16GHz CPU]
+        BigInteger p4096one = 
+                new BigInteger(
+            "1671022210261044010706804337146599012127" +
+            "9427984758140486147735732543262527544919" +
+            "3095812289909599609334542417074310282054" +
+            "0780117501097269771621177740562184444713" +
+            "5311624699359973445785442150139493030849" +
+            "1201896951396220211014303634039307573549" +
+            "4951338587994892653929285926514054477984" +
+            "1897745831487644537568464106991023630108" +
+            "6045751504900830441750495932712549251755" +
+            "0884842714308894440025555839788342744866" +
+            "7101368958164663781091806630951947745404" +
+            "9899622319436016030246615841346729868014" +
+            "9869334160881652755341231281231973786191" +
+            "0590928243420749213395009469338508019541" +
+            "0958855418900088036159728065975165578015" +
+            "3079187511387238090409461192977321170936" +
+            "6081401737953645348323163171237010704282" +
+            "8481068031277612787461827099245660019965" +
+            "4423851454616735972464821439378482870833" +
+            "7709298145449348366148476664877596527269" +
+            "1765522730435723049823184958030880339674" +
+            "1433100452606317504985611860713079871716" +
+            "8809146278034477061142090096734446658190" +
+            "8273334857030516871663995504285034522155" +
+            "7158160427604895839673593745279150722839" +
+            "3997083495197879290548002853265127569910" +
+            "9306488129210915495451479419727501586051" +
+            "1232507931203905482587057398637416125459" +
+            "0876872367709717423642369650017374448020" +
+            "8386154750356267714638641781056467325078" +
+            "08534977443900875333446450467047221"
+            );
+        
+        // No, these "0"s are not an error.  
+        //  The nextProbablePrime is only "735(hex)" away from 2^4100...
+        // In case you are wondering, this duplicate-encoding is a guard
+        //  against an accidental change in (either) string.
+        String bigintcs = 
+            "bigintcs:100000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000000-000000-000000-" +
+            "000000-000000-000000-000000-000735-4C590B";
+        
+//        return p4096one;
+        return checkAndReturn("4096bit prime", p4096one, bigintcs);
+    }
+
 
     public static BigInteger getPrimeUsedFor384bitSecretPayload()
     {
@@ -95,6 +262,10 @@ public class SecretShare
         return checkAndReturn("192bit prime", p194one, bigintcs);
     }
     
+    
+    /**
+     * Guard against accidental changes to the strings.
+     */
     private static BigInteger checkAndReturn(String which,
                                              BigInteger expected,
                                              String asbigintcs)
@@ -165,12 +336,9 @@ public class SecretShare
         }
         if (publicInfo.getPrimeModulus() != null)
         {
-            if (secret.compareTo(publicInfo.getPrimeModulus()) >= 0)
-            {
-                throw new SecretShareException("Secret cannot be larger than modulus.  " +
-                                               "Secret=" + secret + "\n" +
-                                               "Modulus=" + publicInfo.getPrimeModulus());
-            }
+            checkThatModulusIsAppropriate(publicInfo.getPrimeModulus(),
+                                          secret);
+
         }
         
         BigInteger[] coeffs = new BigInteger[publicInfo.getK()];
@@ -200,6 +368,7 @@ public class SecretShare
         
         return ret;
     }
+
 
     /**
      * Combine the shares generated by the split to recover the secret.
@@ -617,7 +786,7 @@ public class SecretShare
             {
                 if (! answer.equals(solve))
                 {
-                    throw new SecretShareException("Failed on combination, count=" + count);
+                    throw new SecretShareException("Paranoid test failed, on combination at count=" + count);
                 }
             }
         }
@@ -634,6 +803,11 @@ public class SecretShare
         return ret;
     }
 
+
+
+
+
+    
 
     
     // ==================================================

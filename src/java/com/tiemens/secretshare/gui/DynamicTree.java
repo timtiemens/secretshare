@@ -37,7 +37,6 @@ package com.tiemens.secretshare.gui;
  */
 
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;

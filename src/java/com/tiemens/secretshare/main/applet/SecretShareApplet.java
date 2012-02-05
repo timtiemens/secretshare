@@ -33,7 +33,6 @@ package com.tiemens.secretshare.main.applet;
 import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 
-import com.tiemens.secretshare.gui.DynamicTreePanel;
 import com.tiemens.secretshare.gui.GuiFactory;
 import com.tiemens.secretshare.gui.SecretSharePanel;
 

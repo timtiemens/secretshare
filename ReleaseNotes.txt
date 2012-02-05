@@ -5,6 +5,10 @@ Release Notes  --
 v1.1
 ====
  o Added applet and Swing command-line front-ends
+ o Fixes SourceForge Ticket #1 - testModExample fails
+ o Fixes SourceForge Ticket #2 - exception Programmer error, list.size=2
+ o Fixes SourceForge Ticket #3 - incorrect use of -m argument
+ 
 
 v1.0
 ====

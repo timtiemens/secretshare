@@ -1,7 +1,6 @@
 package com.tiemens.secretshare.gui.bigintegerchecksum.ui;
 
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.PanelUI;
 
 public class BigIntegerChecksumUI
     extends ComponentUI  // PanelUI // ComponentUI

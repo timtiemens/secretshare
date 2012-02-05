@@ -199,5 +199,13 @@ public class BigIntStringChecksumUT
         BigInteger bint = BigIntStringChecksum.fromString(s).asBigInteger();
         Assert.assertEquals(expected, bint);
     }
-        
+       
+    
+    public void testJustPrintAsBigIntCs()
+    {
+        String in = "11753999"; 
+        //in = "124332";
+        String s = BigIntStringChecksum.create(new BigInteger(in)).toString();
+        System.out.println(in + "=" + s);
+    }
 }

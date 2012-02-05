@@ -8,13 +8,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
 import javax.swing.text.AbstractDocument;
+import javax.swing.text.AbstractDocument.Content;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.GapContent;
 import javax.swing.text.PlainDocument;
-import javax.swing.text.AbstractDocument.Content;
 
-import com.tiemens.secretshare.math.BigIntStringChecksum;
 import com.tiemens.secretshare.math.BigIntUtilities;
 
 public class DefaultBigIntegerChecksumModel

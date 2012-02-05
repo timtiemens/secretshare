@@ -1,7 +1,6 @@
 package com.tiemens.secretshare.gui.bigintegerchecksum;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 

@@ -67,14 +67,15 @@ public class MainSplit
                              "  [-prime384|-prime192|-primeN] [-d <desc>] [-paranoid <p>] "); // optional
         System.out.println("  -k <k>        the threshold");
         System.out.println("  -n <k>        the number of shares to generate");
-        System.out.println("  -sN           the secret as a number, e.g. '124332' or 'bigintcs:123456-DC0AE1'");
+        System.out.println("  -sN           the secret as a number, e.g. '124332' or 'bigintcs:01e5ac-787852'");
         System.out.println("  -sS           the secret as a string, e.g. 'My Secret'");
         System.out.println("  -d <desc>     description of the secret");
+        System.out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         System.out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
         System.out.println("  -prime192     for modulus, use built-in 192-bit prime");
         System.out.println("  -primeN       for modulus, use a random prime (that is bigger than secret)");
-        System.out.println("  -primeNone    modulus, do NOT use any modulus");
-        System.out.println("  -m <modulus>  for modulus, use <modulus>");
+        System.out.println("  -m <modulus>  for modulus, use <modulus>, e.g. '11753999' or 'bigintcs:b35a0f-F89BEC'");
+        System.out.println("  -primeNone    no modulus, do NOT use any modulus");
         System.out.println("  -paranoid <p> test combine combinations, maximum of <p> tests");
 
     }
@@ -245,6 +246,10 @@ public class MainSplit
                     int seed =  parseInt("r", args, i);
                     ret.random = new Random(seed);
                 }
+                else if ("-prime4096".equals(args[i]))
+                {
+                    ret.modulus = SecretShare.getPrimeUsedFor4096bigSecretPayload();
+                }
                 else if ("-prime384".equals(args[i]))
                 {
                     ret.modulus = SecretShare.getPrimeUsedFor384bitSecretPayload();
@@ -266,7 +271,15 @@ public class MainSplit
                 {
                     calculateModulus = false;
                     i++;
-                    ret.modulus = BigIntUtilities.Human.createBigInteger(args[i]);
+                    final String thearg = args[i];
+                    if (BigIntUtilities.Checksum.couldCreateFromStringMd5CheckSum(thearg))
+                    {
+                        ret.modulus = BigIntUtilities.Checksum.createBiscs(thearg).asBigInteger();
+                    }
+                    else
+                    {
+                        ret.modulus = new BigInteger(thearg);
+                    }
                 }
 
                 else if ("-paranoid".equals(args[i]))
@@ -299,15 +312,15 @@ public class MainSplit
             
             if (calculateModulus)
             {
-                ret.modulus = BigIntUtilities.createPrimeBigger(ret.secret);
+                ret.modulus = SecretShare.createAppropriateModulusForSecret(ret.secret);
             }
             
             if (ret.modulus != null)
             {
-                if (ret.secret.compareTo(ret.modulus) >= 0)
+                if (! SecretShare.isTheModulusAppropriateForSecret(ret.modulus, ret.secret))
                 {
-                    String m = "The secret is too big.  Please adjust the prime modulus with either " +
-                        "-primeN or -primeNone";
+                    String m = "The secret is too big.  Please adjust the prime modulus or " +
+                        "use -primeNone";
                     throw new SecretShareException(m);
                     
                 }
