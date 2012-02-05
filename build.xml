@@ -35,7 +35,7 @@
         </jar>
         
         <!-- Create the project-source jar, put dot files and ./src secretshare-src.jar file -->
-        <jar jarfile="${dist}/lib/secretshare-src-v1.1.jar" basedir=".."
+        <jar jarfile="${dist}/lib/secretshare-src-v1.2.jar" basedir=".."
              includes="secretshare/.project secretshare/.classpath secretshare.gitignore secretshare/src/**" 
             >
 
