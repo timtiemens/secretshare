@@ -33,7 +33,7 @@ public class Main
      */
     public static String getVersionString()
     {
-        return "1.1";
+        return "1.1a";
     }
 
     

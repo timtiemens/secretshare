@@ -1,0 +1,1 @@
+rsync -n -v -rauzb --exclude '*.svn*' --exclude 'build/*' --exclude '.git*' --exclude 'extrastuff*' .  /home/tim/sourceforge/secretsharejava/trunk/

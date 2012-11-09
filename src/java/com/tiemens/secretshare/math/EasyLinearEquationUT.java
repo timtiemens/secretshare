@@ -91,7 +91,7 @@ public class EasyLinearEquationUT
     }
     
     public void testJavadocExample() 
-        throws SecurityException, IOException
+        throws IOException
     {
         if (false)
         {
@@ -127,7 +127,7 @@ public class EasyLinearEquationUT
      * 
      */
     public void testFromRealSecret() 
-        throws SecurityException, IOException
+        throws IOException
     {
         if (false)
         {
@@ -163,7 +163,7 @@ public class EasyLinearEquationUT
      * 
      */
     public void testFromRealSecretLong() 
-        throws SecurityException, IOException
+        throws IOException
     {
         if (false)
         {

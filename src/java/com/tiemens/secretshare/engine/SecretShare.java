@@ -83,7 +83,6 @@ public class SecretShare
     {
         final BigInteger ret; 
         final int originalBitLength = secret.bitLength();
-        System.out.println("Creating appropriate for bits=" + originalBitLength);
         
         //
         // be conservative  192 bits ->  180 cutoff 
@@ -107,18 +106,33 @@ public class SecretShare
         {
             // 
             // if you make it here, you are 4000+ bits big.
-            // and that probablePrime() call is going to be really expensive
+            // and this call is going to be really expensive
             //
-            final int numberOfBitsBigger = originalBitLength / 5;
-        
-            final int numbits = originalBitLength + numberOfBitsBigger;
-            System.out.println("Secret.bits=" + originalBitLength + " modulus.bits=" + numbits);
-
-            Random random = new SecureRandom();
-            
-            // This could take a really long time....
-            ret = BigInteger.probablePrime(numbits, random);
+            ret = createRandomModulusForSecret(secret);
         }
+        return ret;
+    }
+    
+    /**
+     * NOTE: you should prefer createAppropriateModulusForSecret() over this method.
+     * 
+     * 
+     */
+    public static BigInteger createRandomModulusForSecret(BigInteger secret)
+    {
+        final BigInteger ret;
+        final int originalBitLength = secret.bitLength();
+        
+        final int numberOfBitsBigger = originalBitLength / 5;
+        
+        final int numbits = originalBitLength + numberOfBitsBigger;
+        //System.out.println("Secret.bits=" + originalBitLength + " modulus.bits=" + numbits);
+
+        Random random = new SecureRandom();
+        
+        // This could take a really long time, especially for 4000+ bits....
+        ret = BigInteger.probablePrime(numbits, random);
+        
         return ret;
     }
 
@@ -706,30 +720,81 @@ public class SecretShare
         }
     }
 
-    public BigInteger combineParanoid(List<ShareInfo> shares)
+    public ParanoidOutput combineParanoid(List<ShareInfo> shares)
     {
-        return combineParanoid(shares, null, System.out);
+        return combineParanoid(shares, null);
+    }
+    public static class ParanoidOutput
+    {
+        private Integer maximumCombinationsAllowedToTest; // null means "all"
+        private BigInteger totalNumberOfCombinations;
+        private List<String> combinations = new ArrayList<String>();
+        public BigInteger agreedAnswerEveryTime;
+        
+        public String getParanoidCompleteOutput()
+        {
+            String ret = getParanoidHeaderOutput();
+            ret += getParanoidCombinationOutput();
+            return ret;
+        }
+        
+        public String getParanoidHeaderOutput()
+        {
+            String ret = "SecretShare.paranoid(max=" +
+                        ((maximumCombinationsAllowedToTest != null) ? maximumCombinationsAllowedToTest : "all") +
+                        " combo.total=" +
+                        totalNumberOfCombinations +
+                        ")";
+            ret += "\n";
+            return ret;
+        }
+        public String getParanoidCombinationOutput()
+        {
+            String ret = "";
+            for (String s : combinations)
+            {
+                ret += s;
+                ret += "\n";
+            }
+            
+            return ret;
+        }
+
+        public void recordCombination(BigInteger currentCombinationNumber,
+                                      String indexesAsString,
+                                      String dumpshares)
+        {
+            String s = "Combination: " + 
+                        currentCombinationNumber + 
+                        " of " +
+                        totalNumberOfCombinations +
+                        indexesAsString +
+                        dumpshares;
+            combinations.add(s);
+        }
+
+        public BigInteger getAgreedAnswer()
+        {
+            return agreedAnswerEveryTime;
+        }
+
+
     }
     
-    public BigInteger combineParanoid(List<ShareInfo> shares,
-                                     Integer maximumCombinationsToTest,
-                                     PrintStream outstream)
+    public ParanoidOutput combineParanoid(List<ShareInfo> shares,
+                                          Integer maximumCombinationsToTest)
     {
+        ParanoidOutput ret = new ParanoidOutput();
+        ret.maximumCombinationsAllowedToTest = maximumCombinationsToTest;
+        
+
         BigInteger answer = null;
         PublicInfo publicInfo = shares.get(0).getPublicInfo();
         
         CombinationGenerator<ShareInfo> combo =
             new CombinationGenerator<ShareInfo>(shares,
                                                 publicInfo.getK());
-        
-        if (outstream != null)
-        {
-            outstream.println("SecretShare.paranoid(max=" +
-                              maximumCombinationsToTest + 
-                              " combo.total=" +
-                              combo.getTotalNumberOfCombinations() +
-                              ")");
-        }
+        ret.totalNumberOfCombinations = combo.getTotalNumberOfCombinations();
         
         final int percentEvery = 30;  // or 10 for every 10%
         int outputEvery = 100;
@@ -764,16 +829,10 @@ public class SecretShare
             if ((count % outputEvery) == 0)
             {
 //                count = 0;
-                
-                if (outstream != null)
-                {
-                    outstream.println("Combination: " + 
-                                      combo.getCurrentCombinationNumber() + 
-                                      " of " +
-                                      combo.getTotalNumberOfCombinations() +
-                                      combo.getIndexesAsString() +
+
+                ret.recordCombination(combo.getCurrentCombinationNumber(),
+                                      combo.getIndexesAsString(),
                                       dumpshares(usetheseshares));
-                }
             }
             
             SecretShare.CombineOutput solved = this.combine(usetheseshares);
@@ -790,7 +849,9 @@ public class SecretShare
                 }
             }
         }
-        return answer;
+        ret.agreedAnswerEveryTime = answer;
+        
+        return ret;
     }
 
     private String dumpshares(List<ShareInfo> usetheseshares)
@@ -802,9 +863,6 @@ public class SecretShare
         }
         return ret;
     }
-
-
-
 
 
     

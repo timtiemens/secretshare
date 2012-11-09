@@ -11,8 +11,11 @@
 SECRET_NUMBER_EQUIV="5735816763073004597640754983969"
 USE_MOD="-m          5735816763073004597640754984037"
 #USE_MOD=" " 
+USE_MOD="-primeAuto " 
 N=6
 K=6
-java -jar build/dist/lib/secretshare.jar  split -n $N -k $K -sS 'Hello Secret!' $USE_MOD -paranoid all
+PRINT=""
+PRINT=" -printIndividual "
+java -jar build/dist/lib/secretshare.jar  split -n $N -k $K -sS 'Hello Secret!' $USE_MOD -paranoid all $PRINT
 
 
