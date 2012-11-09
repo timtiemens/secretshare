@@ -304,7 +304,7 @@ public class SecretShareUT
         // create a new solver from just the public info:
         SecretShare solver = new SecretShare(publicInfo);
         
-        BigInteger secret = solver.combineParanoid(shares);
+        BigInteger secret = solver.combineParanoid(shares).getAgreedAnswer();
         Assert.assertNotNull(secret);
     }
         
@@ -373,6 +373,27 @@ public class SecretShareUT
         //l.addHandler(lh);
         //l.setLevel(Level.ALL);        
         
+    }
+    
+    public void testCreateRandomModulus()
+    {
+        int n = 100;
+        int bits = 150;
+        
+        for (int i = 0; i < n; i++)
+        {
+            BigInteger base = BigInteger.valueOf(2L).pow(bits);
+            BigInteger add = BigInteger.probablePrime(50, new Random());
+            BigInteger secret = base.add(add);
+            
+            BigInteger mod = SecretShare.createRandomModulusForSecret(secret);
+            Assert.assertTrue("modulus " + mod + " is incorrect for secret " + secret, 
+                              (mod.compareTo(secret) > 0));
+            
+            bits += 10;
+            System.out.print(".");
+        }
+        System.out.println("");
     }
  
     public void testPrint4096bigint()

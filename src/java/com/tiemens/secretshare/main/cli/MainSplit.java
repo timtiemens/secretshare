@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.tiemens.secretshare.engine.SecretShare;
+import com.tiemens.secretshare.engine.SecretShare.ParanoidOutput;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.engine.SecretShare.SplitSecretOutput;
 import com.tiemens.secretshare.exceptions.SecretShareException;
@@ -73,10 +74,14 @@ public class MainSplit
         System.out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         System.out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
         System.out.println("  -prime192     for modulus, use built-in 192-bit prime");
-        System.out.println("  -primeN       for modulus, use a random prime (that is bigger than secret)");
+        System.out.println("  -primeAuto    for modulus, use 192, 384, 4096 or a random prime (that is bigger than secret)");
+        System.out.println("  -primeN       same as -primeRandom");
+        System.out.println("  -primeRandom  for modulus, use a random prime (that is bigger than secret)");
         System.out.println("  -m <modulus>  for modulus, use <modulus>, e.g. '11753999' or 'bigintcs:b35a0f-F89BEC'");
         System.out.println("  -primeNone    no modulus, do NOT use any modulus");
         System.out.println("  -paranoid <p> test combine combinations, maximum of <p> tests");
+        System.out.println("  -printOne     put all shares on 1 sheet of paper");
+        System.out.println("  -printIndiv   put 1 share per sheet, use 'n' sheets of paper");
 
     }
 
@@ -198,6 +203,9 @@ public class MainSplit
         // optional: the random can be seeded
         private Random random;
         
+        // if true, print on 1 sheet of paper; otherwise use 'n' sheets and repeat the header
+        private boolean printAllSharesAtOnce = true;
+        
         // ==================================================
         // constructors
         // ==================================================
@@ -206,6 +214,7 @@ public class MainSplit
             SplitInput ret = new SplitInput();
 
             boolean calculateModulus = false;
+            boolean calculateModulusAuto = true;
             for (int i = 0, n = args.length; i < n; i++)
             {
                 if (args[i] == null)
@@ -232,6 +241,7 @@ public class MainSplit
                 else if ("-sN".equals(args[i]))
                 {
                     i++;
+                    ret.secretArgument = null;
                     ret.secret = parseBigInteger("sN", args, i);
                 }
                 else if ("-sS".equals(args[i]))
@@ -258,9 +268,16 @@ public class MainSplit
                 {
                     ret.modulus = SecretShare.getPrimeUsedFor192bitSecretPayload();
                 }
-                else if ("-primeN".equals(args[i]))
+                else if ("-primeAuto".equals(args[i]))
                 {
                     calculateModulus = true;
+                    calculateModulusAuto = true;
+                }
+                else if (("-primeRandom".equals(args[i])) ||
+                         ("-primeN".equals(args[i])))    // backward-compatible
+                {
+                    calculateModulus = true;
+                    calculateModulusAuto = false;
                 }
                 else if ("-primeNone".equals(args[i]))
                 {
@@ -294,6 +311,14 @@ public class MainSplit
                         ret.paranoid = parseInt("paranoid", args, i);
                     }
                 }
+                else if ("-printOne".equals(args[i]))
+                {
+                    ret.printAllSharesAtOnce = true;
+                }
+                else if (args[i].startsWith("-printIndiv"))  // -printIndividual
+                {
+                    ret.printAllSharesAtOnce = false;                    
+                }
                 else if (args[i].startsWith("-"))
                 {
                     String m = "Argument '" + args[i] + "' not understood";
@@ -312,7 +337,14 @@ public class MainSplit
             
             if (calculateModulus)
             {
-                ret.modulus = SecretShare.createAppropriateModulusForSecret(ret.secret);
+                if (calculateModulusAuto)
+                {
+                    ret.modulus = SecretShare.createAppropriateModulusForSecret(ret.secret);
+                }
+                else
+                {
+                    ret.modulus = SecretShare.createRandomModulusForSecret(ret.secret);
+                }
             }
             
             if (ret.modulus != null)
@@ -348,6 +380,7 @@ public class MainSplit
         public SplitOutput output()
         {
             SplitOutput ret = new SplitOutput();
+            ret.setPrintAllSharesAtOnce(printAllSharesAtOnce);
             ret.splitInput = this;
             
             SecretShare.PublicInfo publicInfo = 
@@ -370,18 +403,20 @@ public class MainSplit
                 {
                     parg = null;
                 }
-                
-                secretShare.combineParanoid(generate.getShareInfos(),
-                                            parg,
-                                            this.getParanoidOutput());
+            
+                ret.paranoidOutput = 
+                        secretShare.combineParanoid(generate.getShareInfos(),
+                                                    parg);
+
             }
+            else
+            {
+                ret.paranoidOutput = null;
+            }
+            
             return ret;
         }
 
-        private PrintStream getParanoidOutput()
-        {
-            return System.out;
-        }
         
         // ==================================================
         // non public methods
@@ -392,10 +427,94 @@ public class MainSplit
     {
         private static String SPACES = "                                              ";
         
+        private boolean printAllSharesAtOnce = true;
+
         public SplitInput splitInput;
         private SplitSecretOutput splitSecretOutput;
+        private ParanoidOutput paranoidOutput = null; // can be null
 
+        public SplitOutput()
+        {
+            this(true);
+        }
+        public SplitOutput(boolean inPrintAllSharesAtOnce)
+        {
+            printAllSharesAtOnce = inPrintAllSharesAtOnce;
+        }
+        
+        public void setPrintAllSharesAtOnce(boolean val)
+        {
+            printAllSharesAtOnce = val;
+        }
+
+        
         public void print(PrintStream out)
+        {
+            if (printAllSharesAtOnce)
+            {
+                printParanoidCompleteOutput(out);
+                printHeaderInfo(out);
+                printSharesAllAtOnce(out);
+            }
+            else
+            {
+                printSharesOnePerPage(out);
+            }
+        }
+        private boolean hasParanoidOutput()
+        {
+            return (paranoidOutput != null);
+        }
+        private void printParanoidCompleteOutput(PrintStream out)
+        {
+            if (hasParanoidOutput())
+            {
+                out.println(paranoidOutput.getParanoidCompleteOutput());
+            }
+        }
+        private void printParanoidHeaderOutput(PrintStream out)
+        {
+            if (hasParanoidOutput())
+            {
+
+                out.println(paranoidOutput.getParanoidHeaderOutput());
+            }
+        }
+        
+        private void printSharesOnePerPage(PrintStream out)
+        {
+            final List<SecretShare.ShareInfo> shares = splitSecretOutput.getShareInfos();
+            boolean first = true;
+            for (SecretShare.ShareInfo share : shares)
+            {
+                if (! first)
+                {
+                    printSeparatePage(out);
+                }
+                first = false;
+                
+                
+                printHeaderInfo(out);
+                
+                if (hasParanoidOutput())
+                {
+                    out.println("(Re-)Combine testing performed and passed.");                    
+                    printParanoidHeaderOutput(out);
+                }
+
+                printShare(out, share, false); 
+                printShare(out, share, true);
+
+            }
+
+        }
+        
+        private void printSeparatePage(PrintStream out)
+        {
+            out.print("\u000C");
+        }
+
+        private void printHeaderInfo(PrintStream out)
         {
             final SecretShare.PublicInfo publicInfo = splitSecretOutput.getPublicInfo();
             
@@ -409,6 +528,11 @@ public class MainSplit
             markedValue(out, "modulus", publicInfo.getPrimeModulus(), false);
             markedValue(out, "modulus", publicInfo.getPrimeModulus(), true);
             
+         
+        }
+        
+        private void printSharesAllAtOnce(PrintStream out)
+        {
             List<SecretShare.ShareInfo> shares = splitSecretOutput.getShareInfos();
             out.println("");
             for (SecretShare.ShareInfo share : shares)
