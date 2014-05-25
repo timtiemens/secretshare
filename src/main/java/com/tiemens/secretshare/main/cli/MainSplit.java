@@ -30,7 +30,7 @@ import com.tiemens.secretshare.exceptions.SecretShareException;
 import com.tiemens.secretshare.math.BigIntUtilities;
 
 /**
- * Main command line for the "split" (aka create") of a secret.
+ * Main command line for the "split" (aka "create") of a secret.
  *
  * Takes a number of shares (n) and a threshold (k)
  *  and a secret (s) and creates the SecretShare.
@@ -564,15 +564,22 @@ public class MainSplit
                                  boolean printAsBigIntCs)
         {
             String s;
-            if (printAsBigIntCs)
+            if (number != null)
             {
-                s = BigIntUtilities.Checksum.createMd5CheckSumString(number);
+                if (printAsBigIntCs)
+                {
+                    s = BigIntUtilities.Checksum.createMd5CheckSumString(number);
+                }
+                else
+                {
+                    s = number.toString();
+                }
+                out.println(fieldname + " = " + s);
             }
             else
             {
-                s = number.toString();
+                // no modulus supplied, do nothing
             }
-            out.println(fieldname + " = " + s);
         }
         private void markedValue(PrintStream out,
                                  String fieldname,

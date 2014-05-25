@@ -5,13 +5,13 @@
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  ******************************************************************************/
@@ -32,11 +32,12 @@ import com.tiemens.secretshare.exceptions.SecretShareException;
 import com.tiemens.secretshare.math.BigIntUtilities;
 
 /**
- * Main command line for the "split" (aka create") of a secret.
- * 
- * Takes a number of shares (n) and a threshold (k) 
- *  and a secret (s) and creates the SecretShare.
- * 
+ * Main command line for the "combine" (aka "recover") of a secret.
+ *
+ * Takes a threshold (k), and a modulus [if any],
+ *  and "k" secrets with their index,
+ *  and recovers the original secret.
+ *
  * @author tiemens
  *
  */
@@ -66,10 +67,11 @@ public class MainCombine
     {
         System.out.println("Usage:");
         System.out.println(" combine -k <k>  -s<n> <secret-N> ..." +               // required
-                             "  [-prime384|-prime192|-primeN <m>|-primeNone] -stdin"); // optional
+                             "  [-prime4096|-prime384|-prime192|-primeN <m>|-primeNone] -stdin"); // optional
         System.out.println("  -k <k>        the threshold");
         System.out.println("  -s<n> <s>     secret#n as a number e.g. '124332' or 'bigintcs:123456-DC0AE1'");
         System.out.println("     ...           repeat this argument <k> times");
+        System.out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         System.out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
         System.out.println("  -prime192     for modulus, use built-in 192-bit prime");
         System.out.println("  -primeN <m>   for modulus use m, e.g. '59561' or 'bigintcs:12345-DC0AE1'");
@@ -77,8 +79,8 @@ public class MainCombine
         System.out.println("  -stdin        read values from standard input, as written by 'split'");
     }
 
-    
-    
+
+
     private static BigInteger parseBigInteger(String argname,
                                               String[] args,
                                               int index)
@@ -92,28 +94,32 @@ public class MainCombine
     {
         return MainSplit.parseInt(argname, args, index);
     }
-    
-    
+
+
 
     public static class CombineInput
     {
         // ==================================================
         // instance data
         // ==================================================
-        
+
         // required arguments:
         private Integer k           = null;
-        
-        private List<SecretShare.ShareInfo> shares = new ArrayList<SecretShare.ShareInfo>();
 
-        // optional:  if null, then do not use modulus 
+        private final List<SecretShare.ShareInfo> shares = new ArrayList<SecretShare.ShareInfo>();
+
+        // optional:  if null, then do not use modulus
         // default to 384-bit
         private BigInteger modulus = SecretShare.getPrimeUsedFor384bitSecretPayload();
 
         // optional: for combine, we don't need n, but you can provide it
         private Integer n           = null;
 
+
+        // not an input.  used to cache the PublicInfo, so that after the first ShareInfo is
+        //  created with this PublicInfo, then they are all created with the same PublicInfo
         private PublicInfo publicInfo;
+
         // ==================================================
         // constructors
         // ==================================================
@@ -127,7 +133,7 @@ public class MainCombine
                 {
                     continue;
                 }
-                
+
                 if ("-k".equals(args[i]))
                 {
                     i++;
@@ -151,6 +157,10 @@ public class MainCombine
                     i++;
                     ret.modulus = parseBigInteger("m", args, i);
                 }
+                else if ("-prime4096".equals(args[i]))
+                {
+                    ret.modulus = SecretShare.getPrimeUsedFor4096bigSecretPayload();
+                }
                 else if ("-prime384".equals(args[i]))
                 {
                     ret.modulus = SecretShare.getPrimeUsedFor384bitSecretPayload();
@@ -173,9 +183,10 @@ public class MainCombine
                     String number = args[i].substring(2);
                     i++;
                     MainSplit.checkIndex("s", args, i);
-                    String line = "Share (x:" + number + ") = " + args[i]; 
+                    // put in "standard" format and parse that string:
+                    String line = "Share (x:" + number + ") = " + args[i];
                     SecretShare.ShareInfo share = ret.parseEqualShare("-s", line);
-                    // TODO; better checking for duplicates
+
                     ret.addIfNotDuplicate(share);
                 }
                 else if (args[i].startsWith("-"))
@@ -195,7 +206,7 @@ public class MainCombine
                 throw new SecretShareException("k set to " + ret.k + " but only " +
                                                ret.shares.size() + " shares provided");
             }
-            
+
             return ret;
         }
 
@@ -210,9 +221,9 @@ public class MainCombine
                 throw new SecretShareException("IOException reading stdin", e);
             }
         }
-        
+
         // examples of the kinds of lines we look for:
-        
+
         //  n = 6
         //  k = 3
         //  modulus = 830856716641269307206384693584652377753448639527
@@ -221,7 +232,7 @@ public class MainCombine
         //  Share (x:2) = 481883688232565050752267350226995441999530323860
         //  Share (x:1) = bigintcs:005468-697323-cc48a7-8f1f87-996040-4d07d2-3da700-9C4722
         //  Share (x:2) = bigintcs:005468-69732d-4e02c5-7b11d2-9d4426-e26c88-8a6f94-9809A9
-        private void processStdinThrow() 
+        private void processStdinThrow()
             throws IOException
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -247,7 +258,7 @@ public class MainCombine
                     addIfNotDuplicate(share);
                 }
             }
-            
+
         }
 
         private void addIfNotDuplicate(ShareInfo add)
@@ -260,7 +271,7 @@ public class MainCombine
                     // dupe
                     if (! share.getShare().equals(add.getShare()))
                     {
-                        throw new SecretShareException("share x:" + share.getX() + 
+                        throw new SecretShareException("share x:" + share.getX() +
                                                        " was entered with two different values " +
                                                        "(" + share.getShare() + ") and (" +
                                                        add.getShare() + ")");
@@ -270,10 +281,10 @@ public class MainCombine
                         shouldadd = false;
                     }
                 }
-                else if (share.getShare().equals(add.getShare())) 
+                else if (share.getShare().equals(add.getShare()))
                 {
                     throw new SecretShareException("duplicate share values at x:" +
-                                                   share.getX() + " and x:" + 
+                                                   share.getX() + " and x:" +
                                                    add.getX());
                 }
             }
@@ -283,6 +294,14 @@ public class MainCombine
             }
         }
 
+
+        /**
+         *
+         * @param fieldname description of source of data
+         * @param line is "standard format for share", example:
+         *   Share (x:2) = 481883688232565050752267350226995441999530323860
+         * @return ShareInfo (integer and big integer)
+         */
         private ShareInfo parseEqualShare(String fieldname,
                                           String line)
         {
@@ -353,32 +372,32 @@ public class MainCombine
         {
             CombineOutput ret = new CombineOutput();
             ret.combineInput = this;
-            
-            SecretShare.PublicInfo publicInfo = 
-                new SecretShare.PublicInfo(this.n, 
-                                           this.k, 
+
+            SecretShare.PublicInfo publicInfo =
+                new SecretShare.PublicInfo(this.n,
+                                           this.k,
                                            this.modulus,
                                            "recombine combine command line");
-            
+
             SecretShare secretShare = new SecretShare(publicInfo);
-            
+
             SecretShare.CombineOutput combine= secretShare.combine(shares);
 
             ret.secret = combine.getSecret();
-            
+
             return ret;
         }
-        
+
         // ==================================================
         // non public methods
         // ==================================================
     }
-    
+
     public static class CombineOutput
     {
-        
+
         private BigInteger secret;
-        
+
         @SuppressWarnings("unused")
         private SecretShare.CombineOutput combineOutput;
         @SuppressWarnings("unused")
@@ -387,18 +406,18 @@ public class MainCombine
         public void print(PrintStream out)
         {
             //final SecretShare.PublicInfo publicInfo = combineOutput.getPublicInfo();
-            
+
             out.println("Secret Share version " + Main.getVersionString());
             //field(out, "Date", publicInfo.getDate());
             //field(out, "UUID", publicInfo.getUuid());
             //field(out, "Description", publicInfo.getDescription());
-            
+
             out.println("secret.number = '" + secret + "'");
             String s = BigIntUtilities.Human.createHumanString(secret);
             out.println("secret.string = '" + s + "'");
 
         }
-        
+
         // ==================================================
         // instance data
         // ==================================================
@@ -406,11 +425,11 @@ public class MainCombine
         // ==================================================
         // constructors
         // ==================================================
-        
+
         // ==================================================
         // public methods
         // ==================================================
-        
+
         // ==================================================
         // non public methods
         // ==================================================

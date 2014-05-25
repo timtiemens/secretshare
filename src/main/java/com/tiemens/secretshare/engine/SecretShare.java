@@ -380,7 +380,7 @@ public class SecretShare
         SplitSecretOutput ret = new SplitSecretOutput(this.publicInfo,
                                                       equation);
 
-        for (int x = 1, n = publicInfo.getN() + 1; x < n; x++)
+        for (int x = 1, n = publicInfo.getNforSplit() + 1; x < n; x++)
         {
             final BigInteger fofx = equation.calculateFofX(BigInteger.valueOf(x));
             BigInteger data = fofx;
@@ -510,15 +510,16 @@ public class SecretShare
         private final int k;                         // determines the order of the polynomial
         private final BigInteger primeModulus;       // can be null
 
-        // useful information: "N" - how many shares were generated?
-        private final int n;
+        // required for split: "N" - how many shares were generated?
+        // optional for combine (can be null)
+        private final Integer n;
 
         // just descriptive info:
         private final String description;            // any string, including null
         private final String uuid;                   // a "Random" UUID string
         private final String date;                   // yyyy-MM-dd HH:mm:ss string
 
-        public PublicInfo(final int inN,
+        public PublicInfo(final Integer inN,
                           final int inK,
                           final BigInteger inPrimeModulus,
                           final String inDescription)
@@ -534,17 +535,16 @@ public class SecretShare
 
             date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
-            if (k > n)
+            if (n != null)
             {
-                throw new SecretShareException("k cannot be bigger than n [k=" + k +
-                                               " n=" + n + "]");
+                if (k > n)
+                {
+                    throw new SecretShareException("k cannot be bigger than n [k=" + k +
+                                                   " n=" + n + "]");
+                }
             }
-            // enhancement: allow the modulus to be null:
-            //if (inPrimeModulus == null)
-            //{
-            //    throw new SecretShareException("prime modulus cannot be null");
-            //}
         }
+
         @Override
         public String toString()
         {
@@ -559,9 +559,27 @@ public class SecretShare
         {
             return toString();
         }
+        public final int getNforSplit()
+        {
+            if (n == null)
+            {
+                throw new SecretShareException("n was not set, can not perform split");
+            }
+            else
+            {
+                return n;
+            }
+        }
         public final int getN()
         {
-            return n;
+            if (n == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return n;
+            }
         }
         public final int getK()
         {
@@ -598,7 +616,9 @@ public class SecretShare
         private final int x;              // this is aka "the index", the x in "f(x)"
         private final BigInteger share;   // our piece of the secret
 
-        // "extra"
+        // technically"extra" - at least one ShareInfo must have a PublicInfo,
+        //                      but it is not required that every ShareInfo has a PublicInfo
+        // But for simplicity, it is a required field:
         private final PublicInfo publicInfo;
 
         public ShareInfo(final int inX,
