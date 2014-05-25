@@ -24,7 +24,7 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class BigIntUtilitiesUT
+public class BigIntUtilitiesTest
 {
     // ==================================================
     // class static data

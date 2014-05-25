@@ -1,6 +1,14 @@
 Shamir's Secret Sharing in Java
 
-Release Notes  --  
+Release Notes  --
+
+v1.2
+====
+ o Replaced ant with gradle
+ o Separated tests into unit and integration
+ o Rearranged project directory layout to match latest practices
+ o Renamed tests from UT.java to Test.java and IntegTest.java
+ o Updated/fixed Readme.txt with working examples
 
 v1.1
 ====

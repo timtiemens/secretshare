@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.math.BigIntUtilities;
-import com.tiemens.secretshare.math.EasyLinearEquationUT;
+import com.tiemens.secretshare.math.EasyLinearEquationTest;
 
 public class SecretShareIntegTest
 {
@@ -315,7 +315,7 @@ public class SecretShareIntegTest
     @SuppressWarnings("unused")
     private void enableAllLogging()
     {
-        EasyLinearEquationUT.enableLogging();
+        EasyLinearEquationTest.enableLogging();
         // add any other loggers here:
         //Logger l = Foo.logger;
         //l.addHandler(lh);

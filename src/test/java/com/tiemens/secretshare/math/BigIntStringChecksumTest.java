@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 
-public class BigIntStringChecksumUT
+public class BigIntStringChecksumTest
 {
     // ==================================================
     // class static data

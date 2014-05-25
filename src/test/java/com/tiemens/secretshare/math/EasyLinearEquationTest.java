@@ -34,7 +34,7 @@ import org.junit.Test;
 
 import com.tiemens.secretshare.math.EasyLinearEquation.EasySolve;
 
-public class EasyLinearEquationUT
+public class EasyLinearEquationTest
 {
 
     // ==================================================

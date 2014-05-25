@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PolyEquationImplUT
+public class PolyEquationImplTest
 {
     // ==================================================
     // class static data

@@ -20,21 +20,21 @@ package com.tiemens.secretshare;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.tiemens.secretshare.engine.SecretShareUT;
-import com.tiemens.secretshare.math.BigIntStringChecksumUT;
-import com.tiemens.secretshare.math.BigIntUtilitiesUT;
-import com.tiemens.secretshare.math.EasyLinearEquationUT;
-import com.tiemens.secretshare.math.PolyEquationImplUT;
+import com.tiemens.secretshare.engine.SecretShareTest;
+import com.tiemens.secretshare.math.BigIntStringChecksumTest;
+import com.tiemens.secretshare.math.BigIntUtilitiesTest;
+import com.tiemens.secretshare.math.EasyLinearEquationTest;
+import com.tiemens.secretshare.math.PolyEquationImplTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    BigIntStringChecksumUT.class,
-    BigIntUtilitiesUT.class,
-    PolyEquationImplUT.class,
-    EasyLinearEquationUT.class,
-    SecretShareUT.class
+    BigIntStringChecksumTest.class,
+    BigIntUtilitiesTest.class,
+    PolyEquationImplTest.class,
+    EasyLinearEquationTest.class,
+    SecretShareTest.class
 })
-public class SuiteUT
+public class SuiteTest
 {
     // ==================================================
     // class static data

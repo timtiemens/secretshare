@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class HexByteUtiltiesUT
+public class HexByteUtiltiesTest
 {
     // ==================================================
     // class static data

@@ -16,18 +16,17 @@ The following are required to run the application in secretshare.jar:
  
  
 2. Installation
- a - copy 'secretshare.jar' into your directory
-     or
- b - build the project with gradle
+ a - build the project with gradle
      $ gradle build
        [creates build/dist/lib/secretshare.jar]
      $ cp build/libs/secretshare-1.2.2.jar ./secretshare.jar
        [copy the .jar into the current directory]
+ b - [TODO: push .jar artifact to maven central]
 
 3. Use
    There are two main ways to use the application: split and combine.
-   Split takes a secret (number or string) and splits it into shares
-   Combine takes 'k' shares and re-creates the secret (number or string)
+   Split takes a secret (number or string) and splits it into 'n'shares.
+   Combine takes 'k' of 'n' shares and re-creates the secret (number or string).
 
    split    -- run 'java -jar secretshare.jar split'
                to display usage
