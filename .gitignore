@@ -1,4 +1,8 @@
-build
-.svn
-secretshare.jar
-hide
+/build
+/bin
+/.project
+/.classpath
+/.settings
+/hide
+/.gradle
+/secretshare.jar

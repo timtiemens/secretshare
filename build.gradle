@@ -1,0 +1,113 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+//
+// target:  'build'     - does not run integration tests
+// target:  'integTest' - runs integration tests (about 5 minutes worth)
+// target:  'publish'   - push to archiva (as guest)
+//
+
+group = 'com.tiemens'
+version = '1.2.2-SNAPSHOT'
+sourceCompatibility = 1.5
+
+
+dependencies {
+    compile     group: 'com.miglayout', name: 'miglayout',        version: '3.7.4'
+
+    testCompile group: 'junit',         name: 'junit',            version: '4+'
+}
+
+repositories {
+    if (project.hasProperty('archivaBaseUrl') ) {
+        maven { url project.archivaBaseUrl + "/internal" }
+        maven { url project.archivaBaseUrl + "/snapshots" }
+    } else {
+        mavenCentral()
+    }    
+}
+
+sourceSets {
+    integTest {
+        java.srcDir file("src/integTest/java")
+        resources.srcDir file("src/integTest/resources")
+        compileClasspath = 
+            sourceSets.main.output +
+            sourceSets.test.output +
+            configurations.testRuntime
+        runtimeClasspath = output + compileClasspath
+    }
+}
+
+test {
+    exclude '**/*IntegTest.class'
+    reports.html.destination = file ("$reports.html.destination/test")
+    reports.junitXml.destination = file ("$reports.junitXml.destination/test")
+}
+
+task integTest(type: Test, group: 'Build') {
+    testClassesDir = sourceSets.integTest.output.classesDir
+    classpath = sourceSets.integTest.runtimeClasspath
+    include '**/*IntegTest.class'
+    reports.html.destination = file ("$reports.html.destination/integTest")
+    reports.junitXml.destination = file ("$reports.junitXml.destination/integTest")
+    
+    // Your choice:  
+    //  check.dependsOn integTest - makes 'build'->check->integTest  runs in 5 minutes
+    //  ELSE comment out, and 'build'->check                         runs in 12 seconds
+    //check.dependsOn integTest
+}
+
+jar {
+    manifest {
+        attributes("Main-Class" : "com.tiemens.secretshare.main.cli.Main")
+    }
+}
+
+// Used in publishing:
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+// Used in publishing:
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            if (project.version.contains("SNAPSHOT")) {
+                url project.publishBaseUrl + "/snapshots"
+            } else {
+                url project.publishBaseUrl + "/internal"
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}
