@@ -8,11 +8,11 @@ import com.tiemens.secretshare.gui.bigintegerchecksum.ui.BasicBigIntegerChecksum
 import com.tiemens.secretshare.gui.bigintegerchecksum.ui.BigIntegerChecksumUI;
 
 /**
- * 
+ *
  * @author Tim Tiemens
  */
-public class JBigIntegerChecksum 
-    extends JComponent // JPanel // JComponent 
+public class JBigIntegerChecksum
+extends JComponent // JPanel // JComponent
 {
     // ==================================================
     // class static data
@@ -31,7 +31,7 @@ public class JBigIntegerChecksum
     // ==================================================
     protected BigIntegerChecksumModel model;
 
-//    private Icon[] controlPointIcons;
+    //    private Icon[] controlPointIcons;
 
     //private String[] controlPointTexts;
 
@@ -43,17 +43,17 @@ public class JBigIntegerChecksum
     // constructors
     // ==================================================
     public JBigIntegerChecksum()
-        throws NullPointerException,
-               IllegalArgumentException 
-    {
+            throws NullPointerException,
+            IllegalArgumentException
+            {
 
         this(new DefaultBigIntegerChecksumModel());
-    }
-    
+            }
+
     public JBigIntegerChecksum(BigIntegerChecksumModel model)
-        throws NullPointerException,
-               IllegalArgumentException 
-    {
+            throws NullPointerException,
+            IllegalArgumentException
+            {
 
         this.model = model;
         //    this.model.setRanges(ranges);
@@ -61,92 +61,94 @@ public class JBigIntegerChecksum
         //    this.controlPointIcons = new Icon[controlPointIcons.length];
 
         this.updateUI();
-    }
+            }
 
     // ==================================================
     // public methods
     // ==================================================
-    
-
-	/**
-	 * Sets the new UI delegate.
-	 * 
-	 * @param ui  New UI delegate.
-	 */
-	public void setUI(BigIntegerChecksumUI ui) 
-	{
-		super.setUI(ui);
-	}
-
-	/**
-	 * Resets the UI property to a value from the current look and feel.
-	 * 
-	 * @see JComponent#updateUI
-	 */
-	public void updateUI() 
-	{
-	    BigIntegerChecksumUI newui;
-		if (UIManager.get(getUIClassID()) != null) 
-		{
-			newui = (BigIntegerChecksumUI) UIManager.getUI(this);
-		} 
-		else 
-		{
-		    newui = new BasicBigIntegerChecksumUI();
-		}
-		System.out.println("JBigIntegerChecksum.newui.classname=" + 
-		                   newui.getClass().getName());
-		setUI(newui);
-	}
-
-	/**
-	 * Returns the UI object which implements the L&F for this component.
-	 * 
-	 * @return UI object which implements the L&F for this component.
-	 * @see #setUI
-	 */
-	public BigIntegerChecksumUI getUI() 
-	{
-		return (BigIntegerChecksumUI) ui;
-	}
-
-	/**
-	 * Returns the name of the UI class that implements the L&F for this
-	 * component.
-	 * 
-	 * @return The name of the UI class that implements the L&F for this
-	 *         component.
-	 * @see JComponent#getUIClassID
-	 * @see UIDefaults#getUI
-	 */
-	public String getUIClassID() 
-	{
-		return uiClassID;
-	}
 
 
+    /**
+     * Sets the new UI delegate.
+     *
+     * @param ui  New UI delegate.
+     */
+    public void setUI(BigIntegerChecksumUI ui)
+    {
+        super.setUI(ui);
+    }
 
-	public BigIntegerChecksumModel getModel()
-	{
-		return this.model;
-	}
+    /**
+     * Resets the UI property to a value from the current look and feel.
+     *
+     * @see JComponent#updateUI
+     */
+    @Override
+    public void updateUI()
+    {
+        BigIntegerChecksumUI newui;
+        if (UIManager.get(getUIClassID()) != null)
+        {
+            newui = (BigIntegerChecksumUI) UIManager.getUI(this);
+        }
+        else
+        {
+            newui = new BasicBigIntegerChecksumUI();
+        }
+        System.out.println("JBigIntegerChecksum.newui.classname=" +
+                newui.getClass().getName());
+        setUI(newui);
+    }
 
-	public BigIntegerChecksumModel.Value getValue() 
-	{
-		return this.model.getValue();
-	}
+    /**
+     * Returns the UI object which implements the L&F for this component.
+     *
+     * @return UI object which implements the L&F for this component.
+     * @see #setUI
+     */
+    public BigIntegerChecksumUI getUI()
+    {
+        return (BigIntegerChecksumUI) ui;
+    }
 
-	public void setValue(BigIntegerChecksumModel.Value value) 
-	{
-	    BigIntegerChecksumModel m = getModel();
-		BigIntegerChecksumModel.Value oldValue = m.getValue();
-		if (value.equals(oldValue))
-		{
-			return;
-		}
-		else
-		{
-		    m.setValue(value);
-		}
-	}
+    /**
+     * Returns the name of the UI class that implements the L&F for this
+     * component.
+     *
+     * @return The name of the UI class that implements the L&F for this
+     *         component.
+     * @see JComponent#getUIClassID
+     * @see UIDefaults#getUI
+     */
+    @Override
+    public String getUIClassID()
+    {
+        return uiClassID;
+    }
+
+
+
+    public BigIntegerChecksumModel getModel()
+    {
+        return this.model;
+    }
+
+    public BigIntegerChecksumModel.Value getValue()
+    {
+        return this.model.getValue();
+    }
+
+    public void setValue(BigIntegerChecksumModel.Value value)
+    {
+        BigIntegerChecksumModel m = getModel();
+        BigIntegerChecksumModel.Value oldValue = m.getValue();
+        if (value.equals(oldValue))
+        {
+            return;
+        }
+        else
+        {
+            m.setValue(value);
+        }
+    }
 }

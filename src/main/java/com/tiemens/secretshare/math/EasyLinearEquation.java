@@ -351,7 +351,7 @@ public class EasyLinearEquation
             }
         }
         @SuppressWarnings("unused")
-		public String dumpDebug()
+        public String dumpDebug()
         {
             return "Trial[" + which + " result=" + result;
         }
@@ -799,7 +799,7 @@ public class EasyLinearEquation
             return ret;
         }
         @SuppressWarnings("unused")
-		public Row addConstant(final BigInteger add)
+        public Row addConstant(final BigInteger add)
         {
             Row ret = new Row(this);
 

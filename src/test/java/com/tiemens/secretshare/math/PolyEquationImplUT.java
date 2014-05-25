@@ -48,7 +48,7 @@ public class PolyEquationImplUT
     // public methods
     // ==================================================
 
-	@Test
+    @Test
     public void testBasic()
     {
         // REMEMBER: arguments are REVERSED, i.e. "432" is the constant:

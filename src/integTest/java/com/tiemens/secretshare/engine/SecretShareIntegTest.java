@@ -60,7 +60,7 @@ public class SecretShareIntegTest
      * This test takes 65 to 80 seconds to run 1000 trials.
      * corei7 down to 20 seconds.
      */
-	@Test
+    @Test
     public void testMassiveLoop384()
     {
         subtestMassiveLoop(SecretShare.getPrimeUsedFor384bitSecretPayload());
@@ -70,7 +70,7 @@ public class SecretShareIntegTest
      * This test takes 65 to 80 seconds to run 1000 trials.
      * corei7 down to 20 seconds.
      */
-	@Test
+    @Test
     public void testMassiveLoop4096()
     {
         subtestMassiveLoop(SecretShare.getPrimeUsedFor4096bigSecretPayload());
@@ -209,7 +209,7 @@ public class SecretShareIntegTest
 
     private void subtestAllCombinations(List<ShareInfo> shares)
     {
-    	// enableAllLogging();
+        // enableAllLogging();
 
         // pick the first share's public info:
         SecretShare.PublicInfo publicInfo = shares.get(0).getPublicInfo();
@@ -314,14 +314,13 @@ public class SecretShareIntegTest
 
 
     @SuppressWarnings("unused")
-	private void enableAllLogging()
+    private void enableAllLogging()
     {
         EasyLinearEquationUT.enableLogging();
         // add any other loggers here:
         //Logger l = Foo.logger;
         //l.addHandler(lh);
         //l.setLevel(Level.ALL);
-
     }
 
 

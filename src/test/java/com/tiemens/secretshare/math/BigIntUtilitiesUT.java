@@ -27,7 +27,7 @@ import org.junit.Test;
 
 public class BigIntUtilitiesUT
 {
-	// ==================================================
+    // ==================================================
     // class static data
     // ==================================================
 
@@ -50,7 +50,7 @@ public class BigIntUtilitiesUT
     // ==================================================
     // public methods
     // ==================================================
-	@Test
+    @Test
     public void testHexToString()
     {
         sub("9A1033", 0x9a, 0x10, 0x33);

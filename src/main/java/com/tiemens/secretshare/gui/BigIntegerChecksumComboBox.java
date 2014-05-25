@@ -145,7 +145,7 @@ public class BigIntegerChecksumComboBox
          * (AutoCompleteEditorComponent)
          */
         @Override
-		public Component getEditorComponent()
+        public Component getEditorComponent()
         {
             return editor;
         }
@@ -166,12 +166,12 @@ public class BigIntegerChecksumComboBox
         /**
         * overwritten to return custom PlainDocument which does the work*/
         @Override
-		protected Document createDefaultModel()
+        protected Document createDefaultModel()
         {
             return new PlainDocument()
             {
                 @Override
-				public void insertString(int offs, String str, AttributeSet a)
+                public void insertString(int offs, String str, AttributeSet a)
                     throws BadLocationException
                 {
                     if (str == null || str.length() == 0)

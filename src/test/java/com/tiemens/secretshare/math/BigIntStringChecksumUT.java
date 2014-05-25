@@ -56,7 +56,7 @@ public class BigIntStringChecksumUT
     /**
      * Test negative BigInteger values.
      */
-	@Test
+    @Test
     public void testNegativeBigInteger()
     {
         final int val = -100;
@@ -75,7 +75,7 @@ public class BigIntStringChecksumUT
     /**
      * Test some random strings.
      */
-	@Test
+    @Test
     public void testRandomBad()
     {
         subtestBad("bigintcs:0004-BBEC");
@@ -86,7 +86,7 @@ public class BigIntStringChecksumUT
     /**
      * Test having an extra set of "0"s [with the proper checksum].
      */
-	@Test
+    @Test
     public void testLotsOfLeadingZeros()
     {
         String s = "bigintcs:-000000-000064-F913AE";
@@ -102,11 +102,11 @@ public class BigIntStringChecksumUT
      * Test some crazy strings [that have the proper checksum]
      * that don't actually result in BigIntegers.
      */
-	@Test
+    @Test
     public void testReallyBadInputs()
     {
-    	// true = generates 'reallyBad'[odd] string     false = run tests
-    	boolean runAsGenerate = false;
+        // true = generates 'reallyBad'[odd] string     false = run tests
+        boolean runAsGenerate = false;
 
         String[] reallyBad = new String[] {
                 "AB##",     "461C44",
@@ -147,7 +147,7 @@ public class BigIntStringChecksumUT
     /**
      * Test a bunch of random BigInteger-to-string-backto-BigInteger:
      */
-	@Test
+    @Test
     public void testRandomCoversions()
     {
         Random random = new SecureRandom();

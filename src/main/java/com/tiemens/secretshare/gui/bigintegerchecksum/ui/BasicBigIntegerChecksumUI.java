@@ -375,7 +375,7 @@ public class BasicBigIntegerChecksumUI
             coordinator.itemSelected(this.type);
         }
         @Override
-		public String toString()
+        public String toString()
         {
             return coordinator.getStringForTypeAndState(type);
         }

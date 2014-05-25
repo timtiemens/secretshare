@@ -351,28 +351,28 @@ public class MainSplit
             {
                 if (! SecretShare.isTheModulusAppropriateForSecret(ret.modulus, ret.secret))
                 {
-                	final String originalString;
-                	if (ret.secretArgument != null)
-                	{
-                		originalString = "[" + ret.secretArgument + "]";
-                	}
-                	else
-                	{
-                		originalString = "";
-                	}
-
-                	final String sInfo;
-                    String sAsString = "" + ret.secret;
-                    if (sAsString.length() < 25)
+                    final String originalString;
+                    if (ret.secretArgument != null)
                     {
-                    	sInfo = sAsString;
+                        originalString = "[" + ret.secretArgument + "]";
                     }
                     else
                     {
-                    	sInfo = "length is " + sAsString.length() + " digits";
+                        originalString = "";
+                    }
+
+                    final String sInfo;
+                    String sAsString = "" + ret.secret;
+                    if (sAsString.length() < 25)
+                    {
+                        sInfo = sAsString;
+                    }
+                    else
+                    {
+                        sInfo = "length is " + sAsString.length() + " digits";
                     }
                     String m = "The secret " + originalString +  " (" + sInfo + ") is too big.  " +
-                    		"Please adjust the prime modulus or use -primeNone";
+                            "Please adjust the prime modulus or use -primeNone";
 
                     throw new SecretShareException(m);
 
@@ -428,7 +428,6 @@ public class MainSplit
                 ret.paranoidOutput =
                         secretShare.combineParanoid(generate.getShareInfos(),
                                                     parg);
-
             }
             else
             {
@@ -447,7 +446,6 @@ public class MainSplit
     public static class SplitOutput
     {
         private static String SPACES = "                                              ";
-
         private boolean printAllSharesAtOnce = true;
 
         public SplitInput splitInput;
@@ -467,7 +465,6 @@ public class MainSplit
         {
             printAllSharesAtOnce = val;
         }
-
 
         public void print(PrintStream out)
         {
@@ -514,7 +511,6 @@ public class MainSplit
                 }
                 first = false;
 
-
                 printHeaderInfo(out);
 
                 if (hasParanoidOutput())
@@ -548,8 +544,6 @@ public class MainSplit
             markedValue(out, "k", publicInfo.getK());
             markedValue(out, "modulus", publicInfo.getPrimeModulus(), false);
             markedValue(out, "modulus", publicInfo.getPrimeModulus(), true);
-
-
         }
 
         private void printSharesAllAtOnce(PrintStream out)

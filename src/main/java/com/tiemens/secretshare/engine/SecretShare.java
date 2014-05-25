@@ -119,9 +119,9 @@ public class SecretShare
      */
     public static BigInteger createRandomModulusForSecret(BigInteger secret)
     {
-    	Random random = new SecureRandom();
+        Random random = new SecureRandom();
 
-    	return createRandomModulusForSecret(secret, random);
+        return createRandomModulusForSecret(secret, random);
     }
 
     /**
@@ -130,7 +130,7 @@ public class SecretShare
      *
      */
     public static BigInteger createRandomModulusForSecret(BigInteger secret,
-    			                                          Random random)
+                                                          Random random)
     {
         final BigInteger ret;
         final int originalBitLength = secret.bitLength();
@@ -297,7 +297,7 @@ public class SecretShare
                                              String asbigintcs)
     {
         BigInteger other =
-        		BigIntStringChecksum.fromString(asbigintcs).asBigInteger();
+                BigIntStringChecksum.fromString(asbigintcs).asBigInteger();
 
         if (expected.equals(other))
         {
@@ -622,10 +622,10 @@ public class SecretShare
         public String debugDump()
         {
             return "ShareInfo[x=" + x + "\n" +
-            		"share=" + share + "\n" +
-            		"shareBigIntCs=" + BigIntStringChecksum.create(share).toString() + "\n" +
-            		" public=" + publicInfo.debugDump() +
-            		"]";
+                    "share=" + share + "\n" +
+                    "shareBigIntCs=" + BigIntStringChecksum.create(share).toString() + "\n" +
+                    " public=" + publicInfo.debugDump() +
+                    "]";
         }
         public final int getIndex()
         {
@@ -714,7 +714,6 @@ public class SecretShare
         }
     }
 
-
     public ParanoidOutput combineParanoid(List<ShareInfo> shares)
     {
         return combineParanoid(shares, null);
@@ -725,7 +724,6 @@ public class SecretShare
     {
         ParanoidOutput ret = new ParanoidOutput();
         ret.maximumCombinationsAllowedToTest = maximumCombinationsToTest;
-
 
         BigInteger answer = null;
         PublicInfo publicInfo = shares.get(0).getPublicInfo();
@@ -872,10 +870,6 @@ public class SecretShare
             return agreedAnswerEveryTime;
         }
     }
-
-
-
-
 
 
     // ==================================================

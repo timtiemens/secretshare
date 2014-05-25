@@ -186,7 +186,7 @@ public class CombinationGenerator<E>
     }
 
     @Override
-	public void remove()
+    public void remove()
     {
         // ouch again
         throw new UnsupportedOperationException();

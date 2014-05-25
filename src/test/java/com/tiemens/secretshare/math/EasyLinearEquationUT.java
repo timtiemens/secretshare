@@ -17,6 +17,7 @@
  ******************************************************************************/
 package com.tiemens.secretshare.math;
 
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -37,7 +38,7 @@ import com.tiemens.secretshare.math.EasyLinearEquation.EasySolve;
 public class EasyLinearEquationUT
 {
 
-	// ==================================================
+    // ==================================================
     // class static data
     // ==================================================
 
@@ -57,12 +58,11 @@ public class EasyLinearEquationUT
     // constructors
     // ==================================================
 
-
     // ==================================================
     // public methods
     // ==================================================
 
-	@Test
+    @Test
     public void testFirst()
     {
         EasyLinearEquation ele = null;
@@ -84,12 +84,12 @@ public class EasyLinearEquationUT
                             BigInteger.valueOf(7), solve.getAnswer(3));
     }
 
-	@Test
+    @Test
     public void testJavadocExample()
         throws IOException
     {
         // uncomment to enable logging:
-    	//enableLogging();
+        //enableLogging();
 
         EasyLinearEquation ele = null;
 
@@ -119,12 +119,12 @@ public class EasyLinearEquationUT
      * where there was no modulus.
      *
      */
-	@Test
+    @Test
     public void testFromRealSecret()
         throws IOException
     {
-    	// uncomment to enable logging
-    	//enableLogging();
+        // uncomment to enable logging
+        //enableLogging();
 
         EasyLinearEquation ele = null;
 
@@ -154,11 +154,11 @@ public class EasyLinearEquationUT
      * the coefficients came from random-long [i.e. were big].
      *
      */
-	@Test
+    @Test
     public void testFromRealSecretLong()
         throws IOException
     {
-    	// enableLogging();
+        // enableLogging();
 
         EasyLinearEquation ele = null;
 
@@ -189,7 +189,7 @@ public class EasyLinearEquationUT
     }
 
 
-	@Test
+    @Test
     public void testMod()
     {
         BigInteger a = BigInteger.valueOf(-28891);
@@ -213,7 +213,7 @@ public class EasyLinearEquationUT
      *   and so does this test.
      * Note that the wiki does not use modulus in its example.
      */
-	@Test
+    @Test
     public void testFirstPolynomial()
     {
         EasyLinearEquation ele = null;
@@ -297,7 +297,7 @@ public class EasyLinearEquationUT
         return new SimpleFormatter()
         {
             @Override
-			public synchronized String format(LogRecord record)
+            public synchronized String format(LogRecord record)
             {
                 StringBuffer sb = new StringBuffer();
                 String message = formatMessage(record);

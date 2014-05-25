@@ -24,13 +24,13 @@ public class TicketTwoMain
 
         if (useSimpleSecret)
         {
-        	// 	simple secret:
-        	secret = "Hello Secret!";
+            // simple secret:
+            secret = "Hello Secret!";
         }
         else
         {
-        	// This secret takes a long time to generate "probable prime"...
-        	secret = "A2345678901234567890123456789012345678901234567890"
+            // This secret takes a long time to generate "probable prime"...
+            secret = "A2345678901234567890123456789012345678901234567890"
                 + "12345678901234567890123456789012345678901234567890"
                 + "12345678901234567890123456789012345678901234567890"
                 + "12345678901234567890123456789012345678901234567890"

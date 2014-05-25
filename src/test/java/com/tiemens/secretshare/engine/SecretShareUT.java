@@ -35,7 +35,7 @@ public class SecretShareUT
 {
 
 
- // ==================================================
+    // ==================================================
     // class static data
     // ==================================================
 
@@ -55,21 +55,21 @@ public class SecretShareUT
     // constructors
     // ==================================================
 
-	// @Before
+    // @Before
 
 
     // ==================================================
     // public methods
     // ==================================================
 
-	@Test
+    @Test
     public void testStandard192prime()
     {
         BigInteger p = SecretShare.getPrimeUsedFor192bitSecretPayload();
         Assert.assertNotNull(p);
     }
 
-	@Test
+    @Test
     public void testFirst()
     {
         final int n = 6;
@@ -181,7 +181,7 @@ public class SecretShareUT
 
     private void subtestAllCombinations(List<ShareInfo> shares)
     {
-    	// enableAllLogging();
+        // enableAllLogging();
 
         // pick the first share's public info:
         SecretShare.PublicInfo publicInfo = shares.get(0).getPublicInfo();
@@ -210,49 +210,47 @@ public class SecretShareUT
 
     @Test
     public void testCreateRandomModulusForSecret() {
-    	Random random = new Random(1234L);
+        Random random = new Random(1234L);
 
-    	String[] secret4expected = new String [] {
-    			"500", "757",
-    			"250000", "1671671",
-    			"125000000", "4248385987",
-    			"750000000000000", "1120190824028631461",
-    	};
+        String[] secret4expected = new String [] {
+                "500", "757",
+                "250000", "1671671",
+                "125000000", "4248385987",
+                "750000000000000", "1120190824028631461",
+        };
 
-    	for (int i = 0, n = secret4expected.length; i < n; i += 2)
-    	{
-    		BigInteger secret = new BigInteger(secret4expected[i + 0]);
-    		BigInteger expected = new BigInteger(secret4expected[i + 1]);
+        for (int i = 0, n = secret4expected.length; i < n; i += 2)
+        {
+            BigInteger secret = new BigInteger(secret4expected[i + 0]);
+            BigInteger expected = new BigInteger(secret4expected[i + 1]);
 
-    		BigInteger actual = SecretShare.createRandomModulusForSecret(secret, random);
-    		Assert.assertEquals("secret=" + secret, expected, actual);
-    		Assert.assertTrue("not bigger than", actual.compareTo(secret) > 0);
-    		Assert.assertTrue("isTheModulusAppropriateForSecret", SecretShare.isTheModulusAppropriateForSecret(actual, secret));
-    	}
+            BigInteger actual = SecretShare.createRandomModulusForSecret(secret, random);
+            Assert.assertEquals("secret=" + secret, expected, actual);
+            Assert.assertTrue("not bigger than", actual.compareTo(secret) > 0);
+            Assert.assertTrue("isTheModulusAppropriateForSecret", SecretShare.isTheModulusAppropriateForSecret(actual, secret));
+        }
     }
 
     @Test
     public void testIsTheModulusAppropriateForSecret()
     {
-    	BigInteger secret = new BigInteger("100");
-    	Assert.assertFalse(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("99"), secret));
-    	Assert.assertFalse(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("100"), secret));
-    	Assert.assertTrue(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("101"), secret));
-
-
+        BigInteger secret = new BigInteger("100");
+        Assert.assertFalse(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("99"), secret));
+        Assert.assertFalse(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("100"), secret));
+        Assert.assertTrue(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("101"), secret));
     }
 
 
     @Test
     public void testPayloadModulus()
     {
-    	BigInteger p4096 = SecretShare.getPrimeUsedFor4096bigSecretPayload();
-    	BigInteger p384 = SecretShare.getPrimeUsedFor384bitSecretPayload();
-    	BigInteger p192 = SecretShare.getPrimeUsedFor192bitSecretPayload();
+        BigInteger p4096 = SecretShare.getPrimeUsedFor4096bigSecretPayload();
+        BigInteger p384 = SecretShare.getPrimeUsedFor384bitSecretPayload();
+        BigInteger p192 = SecretShare.getPrimeUsedFor192bitSecretPayload();
 
-    	Assert.assertNotNull(p4096);
-    	Assert.assertNotNull(p384);
-    	Assert.assertNotNull(p192);
+        Assert.assertNotNull(p4096);
+        Assert.assertNotNull(p384);
+        Assert.assertNotNull(p192);
     }
 
     // ==================================================
@@ -260,7 +258,7 @@ public class SecretShareUT
     // ==================================================
 
     @SuppressWarnings("unused")
-	private void enableAllLogging()
+    private void enableAllLogging()
     {
         EasyLinearEquationUT.enableLogging();
         // add any other loggers here:

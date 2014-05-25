@@ -47,7 +47,7 @@ public class HexByteUtiltiesUT
     // ==================================================
     // public methods
     // ==================================================
-	@Test
+    @Test
     public void testHexToString()
     {
         sub("9A1033", 0x9a, 0x10, 0x33);
