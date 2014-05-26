@@ -19,7 +19,7 @@ The following are required to run the application in secretshare.jar:
  a - build the project with gradle
      $ gradle build
        [creates build/dist/lib/secretshare.jar]
-     $ cp build/libs/secretshare-1.2.2.jar ./secretshare.jar
+     $ cp build/libs/secretshare-1.3.0.jar ./secretshare.jar
        [copy the .jar into the current directory]
  b - [TODO: push .jar artifact to maven central]
 

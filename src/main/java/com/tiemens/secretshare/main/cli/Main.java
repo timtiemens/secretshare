@@ -36,7 +36,7 @@ public class Main
      */
     public static String getVersionString()
     {
-        return "1.2.2-SNAPSHOT";
+        return "1.3.0";
     }
 
 
