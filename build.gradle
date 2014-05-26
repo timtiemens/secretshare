@@ -9,7 +9,7 @@ apply plugin: 'maven-publish'
 //
 
 group = 'com.tiemens'
-version = '1.2-SNAPSHOT'
+version = '1.2.0-SNAPSHOT'
 sourceCompatibility = 1.6
 
 

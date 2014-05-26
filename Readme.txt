@@ -45,23 +45,21 @@ The following are required to run the application in secretshare.jar:
        | java -jar secretshare.jar combine -stdin
     [runs the same command as above, but pipes that output into the 'combine'
      program, which then re-creates the secret and the secret string "Cat".]
-    
-  $ java -jar secretshare.jar split -k 3 -n 6 \
-        -sS "The Cat In The Hat" 
-    [creates a share size 6 with threshold 3 with the secret string.
+
+  $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat"
+    [creates a share size 6 with threshold 3 with the longer secret string.
      Note: no modulus was given, so a pre-defined 384-bit prime was used,
            which allows 48 characters of secret string.]
 
-  $ java -jar secretshare.jar split -k 3 -n 6 \
-        -sS "The Cat In The Hat" | \ 
-        java -jar secretshare.jar combine -stdin
+  $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat" \
+       | java -jar secretshare.jar combine -stdin
     [creates the same share as above, then pipes the output of 'split'
      into 'combine', and prints out the secret string.]
 
-  $ java -jar secretshare.jar split -k 3 -n 6 \
-        -sS "The Cat In The Hat 4096bits"  -prime4096
+  $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
+              -prime4096
     [creates a share size 6 with threshold 3 with the secret string.
-     Note: the modulus was given as "prime4096", so the pre-defined 40964-bit prime 
+     Note: the modulus was given as "prime4096", so the pre-defined 40964-bit prime
            was used, which allows 512 characters of secret string.]
 
 Note: Using a shared modulus is ok - the modulus is NOT secret.

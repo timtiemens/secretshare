@@ -17,6 +17,9 @@
  ******************************************************************************/
 package com.tiemens.secretshare.main.cli;
 
+import java.io.InputStream;
+import java.io.PrintStream;
+
 /**
  * "Dispatch" main program.
  * Based on the 1st argument, calls one of:
@@ -43,11 +46,26 @@ public class Main
      */
     public static void main(String[] args)
     {
+        main(args, System.in, System.out, true);
+    }
+
+    public static void main(String[] args,
+                            InputStream in,
+                            PrintStream out,
+                            boolean callExit)
+    {
         if (args.length < 1)
         {
-            System.out.println("Error: must supply at least 1 argument");
-            usage();
-            System.exit(1);
+            out.println("Error: must supply at least 1 argument");
+            usage(out);
+            if (callExit)
+            {
+                System.exit(1);
+            }
+            else
+            {
+                return;
+            }
         }
         else
         {
@@ -55,27 +73,34 @@ public class Main
             args[0] = null;
             if ("split".equalsIgnoreCase(cmd))
             {
-                MainSplit.main(args);
+                MainSplit.main(args, in, out);
             }
             else if ("combine".equalsIgnoreCase(cmd))
             {
-                MainCombine.main(args);
+                MainCombine.main(args, in, out);
             }
             else
             {
-                System.out.println("Error: could not understand argument '" + cmd + "' - it must be " +
+                out.println("Error: could not understand argument '" + cmd + "' - it must be " +
                                    "either 'split' or 'combine'");
-                usage();
-                System.exit(1);
+                usage(out);
+                if (callExit)
+                {
+                    System.exit(1);
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
     }
 
 
-    private static void usage()
+    private static void usage(PrintStream out)
     {
-        System.out.println("Usage:  java -jar secretshare.jar <split>|<combine>");
+        out.println("Usage:  java -jar secretshare.jar <split>|<combine>");
     }
 
     // ==================================================

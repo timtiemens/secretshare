@@ -16,6 +16,7 @@
  *******************************************************************************/
 package com.tiemens.secretshare.main.cli;
 
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -46,41 +47,48 @@ public class MainSplit
      */
     public static void main(String[] args)
     {
+        main(args, System.in, System.out);
+    }
+
+    public static void main(String[] args,
+                            InputStream in,
+                            PrintStream out)
+    {
         try
         {
             SplitInput input = SplitInput.parse(args);
             SplitOutput output = input.output();
-            output.print(System.out);
+            output.print(out);
         }
         catch (SecretShareException e)
         {
-            System.out.println(e.getMessage());
-            usage();
-            optionallyPrintStackTrace(args, e);
+            out.println(e.getMessage());
+            usage(out);
+            optionallyPrintStackTrace(args, e, out);
         }
     }
 
-    public static void usage()
+    public static void usage(PrintStream out)
     {
-        System.out.println("Usage:");
-        System.out.println(" split -k <k> -n <n> -sN|-sS secret " +               // required
-                             "  [-prime4096|-prime384|-prime192|-primeN] [-d <desc>] [-paranoid <p>] "); // optional
-        System.out.println("  -k <k>        the threshold");
-        System.out.println("  -n <k>        the number of shares to generate");
-        System.out.println("  -sN           the secret as a number, e.g. '124332' or 'bigintcs:01e5ac-787852'");
-        System.out.println("  -sS           the secret as a string, e.g. 'My Secret'");
-        System.out.println("  -d <desc>     description of the secret");
-        System.out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
-        System.out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
-        System.out.println("  -prime192     for modulus, use built-in 192-bit prime");
-        System.out.println("  -primeAuto    for modulus, use 192, 384, 4096 or a random prime (that is bigger than secret)");
-        System.out.println("  -primeN       same as -primeRandom");
-        System.out.println("  -primeRandom  for modulus, use a random prime (that is bigger than secret)");
-        System.out.println("  -m <modulus>  for modulus, use <modulus>, e.g. '11753999' or 'bigintcs:b35a0f-F89BEC'");
-        System.out.println("  -primeNone    no modulus, do NOT use any modulus");
-        System.out.println("  -paranoid <p> test combine combinations, maximum of <p> tests");
-        System.out.println("  -printOne     put all shares on 1 sheet of paper");
-        System.out.println("  -printIndiv   put 1 share per sheet, use 'n' sheets of paper");
+        out.println("Usage:");
+        out.println(" split -k <k> -n <n> -sN|-sS secret " +               // required
+                    "  [-prime4096|-prime384|-prime192|-primeN] [-d <desc>] [-paranoid <p>] "); // optional
+        out.println("  -k <k>        the threshold");
+        out.println("  -n <k>        the number of shares to generate");
+        out.println("  -sN           the secret as a number, e.g. '124332' or 'bigintcs:01e5ac-787852'");
+        out.println("  -sS           the secret as a string, e.g. 'My Secret'");
+        out.println("  -d <desc>     description of the secret");
+        out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
+        out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
+        out.println("  -prime192     for modulus, use built-in 192-bit prime");
+        out.println("  -primeAuto    for modulus, use 192, 384, 4096 or a random prime (that is bigger than secret)");
+        out.println("  -primeN       same as -primeRandom");
+        out.println("  -primeRandom  for modulus, use a random prime (that is bigger than secret)");
+        out.println("  -m <modulus>  for modulus, use <modulus>, e.g. '11753999' or 'bigintcs:b35a0f-F89BEC'");
+        out.println("  -primeNone    no modulus, do NOT use any modulus");
+        out.println("  -paranoid <p> test combine combinations, maximum of <p> tests");
+        out.println("  -printOne     put all shares on 1 sheet of paper");
+        out.println("  -printIndiv   put 1 share per sheet, use 'n' sheets of paper");
 
     }
 
@@ -156,7 +164,8 @@ public class MainSplit
     }
 
     public static void optionallyPrintStackTrace(String[] args,
-                                                 Exception e)
+                                                 Exception e,
+                                                 PrintStream out)
     {
         boolean print = false;
         for (String s : args)
@@ -168,7 +177,7 @@ public class MainSplit
         }
         if (print)
         {
-            e.printStackTrace();
+            e.printStackTrace(out);
         }
     }
 

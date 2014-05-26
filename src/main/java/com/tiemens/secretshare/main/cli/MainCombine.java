@@ -19,6 +19,7 @@ package com.tiemens.secretshare.main.cli;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -49,37 +50,42 @@ public class MainCombine
      */
     public static void main(String[] args)
     {
+        main(args, System.in, System.out);
+    }
+
+    public static void main(String[] args,
+                            InputStream in,
+                            PrintStream out)
+    {
         try
         {
-            CombineInput input = CombineInput.parse(args);
+            CombineInput input = CombineInput.parse(args, in, out);
             CombineOutput output = input.output();
-            output.print(System.out);
+            output.print(out);
         }
         catch (SecretShareException e)
         {
-            System.out.println(e.getMessage());
-            usage();
-            MainSplit.optionallyPrintStackTrace(args, e);
+            out.println(e.getMessage());
+            usage(out);
+            MainSplit.optionallyPrintStackTrace(args, e, out);
         }
     }
 
-    public static void usage()
+    public static void usage(PrintStream out)
     {
-        System.out.println("Usage:");
-        System.out.println(" combine -k <k>  -s<n> <secret-N> ..." +               // required
-                             "  [-prime4096|-prime384|-prime192|-primeN <m>|-primeNone] -stdin"); // optional
-        System.out.println("  -k <k>        the threshold");
-        System.out.println("  -s<n> <s>     secret#n as a number e.g. '124332' or 'bigintcs:123456-DC0AE1'");
-        System.out.println("     ...           repeat this argument <k> times");
-        System.out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
-        System.out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
-        System.out.println("  -prime192     for modulus, use built-in 192-bit prime");
-        System.out.println("  -primeN <m>   for modulus use m, e.g. '59561' or 'bigintcs:12345-DC0AE1'");
-        System.out.println("  -primeNone    modulus, do NOT use any modulus");
-        System.out.println("  -stdin        read values from standard input, as written by 'split'");
+        out.println("Usage:");
+        out.println(" combine -k <k>  -s<n> <secret-N> ..." +               // required
+                    "  [-prime4096|-prime384|-prime192|-primeN <m>|-primeNone] -stdin"); // optional
+        out.println("  -k <k>        the threshold");
+        out.println("  -s<n> <s>     secret#n as a number e.g. '124332' or 'bigintcs:123456-DC0AE1'");
+        out.println("     ...           repeat this argument <k> times");
+        out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
+        out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
+        out.println("  -prime192     for modulus, use built-in 192-bit prime");
+        out.println("  -primeN <m>   for modulus use m, e.g. '59561' or 'bigintcs:12345-DC0AE1'");
+        out.println("  -primeNone    modulus, do NOT use any modulus");
+        out.println("  -stdin        read values from standard input, as written by 'split'");
     }
-
-
 
     private static BigInteger parseBigInteger(String argname,
                                               String[] args,
@@ -123,7 +129,9 @@ public class MainCombine
         // ==================================================
         // constructors
         // ==================================================
-        public static CombineInput parse(String[] args)
+        public static CombineInput parse(String[] args,
+                                         InputStream in,
+                                         PrintStream out)
         {
             CombineInput ret = new CombineInput();
 
@@ -150,7 +158,7 @@ public class MainCombine
                 }
                 else if ("-stdin".equals(args[i]))
                 {
-                    ret.processStdin();
+                    ret.processStdin(in, out);
                 }
                 else if ("-m".equals(args[i]))
                 {
@@ -210,11 +218,12 @@ public class MainCombine
             return ret;
         }
 
-        private void processStdin()
+        private void processStdin(InputStream in,
+                                  PrintStream out)
         {
             try
             {
-                processStdinThrow();
+                processStdinThrow(in, out);
             }
             catch (IOException e)
             {
@@ -232,10 +241,11 @@ public class MainCombine
         //  Share (x:2) = 481883688232565050752267350226995441999530323860
         //  Share (x:1) = bigintcs:005468-697323-cc48a7-8f1f87-996040-4d07d2-3da700-9C4722
         //  Share (x:2) = bigintcs:005468-69732d-4e02c5-7b11d2-9d4426-e26c88-8a6f94-9809A9
-        private void processStdinThrow()
+        private void processStdinThrow(InputStream in,
+                                       PrintStream out)
             throws IOException
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -257,8 +267,12 @@ public class MainCombine
                     SecretShare.ShareInfo share = parseEqualShare("share", line);
                     addIfNotDuplicate(share);
                 }
+                else
+                {
+                    // There are lots of lines we do not process.
+                    // For now, just ignore them.
+                }
             }
-
         }
 
         private void addIfNotDuplicate(ShareInfo add)
