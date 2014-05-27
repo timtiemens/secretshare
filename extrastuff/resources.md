@@ -3,6 +3,20 @@ Resources
 
 Other implementations
 
+Clojure
+-------
+
+[Shamir Secret Sharing for Clojure based on secretsharejava] 
+
+Wonderful application in Clojure.  Based on this library as hosted at SourceForge.
+
+Java
+----
+
+[Shamir Secret Sharing in Java]
+
+The original location for this project.  Out of date.  Uses ant instead of gradle.  Remember the good 'ole days when Sourceforge choked when the project had a quote-mark in the title?  That is why it isn't called "Shamir's Secret Sharing in Java".
+
 Perl
 ----
 
@@ -23,20 +37,6 @@ C
 [Shamir's Secret Sharing Scheme]
 
 Too simple "share format" of NN-hhhhhhhhhh where NN/x is provided, but not "k"
-
-Clojure
--------
-
-[Shamir Secret Sharing for Clojure based on secretsharejava] 
-
-Wonderful application in Clojure.  Based on this library as hosted at SourceForge.
-
-Java
-----
-
-[Shamir Secret Sharing in Java]
-
-The original location for this project.  Out of date.  Uses ant instead of gradle.  Remember the good 'ole days when Sourceforge choked when the project had a quote-mark in the title?  That is why it isn't called "Shamir's Secret Sharing in Java".
 
 
 [Implementation of Shamir's method for sharing a secret]:http://charles.karney.info/misc/secret.html
