@@ -38,7 +38,7 @@ import com.tiemens.secretshare.exceptions.SecretShareException;
  *  1491   83   32   22
  *   329    5   13   22
  *   122    3    2   19
- * and stored in this class as a List<Row> objects.
+ * and stored in this class as a List[Row] objects.
  *
  * Then, this class can "solve" it into the 'diagonal 1', giving:
  *   11    1    0    0

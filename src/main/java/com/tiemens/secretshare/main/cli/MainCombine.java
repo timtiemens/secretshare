@@ -46,7 +46,7 @@ public class MainCombine
 {
 
     /**
-     * @param args
+     * @param args from command line
      */
     public static void main(String[] args)
     {

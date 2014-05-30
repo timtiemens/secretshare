@@ -86,6 +86,8 @@ public class BasicBigIntegerChecksumUI
 
     /**
      * TODO: why argument 'c'?
+     * @param c because
+     * @return component
      */
     public static ComponentUI createUI(JComponent c)
     {

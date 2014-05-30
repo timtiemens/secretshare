@@ -117,9 +117,9 @@ extends JComponent // JPanel // JComponent
     }
 
     /**
-     * Returns the UI object which implements the L&F for this component.
+     * Returns the UI object which implements the LnF for this component.
      *
-     * @return UI object which implements the L&F for this component.
+     * @return UI object which implements the LnF for this component.
      * @see #setUI
      */
     public BigIntegerChecksumUI getUI()
@@ -128,10 +128,10 @@ extends JComponent // JPanel // JComponent
     }
 
     /**
-     * Returns the name of the UI class that implements the L&F for this
+     * Returns the name of the UI class that implements the LnF for this
      * component.
      *
-     * @return The name of the UI class that implements the L&F for this
+     * @return The name of the UI class that implements the LnF for this
      *         component.
      * @see JComponent#getUIClassID
      * @see UIDefaults#getUI
