@@ -641,7 +641,8 @@ public class MainSplit
                     pad = pad.substring(0, 30);
                     if (value.equals(""))
                     {
-                        sep = "  ";
+                        pad = label;
+                        sep = "";
                     }
                     else
                     {
