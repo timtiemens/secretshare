@@ -9,7 +9,7 @@ public class SecretShareFrame
 {
 
     /**
-     * @param args
+     * @param args from command line
      */
     public static void main(String[] args)
     {

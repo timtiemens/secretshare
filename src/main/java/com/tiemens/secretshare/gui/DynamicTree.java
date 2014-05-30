@@ -134,7 +134,11 @@ public class DynamicTree
         guiFactory.getToolkit().beep();
     }
 
-    /** Add child to the currently selected node. */
+    /** 
+     * Add child to the currently selected node. 
+     * @param child to add
+     * @return the added node
+     */
     public DefaultMutableTreeNode addObject(Object child) 
     {
         DefaultMutableTreeNode parentNode = null;

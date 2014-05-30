@@ -114,7 +114,8 @@ public class SecretShare
     /**
      * NOTE: you should prefer createAppropriateModulusForSecret() over this method.
      *
-     *
+     * @param secret as biginteger
+     * @return prime modulus big enough for secret
      */
     public static BigInteger createRandomModulusForSecret(BigInteger secret)
     {
@@ -126,7 +127,9 @@ public class SecretShare
     /**
      * NOTE: you should prefer createAppropriateModulusForSecret() over this method.
      *
-     *
+     * @param secret as biginteger
+     * @param random you provide the random
+     * @return prime modulus big enough for secret*
      */
     public static BigInteger createRandomModulusForSecret(BigInteger secret,
                                                           Random random)
@@ -290,6 +293,12 @@ public class SecretShare
 
     /**
      * Guard against accidental changes to the strings.
+     * 
+     * @param which caller
+     * @param expected value as biginteger
+     * @param asbigintcs value as big-integer-checksum string
+     * @return expected or throw exception
+     * @throws SecretShareException if expected does not match asbigintcs
      */
     private static BigInteger checkAndReturn(String which,
                                              BigInteger expected,
