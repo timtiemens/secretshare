@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: com.tiemens.VersionClassPlugin
-apply from: "$rootDir/gradle/jacoco.gradle"
+// apply from: "$rootDir/gradle/jacoco.gradle"
     
 //
 // target:  'build'     - does not run integration tests
@@ -164,5 +164,5 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '1.12'
 }
