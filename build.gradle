@@ -2,12 +2,13 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: com.tiemens.VersionClassPlugin
-
+apply from: "$rootDir/gradle/jacoco.gradle"
     
 //
 // target:  'build'     - does not run integration tests
 // target:  'integTest' - runs integration tests (about 5 minutes worth)
 // target:  'publish'   - push to archiva (as guest)
+// target:  'jacocoTestReport'    'jacocoIntegTestReport' - 
 //
 
 group = 'com.tiemens'
