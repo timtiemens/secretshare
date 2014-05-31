@@ -143,10 +143,15 @@ publishing {
 
     repositories {
         maven {
-            if (project.version.contains("SNAPSHOT")) {
-                url project.publishBaseUrl + "/snapshots"
+            if (project.hasProperty('publishBaseUrl')) {
+                if (project.version.contains("SNAPSHOT")) {
+                    url project.publishBaseUrl + "/snapshots"
+                } else {
+                    url project.publishBaseUrl + "/internal"
+                }
             } else {
-                url project.publishBaseUrl + "/internal"
+                    // this 
+                    url "http://you.must.configure.project.publishBaseUrl"
             }
         }
     }
