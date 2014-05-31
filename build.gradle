@@ -1,7 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: com.tiemens.VersionClassPlugin
 
+    
 //
 // target:  'build'     - does not run integration tests
 // target:  'integTest' - runs integration tests (about 5 minutes worth)
@@ -147,6 +149,11 @@ publishing {
                 url project.publishBaseUrl + "/internal"
             }
         }
+    }
+}
+
+buildscript {
+    repositories {
     }
 }
 

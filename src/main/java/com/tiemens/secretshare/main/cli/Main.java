@@ -20,9 +20,11 @@ package com.tiemens.secretshare.main.cli;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+import com.tiemens.secretshare.BuildVersion;
+
 /**
  * "Dispatch" main program.
- * Based on the 1st argument, calls one of:
+ * Based on the first argument in args[], this calls one of:
  *   split
  *   combine
  *
@@ -36,7 +38,7 @@ public class Main
      */
     public static String getVersionString()
     {
-        return "1.3.0";
+        return BuildVersion.UI_VERSION;
     }
 
 
