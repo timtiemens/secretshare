@@ -198,14 +198,14 @@ class VersionClassPlugin implements Plugin<Project> {
 //    Plugin Configuration mechanism
 //
 class VersionClassPluginExtension {
-    def now = "" + new Date() 
-    def version = null
-    def group = null
-    def buildNumber = null
-    def packageName = null
-    def generatedClassName = "BuildVersion"
+    String now = "" + new Date() 
+    String version = null
+    String group = null
+    String buildNumber = null
+    String packageName = null
+    String generatedClassName = "BuildVersion"
 
-    def getUiVersion() {
+    String getUiVersion() {
         version +
         ( buildNumber.equals("") ? "" : (".b" + buildNumber) )
     }
