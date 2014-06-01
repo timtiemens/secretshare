@@ -31,30 +31,6 @@ class VersionClassPlugin implements Plugin<Project> {
   VersionClassPlugin()  {
   }
 
-  public genTemplateModel(project, env) {
-        def sourceBuildNumber = ''
-        if (env != null) {
-            if (env.SOURCE_BUILD_NUMBER != null) {
-                sourceBuildNumber = env.SOURCE_BUILD_NUMBER
-            }
-        }
-        def templateModel = [:]
-        templateModel['now'] = "" + new Date()
-        templateModel['name'] = project == null ? "Name" : project.name;
-        templateModel['version'] = project == null ? "Version" : project.version
-        templateModel['group'] = project == null ? "Group" : project.group
-        templateModel['buildNumber'] = sourceBuildNumber
-        templateModel['uiVersion'] =
-         templateModel['version'] +
-         ( templateModel['buildNumber'].equals("") ? "" :
-              (".b" + templateModel['buildNumber']) );
-
-
-        return templateModel;
-    }
-
-
-
     public Map fetchTemplateText(thingsThatHaveDotNewReader) {
 
         // this is set by the .each loop to the first:
@@ -112,12 +88,21 @@ class VersionClassPlugin implements Plugin<Project> {
 
   def void apply(Project project)
   {
+    project.extensions.create("versionClass", VersionClassPluginExtension)
+    def versionClassConfiguration = project.versionClass
+
     project.getPlugins().apply(JavaPlugin.class)
     def genSrc = 'generated-src/version'
     def generatedSrcDir = new File(project.buildDir, genSrc)
 
-    def templateName = "VersionClass.template"
+    // See below on why templateName is hard-coded.
+    // And, for that matter, why the directories are hard-coded too.
+    // [versionClassConfiguration.templateName is still the default value here]
+    def templateName = 
+        "VersionClass.template"
+        // NO! versionClassConfiguration.templateName
 
+    // directories hard-coded for same reason as templateName hard-coded
     def fetch = fetchTemplateText(
             [ new File("src/main/resources/" + templateName),
               new File("buildSrc/src/main/resources/" + templateName),
@@ -128,25 +113,33 @@ class VersionClassPlugin implements Plugin<Project> {
 
 
     def makeVersionClassTask = project.task('makeVersionClass') << {
-      def packageName = project.group + '.' + project.name
-      packageName = packageName.replace('-','_')
-      def outFilename = "java/" + packageName.replace('.', '/') + "/BuildVersion.java"
+
+      // at the time the versionClassConfiguration was constructed,
+      // "project" did not have many properties set to their final value,
+      // so "refresh" our values from project and System.env
+      versionClassConfiguration.refresh(project, System.env)
+
+      def templateModel = versionClassConfiguration
+      def packageName = "${templateModel.packageName}"
+
+      def outFilename = "java/" + 
+                        packageName.replace('.', '/') + 
+                        "/${templateModel.generatedClassName}.java"
       def outFile = new File(generatedSrcDir, outFilename)
       outFile.getParentFile().mkdirs()
 
-    def templateModel = genTemplateModel(project, System.env)
-    templateModel['packageName'] = packageName;
-
 
       def engine = new SimpleTemplateEngine();
-      def answer = engine.createTemplate(templateText).make(templateModel);
+      def outputString = engine.createTemplate(templateText)
+                               .make(templateModel.convertToMap());
 
-      def templateString = answer
 
       def f = new FileWriter(outFile)
-      f.write(templateString)
+      f.write(outputString)
       f.close()
+
     } // task
+
 
     project.sourceSets {
       version {
@@ -161,17 +154,33 @@ class VersionClassPlugin implements Plugin<Project> {
       }
     }
 
+    //
+    // Task : INPUTS
+    //
     makeVersionClassTask.getInputs().files(project.sourceSets.main.getAllSource())
+
+    // This is so messed up...
+    //  We can't have both:
+    //     templateName is CONFIGURABLE                  and
+    //     identify the template as an INPUT dependency
+    // So, we do not allow templateName to be CONFIGURABLE
     if (templateFileInput) {
         makeVersionClassTask.getInputs().files(templateFileInput)
     } else {
         // println "No template file found, no input dependency added"
     }
-    makeVersionClassTask.getOutputs().files(generatedSrcDir)
+
     if( project.getBuildFile() != null && project.getBuildFile().exists() )
     {
       makeVersionClassTask.getInputs().files(project.getBuildFile())
     }
+
+    //
+    // Task : OUTPUTS
+    //
+    makeVersionClassTask.getOutputs().files(generatedSrcDir)
+
+
     project.getTasks().getByName('compileJava').dependsOn('compileVersionJava')
     project.getTasks().getByName('compileVersionJava').dependsOn('makeVersionClass')
 
@@ -183,3 +192,73 @@ class VersionClassPlugin implements Plugin<Project> {
 }
 
 
+
+// This class is both the:
+//    Template Model      and
+//    Plugin Configuration mechanism
+//
+class VersionClassPluginExtension {
+    def now = "" + new Date() 
+    def version = null
+    def group = null
+    def buildNumber = null
+    def packageName = null
+    def generatedClassName = "BuildVersion"
+
+    def getUiVersion() {
+        version +
+        ( buildNumber.equals("") ? "" : (".b" + buildNumber) )
+    }
+
+
+
+    VersionClassPluginExtension() {
+    }
+
+    public void refresh(project, env) {
+        if (project != null) {
+            // project.PROPERTY could be "unspecified", 
+            // but if ours is null, set it anyway
+
+            if (! version) {
+
+                version = project.version
+            }
+            if (! group) {
+                group = project.group
+            }
+        }
+        if (env != null) {
+            def sourceBuildNumber = ''
+            if (env.SOURCE_BUILD_NUMBER != null) {
+                sourceBuildNumber = env.SOURCE_BUILD_NUMBER
+            }
+
+            if (! buildNumber) {
+                buildNumber = sourceBuildNumber
+            }
+        }    
+    }
+
+    //
+    // SimpleTemplateEngine needs an actual "Map" instance
+    // This is a cheap-and-dirty way to get that Map instance:
+    // The "depth > 10" prevents stack overflows on the runtime object
+    //   "muck-if-ication" of the VersionClassPluginExtension - 
+    //    stuff that your .template file is not going to reference anyway
+    //
+    public Map convertToMap() {
+        return convertToMap(this, 1)
+    }
+    public Map convertToMap(object, depth) {
+        return object?.properties.findAll{
+            it.hasProperty('key') && (it.key != 'class') }
+        .collectEntries {
+            it.value == null || 
+            it.value instanceof Serializable || 
+            (depth > 10) ?
+                    [it.key, it.value] :
+                    [it.key,   convertToMap(it.value, depth + 1)]
+        }
+    }
+}

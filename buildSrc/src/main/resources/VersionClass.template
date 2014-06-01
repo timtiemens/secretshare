@@ -4,13 +4,10 @@ package $packageName;
  * Simple class for storing the version derived from the build system.
  *
  */
-public interface BuildVersion
+public interface $generatedClassName
 {
     /** The version of the project from the gradle build.gradle file. */
     String VERSION = "$version";
-
-    /** The name of the project from the gradle build.gradle file. */
-    String NAME = "$name";
 
     /** The group of the project from the gradle build.gradle file. */
     String GROUP = "$group";
@@ -21,10 +18,12 @@ public interface BuildVersion
     /** The build number. */
     String BUILD_NUMBER = "$buildNumber";
 
-    /** The details for display to humans. */
+    /** The details for display to humans. 
+     *  This is a combination of VERSION and BUILD_NUMBER.
+     */
     String UI_VERSION = "$uiVersion";
 
     /** The full details of the version, including the build date. */
-    String DETAILED_VERSION = GROUP + ":" + NAME + ":" + VERSION + ":" +
+    String DETAILED_VERSION = GROUP + ":" + VERSION + ":" +
         BUILD_NUMBER + ":" + DATE;
-}\n
+}

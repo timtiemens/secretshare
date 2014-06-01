@@ -163,6 +163,11 @@ buildscript {
     }
 }
 
+versionClass {
+    packageName = "com.tiemens.secretshare"
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
+
