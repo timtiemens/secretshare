@@ -72,6 +72,8 @@ public class TicketTwoMain
         System.out.println("Any " + k + " pieces: " + Arrays.toString(kPieces));
         String reconstructed = mergePiecesIntoSecret(kPieces);
         System.out.println("Reconstructed secret=" + reconstructed);
+
+        System.out.println("Finish");
     }
 
     static BigInteger stringToBigInteger(String in)

@@ -19,6 +19,8 @@ package com.tiemens.secretshare.math;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.junit.Assert;
@@ -326,6 +328,24 @@ public class BigIntUtilitiesTest
                 Assert.fail("Should fail (" + description  +
                             ")  but didn't on " + fromHex + ", " + fromBigInteger);
             }
+        }
+    }
+
+    @Test
+    public void testCreatePrimeBigger()
+    {
+        Map<Integer, BigInteger> bits2prime = new HashMap<Integer, BigInteger>();
+        bits2prime.put(1, new BigInteger("7"));
+        bits2prime.put(2, new BigInteger("13"));
+        bits2prime.put(3, new BigInteger("23"));
+        bits2prime.put(4, new BigInteger("37"));
+
+        for (Integer bits : bits2prime.keySet()) {
+            Random random = new Random(100);
+            int intvalue = 1 << bits;
+            BigInteger value = new BigInteger("" + intvalue);
+            BigInteger actual = BigIntUtilities.createPrimeBigger(value, random);
+            Assert.assertEquals("bits=" + bits + " value=" + value, bits2prime.get(bits), actual);
         }
     }
     // ==================================================

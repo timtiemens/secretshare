@@ -5,13 +5,13 @@
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  ******************************************************************************/
@@ -50,7 +50,7 @@ public class BigIntUtilities
          * Convert a "human string" into a BigInteger by using the string's
          *   byte[] array.
          * This is NOT EVEN CLOSE to the same as new BigInteger("string").
-         * 
+         *
          * @param in a string like "This is my cat" or "123FooBar"
          * @return BigInteger
          * @throws SecretShareException on error
@@ -70,7 +70,7 @@ public class BigIntUtilities
                 throw new SecretShareException("UTF8 not found", e);
             }
         }
-        
+
         /**
          * @param in the BigInteger whose bytes to use for the String
          *      usually the output of 'createBigInteger()', above.
@@ -91,8 +91,8 @@ public class BigIntUtilities
                 throw new SecretShareException("UTF8 not found", e);
             }
         }
-    } 
-       
+    }
+
     /**
      * Converter class   : "Bigint Checksum"
      * Input format      : String that starts with "bigintcs:", contains Hex groups
@@ -103,7 +103,7 @@ public class BigIntUtilities
     {
         /**
          * @param value string to test
-         * @return true if this value is a big-int-checksum string 
+         * @return true if this value is a big-int-checksum string
          *              (i.e. starts with "bigintcs:")
          *         false otherwise
          */
@@ -144,7 +144,7 @@ public class BigIntUtilities
     /**
      * Converter class   : "Hex"
      * Input format      : String that starts with "0x", contains 0-9A-Fa-f only
-     * Example input     : 0x54686973206973206d7920636174 
+     * Example input     : 0x54686973206973206d7920636174
      *  gives BigInteger : 1711994770713785234966317640147316
      */
     public static class Hex
@@ -209,14 +209,21 @@ public class BigIntUtilities
             }
             return "0x" + bigInteger.toString(HEX_RADIX);
         }
-    }        
-        
-        
+    }
+
+
 
     public static BigInteger createPrimeBigger(BigInteger valueThatDeterminesNumberOfBits)
     {
-        int numbits = valueThatDeterminesNumberOfBits.bitLength() + 1;
         Random random = new SecureRandom();
+        return createPrimeBigger(valueThatDeterminesNumberOfBits, random);
+    }
+
+    public static BigInteger createPrimeBigger(BigInteger valueThatDeterminesNumberOfBits,
+                                               Random random)
+    {
+        int numbits = valueThatDeterminesNumberOfBits.bitLength() + 1;
+
         BigInteger ret = BigInteger.probablePrime(numbits, random);
         return ret;
     }
@@ -228,7 +235,7 @@ public class BigIntUtilities
     // ==================================================
 
 
- 
+
     // ==================================================
     // factories
     // ==================================================
