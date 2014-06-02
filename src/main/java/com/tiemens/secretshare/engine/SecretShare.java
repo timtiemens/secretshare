@@ -293,7 +293,7 @@ public class SecretShare
 
     /**
      * Guard against accidental changes to the strings.
-     * 
+     *
      * @param which caller
      * @param expected value as biginteger
      * @param asbigintcs value as big-integer-checksum string
@@ -415,6 +415,8 @@ public class SecretShare
     {
         CombineOutput ret = null;
 
+        sanityCheckPublicInfos(publicInfo, usetheseshares);
+
         if (publicInfo.getK() > usetheseshares.size())
         {
             throw new SecretShareException("Must have " + publicInfo.getK() +
@@ -423,6 +425,7 @@ public class SecretShare
         }
 
         checkForDuplicatesOrThrow(usetheseshares);
+
 
         final int size = publicInfo.getK();
         BigInteger[] xarray = new BigInteger[size];
@@ -451,6 +454,108 @@ public class SecretShare
         return ret;
     }
 
+    /**
+     * @param outer - usually the one from SecretShare.publicInfo
+     * @param list  - share info list that also have publicInfos
+     */
+    private void sanityCheckPublicInfos(PublicInfo      outer,
+                                        List<ShareInfo> list)
+    {
+        // Basic sanity checks:
+        if (outer == null)
+        {
+            throw new SecretShareException("Public Info [outer] cannot be null");
+        }
+        if (outer.k <= 0)
+        {
+            throw new SecretShareException("Public Info [outer] k must be positive, k=" + outer.k);
+        }
+        // Note: there is no restriction on outer.primeModulus -- it is allowed to be null
+
+        if (list == null)
+        {
+            throw new SecretShareException("Public Info [list] cannot be null");
+        }
+
+        // First way you are ok: if every list[x].getPublicInfo() == null
+        boolean anyShareNullsInList = false;  // any list[x] == null?
+        boolean allNullInList       = true;   // ALL list[x].publicInfo() == null?
+        boolean anyNullInList       = false;  // ANY list[x].publicInfo() == null?
+        for (ShareInfo share : list)
+        {
+            if (share != null)
+            {
+                if (share.getPublicInfo() != null)
+                {
+                    allNullInList = false;
+                }
+                else
+                {
+                    anyNullInList = true;
+                }
+            }
+            else
+            {
+                anyShareNullsInList = true;
+            }
+        }
+
+        if (allNullInList)
+        {
+            return;
+        }
+        // For now, if there are SOME nulls in the list or SOME null-publicInfos in list, then OK
+        if (anyShareNullsInList)
+        {
+            // could throw an exception here, but for now, don't
+        }
+        if (anyNullInList)
+        {
+            // could throw an exception here, but for now, don't
+        }
+
+
+        // Next -- make sure all 'n' and 'k' match
+        for (int i = 0, n = list.size(); i < n; i++)
+        {
+            final ShareInfo share = list.get(i);
+            // See above: we only check if the share is not null
+            if (share != null)
+            {
+                if (outer.k != share.getPublicInfo().k)
+                {
+                    throw new SecretShareException("Public Info [" + i + "] mismatch on k, should be = "+
+                                                   outer.k + " but was = " + share.getPublicInfo().k);
+                }
+
+                // N is allowed to be null in 'outer' - make sure it matches
+                if (! matches(outer.n, share.getPublicInfo().n))
+                {
+                    throw new SecretShareException("Public Info [" + i + "] mismatch on n, should be = "+
+                            outer.n + " but was = " + share.getPublicInfo().n);
+                }
+
+                // primeModulus is allowed to be null in 'outer' - make sure it matches
+                if (! matches(outer.primeModulus, share.getPublicInfo().primeModulus))
+                {
+                    throw new SecretShareException("Public Info [" + i + "] mismatch on modulus, should be = "+
+                            outer.primeModulus + " but was = " + share.getPublicInfo().primeModulus);
+                }
+            }
+        }
+    }
+
+    private boolean matches(Object a, Object b)
+    {
+        if (a == null)
+        {
+            return b == null;
+        }
+        else
+        {
+            return a.equals(b);
+        }
+    }
     private void checkForDuplicatesOrThrow(List<ShareInfo> shares)
     {
         Set<ShareInfo> seen = new HashSet<ShareInfo>();
@@ -754,7 +859,7 @@ public class SecretShare
         ret.maximumCombinationsAllowedToTest = maximumCombinationsToTest;
 
         BigInteger answer = null;
-        PublicInfo publicInfo = shares.get(0).getPublicInfo();
+        //PublicInfo publicInfo = shares.get(0).getPublicInfo();
 
         CombinationGenerator<ShareInfo> combo =
             new CombinationGenerator<ShareInfo>(shares,

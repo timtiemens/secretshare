@@ -18,6 +18,7 @@ package com.tiemens.secretshare.engine;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -251,6 +252,112 @@ public class SecretShareTest
         Assert.assertNotNull(p192);
     }
 
+    private BigInteger bi(int a)
+    {
+        return new BigInteger("" + a);
+    }
+
+    @Test
+    public void testCanDetectMismatchPublicInfo()
+    {
+        int n = 6, k = 3;
+        BigInteger modulus = new BigInteger("57");
+        SecretShare.PublicInfo publicInfo =
+                new SecretShare.PublicInfo(n, k, modulus, "correct baseline");
+        SecretShare.PublicInfo publicInfoMissingN =
+                new SecretShare.PublicInfo(null, k, modulus, "correct baseline");
+
+        SecretShare.PublicInfo piWrongN =
+                new SecretShare.PublicInfo(n + 1, k, modulus, "wrong n");
+        SecretShare.PublicInfo piWrongKneg =
+                new SecretShare.PublicInfo(n, k - 1, modulus, "wrong k=k-1");
+        SecretShare.PublicInfo piWrongKpos =
+                new SecretShare.PublicInfo(n, k + 1, modulus, "wrong k=k+1");
+        SecretShare.PublicInfo piWrongModulus =
+                new SecretShare.PublicInfo(n, k, modulus.add(BigInteger.TEN), "wrong modulus");
+
+
+        // jar split -n 6 -k 3 -sN 50 -m 57
+        // x(1) = 20   x(2) =  2   x(3) = 53   x(4) = 2    x(5) = 20
+        final BigInteger secret = bi(50);
+        SecretShare.ShareInfo s1 = new SecretShare.ShareInfo(1, bi(20), publicInfo);
+        SecretShare.ShareInfo s2 = new SecretShare.ShareInfo(2, bi(2), publicInfo);
+        SecretShare.ShareInfo s3 = new SecretShare.ShareInfo(3, bi(53), publicInfo);
+
+        List<SecretShare.ShareInfo> shares;
+
+        // double-check can solve:
+        shares = Arrays.asList(s1, s2, s3);
+        SecretShare secretShare = new SecretShare(publicInfo);
+        SecretShare.CombineOutput combine = secretShare.combine(shares);
+        Assert.assertEquals("baseline failed", secret, combine.getSecret());
+        assertOk("baseline failed 2", secret, publicInfo, shares);
+        //assertThrows("baseline failed 2", secret, publicInfo, shares);
+
+        // can not test: all shareInfo.publicInfo are null,
+        //   because constructor prevents null public info:
+        //     no:new SecretShare.ShareInfo(2, bi(20), null),
+
+        //
+        // SHOULD BE OK
+        //
+
+        // no public info has "n"
+        shares = Arrays.asList(new SecretShare.ShareInfo(1, bi(20), publicInfoMissingN),
+                               new SecretShare.ShareInfo(2, bi(2), publicInfoMissingN),
+                               new SecretShare.ShareInfo(3, bi(53), publicInfoMissingN));
+        assertOk("all missing n", secret, publicInfoMissingN, shares);
+
+        //
+        // SHOULD FAIL
+        //
+
+        // "outer" public info has wrong "k"
+        assertThrows("outer pi kneg", secret, piWrongKneg, shares);
+        assertThrows("outer pi kpos", secret, piWrongKpos, shares);
+
+
+        // "list[1]" public info has wrong "n"
+        shares = Arrays.asList(s1,
+                               new SecretShare.ShareInfo(2, bi(2), piWrongN),
+                               s3);
+        assertThrows("share[1] pi n wrong", secret, publicInfo, shares);
+        assertThrows("share[1] pi n wrong and outer n wrong", secret, piWrongN, shares);
+
+        // "list[2] public info has wrong "k"
+        shares = Arrays.asList(s1,
+                               s2,
+                               new SecretShare.ShareInfo(3, bi(53), piWrongKpos));
+        assertThrows("share[2] pi k wrong", secret, publicInfo, shares);
+
+        // "list[0] public info has wrong "modulus"
+        shares = Arrays.asList(new SecretShare.ShareInfo(1, bi(20), piWrongModulus),
+                               s2,
+                               s3);
+        assertThrows("share[0] pi modulus wrong", secret, publicInfo, shares);
+    }
+
+    private void assertThrows(String where, BigInteger secret, SecretShare.PublicInfo publicInfo, List<SecretShare.ShareInfo>shares)
+    {
+        SecretShare secretShare = new SecretShare(publicInfo);
+        try
+        {
+            SecretShare.CombineOutput combine = secretShare.combine(shares);
+            Assert.fail(where + ": should have thrown exception, but did not");
+        }
+        catch (SecretShareException sse)
+        {
+            // ok
+        }
+
+    }
+
+    private void assertOk(String where, BigInteger secret, SecretShare.PublicInfo publicInfo, List<SecretShare.ShareInfo>shares)
+    {
+        SecretShare secretShare = new SecretShare(publicInfo);
+        SecretShare.CombineOutput combine = secretShare.combine(shares);
+        Assert.assertEquals(where, secret, combine.getSecret());
+    }
     // ==================================================
     // non public methods
     // ==================================================

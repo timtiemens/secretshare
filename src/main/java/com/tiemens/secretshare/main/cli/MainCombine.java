@@ -321,12 +321,18 @@ public class MainCombine
         {
             if (this.publicInfo == null)
             {
-                this.publicInfo = new SecretShare.PublicInfo(n, k, this.modulus, "");
+                this.publicInfo = constructPublicInfoFromFields("parseEqualShare");
             }
 
             BigInteger s = parseEqualBigInt(fieldname, line);
             int x = parseXcolon(line);
             return new ShareInfo(x, s, this.publicInfo);
+        }
+
+        private PublicInfo constructPublicInfoFromFields(String where)
+        {
+            return new SecretShare.PublicInfo(this.n, this.k, this.modulus,
+                                              "MainCombine:" + where);
         }
 
         //  Share (x:2) = bigintcs:005468-69732d-4e02c5-7b11d2-9d4426-e26c88-8a6f94-9809A9
@@ -387,15 +393,12 @@ public class MainCombine
             CombineOutput ret = new CombineOutput();
             ret.combineInput = this;
 
-            SecretShare.PublicInfo publicInfo =
-                new SecretShare.PublicInfo(this.n,
-                                           this.k,
-                                           this.modulus,
-                                           "recombine combine command line");
+            // it is a "copy" since it should be equal to this.publicInfo
+            SecretShare.PublicInfo copyPublicInfo = constructPublicInfoFromFields("output");
 
-            SecretShare secretShare = new SecretShare(publicInfo);
+            SecretShare secretShare = new SecretShare(copyPublicInfo);
 
-            SecretShare.CombineOutput combine= secretShare.combine(shares);
+            SecretShare.CombineOutput combine = secretShare.combine(shares);
 
             ret.secret = combine.getSecret();
 
