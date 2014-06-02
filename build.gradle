@@ -3,6 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: com.tiemens.VersionClassPlugin
 apply from: "$rootDir/gradle/jacoco.gradle"
+apply plugin: 'sonar-runner'
     
 //
 // target:  'build'     - does not run integration tests
@@ -165,6 +166,15 @@ buildscript {
 
 versionClass {
     packageName = "com.tiemens.secretshare"
+}
+
+sonarRunner {
+    sonarProperties {
+        property 'sonar.projectName', 'secretshare'
+        property 'sonar.projectDescription', "Shamir's Secret Share in Java"
+        property 'sonar.sourceEncoding', 'UTF-8'
+        properties['sonar.tests'] += sourceSets.integTest.allSource.srcDirs
+    }
 }
 
 task wrapper(type: Wrapper) {
