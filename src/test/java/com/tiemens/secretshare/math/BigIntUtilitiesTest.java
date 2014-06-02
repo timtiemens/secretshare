@@ -332,7 +332,20 @@ public class BigIntUtilitiesTest
     }
 
     @Test
-    public void testCreatePrimeBigger()
+    public void testCreatePrimeBiggerRandom()
+    {
+        // without control of the Random instance, testing is very limited:
+        BigInteger value = new BigInteger("16");  // i.e. 5 bits means 32+ means 37 is smallest possible
+        BigInteger expectedBiggerThan = new BigInteger("37");
+        // actual will be 37, 41, 47, 53, etc., depending on Random we don't control
+        BigInteger actual = BigIntUtilities.createPrimeBigger(value);
+        Assert.assertTrue("actual=" + actual + " expected=" + expectedBiggerThan,
+                           actual.compareTo(expectedBiggerThan) >= 0);
+    }
+
+
+    @Test
+    public void testCreatePrimeBiggerNotRandom()
     {
         Map<Integer, BigInteger> bits2prime = new HashMap<Integer, BigInteger>();
         bits2prime.put(1, new BigInteger("7"));
@@ -345,6 +358,7 @@ public class BigIntUtilitiesTest
             int intvalue = 1 << bits;
             BigInteger value = new BigInteger("" + intvalue);
             BigInteger actual = BigIntUtilities.createPrimeBigger(value, random);
+            System.out.println(" value=" + value + " actual=" + actual);
             Assert.assertEquals("bits=" + bits + " value=" + value, bits2prime.get(bits), actual);
         }
     }
@@ -362,6 +376,7 @@ public class BigIntUtilitiesTest
                            BigIntUtilities.Checksum.createMd5CheckSumString(actual));
         Assert.assertEquals("test s=" + in, expected, actual);
     }
+
 
     private static boolean passesMillerRabin(BigInteger us,
                                              int iterations,
@@ -400,4 +415,6 @@ public class BigIntUtilitiesTest
         }
         return true;
     }
+
+
 }
