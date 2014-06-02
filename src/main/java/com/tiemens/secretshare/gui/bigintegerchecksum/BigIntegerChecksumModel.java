@@ -34,19 +34,19 @@ public interface BigIntegerChecksumModel
     // ==================================================
     // public methods
     // ==================================================
-    
+
     public Value getValue();
 
     public void setValue(Value value);
-    
+
     public void setValue(BigInteger value);
 
-    public void setValueAsBigIntCsString(String s);    
+    public void setValueAsBigIntCsString(String s);
 
     public void setValueAsBigIntegerString(String s);
 
     public void setValueAsHexString(String s);
-    
+
     public void setValueAsHumanString(String s);
 
     public boolean isAllowHumanString();
@@ -54,7 +54,7 @@ public interface BigIntegerChecksumModel
 
     /**
      * Adds a ChangeListener to the model's listener list.
-     * 
+     *
      * @param x  the ChangeListener to add
      * @see #removeChangeListener
      */
@@ -62,22 +62,22 @@ public interface BigIntegerChecksumModel
 
     /**
      * Removes a ChangeListener from the model's listener list.
-     * 
+     *
      * @param x  the ChangeListener to remove
      * @see #addChangeListener
      */
     public void removeChangeListener(ChangeListener x);
-    
-    
+
+
     // ==================================================
     // non public methods
     // ==================================================
-    
+
     /**
      * Design: Immutable
      *
      */
-    public static class Value 
+    public static class Value
     {
         public static Value create(String s,
                                    boolean allowHumanString)
@@ -135,7 +135,7 @@ public interface BigIntegerChecksumModel
             return ret;
         }
 
-        
+
         private static enum ValueSource
         {
             BIG_INTEGER,
@@ -143,7 +143,7 @@ public interface BigIntegerChecksumModel
             HEX,
             HUMAN_STRING;
         };
-        
+
         private final BigInteger biginteger;
         private final ValueSource source;
 
@@ -153,13 +153,19 @@ public interface BigIntegerChecksumModel
             this.biginteger = inBiginteger;
             this.source = inValueSource;
         }
-        
-        
+
         @Override
-        public boolean equals(Object obj) 
+        public int hashCode()
+        {
+            return 1;
+        }
+
+
+        @Override
+        public boolean equals(Object obj)
         {
             boolean ret = false;
-            if (obj instanceof Value) 
+            if (obj instanceof Value)
             {
                 ret = true;
                 Value value2 = (Value) obj;
@@ -184,7 +190,7 @@ public interface BigIntegerChecksumModel
         }
 
         @Override
-        public String toString() 
+        public String toString()
         {
             return "" + this.biginteger + " [" + source + "]";
         }
@@ -193,7 +199,7 @@ public interface BigIntegerChecksumModel
         {
             return biginteger;
         }
-        
+
         public boolean isBigIntegerChecksum()
         {
             return ValueSource.BIGINTCS.equals(source);

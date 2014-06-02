@@ -87,15 +87,16 @@ public class BigIntegerChecksumComboBox
 
     /**
      * Constructor for AutoCompleteComboBox -
-     * The Default Model is a TreeSet which is alphabetically sorted and doesnt allow
+     * The Default Model is a TreeSet which is alphabetically sorted and does not allow
      * duplicates.
      * @param items for the model
      * @param caseSensitive for case
      */
     public BigIntegerChecksumComboBox(Object[] items, boolean caseSensitive)
     {
-        super(items);
-        model = new ComboBoxModel(items);
+        super();
+        Object[] copyItems = items.clone();
+        model = new ComboBoxModel(copyItems);
         setModel(model);
         setEditable(true);
         setEditor(new AutoCompleteEditor(this, caseSensitive));
