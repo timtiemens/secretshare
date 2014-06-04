@@ -184,7 +184,7 @@ publishing {
 ext.useOssrhUsername = 
    project.hasProperty("ossrhUsername") ? ossrhUsername : "fake"
 ext.useOssrhPassword = 
-   project.hasProperty("ossrhPassword") ? ossrPassword : "fake"
+   project.hasProperty("ossrhPassword") ? ossrhPassword : "fake"
 
 uploadArchives {
   repositories {
