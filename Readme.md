@@ -24,6 +24,7 @@ This will allow the Unit Test .java files to compile.
 Installation
 ------
 1. Compile locally or use artifact.
+
   a. build the project with gradle
 ```
     $ gradle build
@@ -41,12 +42,12 @@ Installation
 
    a. split  - To display usage:
    ```
-   java -jar secretshare.jar split
+   $ java -jar secretshare.jar split
    ```
 
    b. combine  - To display usage:
    ```
-   java -jar secretshare.jar combine
+   $ java -jar secretshare.jar combine
    ```
     
 3. Examples of command line invocations
@@ -80,11 +81,19 @@ Installation
   ```
 
 
+
+Note on Secret
+-----
+From above, you can see the largest pre-defined prime modulus is 4096 bits, which only allows 512 characters of secret.
+In case it isn't obvious, the best way to use the shared secret is to use the Shamir Secret as the key to a symmetric encryption.
+See gpg -c (aka gpg --symmetric).
+
+
 Note on Modulus
 -----
 Using a shared modulus is ok - the modulus is NOT secret.
 You can use a randomly generated prime modulus if you'd like.
-it just takes longer.
+It just takes longer.
 
 ```
 Timing difference:                             Time To Generate Split
