@@ -10,31 +10,33 @@ The following are required to run the application in secretshare.jar:
  1. jre 1.6+
  
 
- The following are required to compile the project:
-1.  jdk 1.6+
-2.  gradle 1.10+
-3.  miglayout 3.7.4+
+The following are required to compile the project:
+ 1.  jdk 1.6+
+ 2.  gradle 1.10+
+ 3.  miglayout 3.7.4+
 
 
- The following are required to completely build and test the project:
-1.  JUnit 4.x
-This will allow the Unit Test .java files to compile.
+The following are required to completely build and test the project:
+ 1.  JUnit 4.x
+This will allow the (Unit and Integration) Test .java files to compile.
  
  
 Installation
 ------
 1. Compile locally or use artifact.
 
-  a. build the project with gradle
+  a. Compile locally - build the project with gradle
 ```
     $ gradle build
   [creates build/dist/lib/secretshare.jar]
     $ cp build/libs/secretshare-1.3.0.jar ./secretshare.jar
   [copies the .jar into the current directory]
 ```
-  b. [TODO: push .jar artifact to maven central]
+  b. Use artifact - [TODO: push .jar artifact to maven central, document groupId, etc. here]
 
-2. Use
+
+Use
+-----
 
    There are two main ways to use the application: split and combine.
    Split takes a secret (number or string) and splits it into 'n'shares.
@@ -82,14 +84,14 @@ Installation
 
 
 
-Note on Secret
+Note on the Secret
 -----
 From above, you can see the largest pre-defined prime modulus is 4096 bits, which only allows 512 characters of secret.
-In case it isn't obvious, the best way to use the shared secret is to use the Shamir Secret as the key to a symmetric encryption.
-See gpg -c (aka gpg --symmetric).
+In case it isn't obvious, the best way to use the shared secret is to use it as the key/pass-phrase for a symmetric encryption.
+See gpg -c (aka gpg --symmetric) for an example of symmetric encryption.
 
 
-Note on Modulus
+Note on the Modulus
 -----
 Using a shared modulus is ok - the modulus is NOT secret.
 You can use a randomly generated prime modulus if you'd like.
