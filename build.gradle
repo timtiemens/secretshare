@@ -10,6 +10,7 @@ apply plugin: 'sonar-runner'
 // target:  'integTest' - runs integration tests (about 5 minutes worth)
 // target:  'publish'   - push to archiva (as guest)
 // target:  'jacocoTestReport'    'jacocoIntegTestReport' - 
+// target:  'sonarRunner' - publish data to locally running SonarCube
 //
 
 group = 'com.tiemens'
