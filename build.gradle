@@ -20,6 +20,7 @@ apply plugin: 'maven'
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
 version = '1.3.1'
+project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 sourceCompatibility = 1.6
 
 
@@ -95,6 +96,11 @@ artifacts {
 }
 
 signing {
+    required { 
+        isReleaseVersion && 
+        gradle.taskGraph.hasTask("uploadArchives")  &&
+        project.hasProperty("ossrhUsername")
+    }
     sign configurations.archives
 }
 
@@ -119,9 +125,9 @@ publishing {
                     "Shamir's Secret Share in Java")
                 root.appendNode('url', 
                     'https://github.com/timtiemens/secretshare')
-		// strange packaging is missing:
-		root.appendNode('packaging', 'jar')
-		root.appendNode('name', "SecretShare core")
+                // strange packaging is missing:
+                root.appendNode('packaging', 'jar')
+                root.appendNode('name', "SecretShare core")
 
                 def scm = root.appendNode('scm')
                 scm.appendNode('url', 
@@ -162,7 +168,7 @@ publishing {
     repositories {
         maven {
             if (project.hasProperty('publishBaseUrl')) {
-                if (project.version.contains("SNAPSHOT")) {
+                if (project.ext.isReleaseVersion) {
                     url project.publishBaseUrl + "/snapshots"
                 } else {
                     url project.publishBaseUrl + "/internal"
@@ -175,17 +181,22 @@ publishing {
     }
 }
 
+ext.useOssrhUsername = 
+   project.hasProperty("ossrhUsername") ? ossrhUsername : "fake"
+ext.useOssrhPassword = 
+   project.hasProperty("ossrhPassword") ? ossrPassword : "fake"
+
 uploadArchives {
   repositories {
     mavenDeployer {
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
       repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
+        authentication(userName: useOssrhUsername, password: useOssrhPassword)
       }
 
       snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
+        authentication(userName: useOssrhUsername, password: useOssrhPassword)
       }
 
       pom.project {
@@ -214,7 +225,7 @@ uploadArchives {
             id 'timtiemens'
             name 'Tim Tiemens'
             email 'timremote@gmail.com'
-	    url 'https://github.com/timtiemens'
+            url 'https://github.com/timtiemens'
           }
         }
       }
