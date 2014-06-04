@@ -5,13 +5,13 @@
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  ******************************************************************************/
@@ -25,7 +25,9 @@ public class Md5ChecksummerFactory
     // ==================================================
     // class static data
     // ==================================================
+
     private static final String KEY = "ssmd5class";
+
     // ==================================================
     // class static methods
     // ==================================================
@@ -55,12 +57,12 @@ public class Md5ChecksummerFactory
                 throw new SecretShareException("Failed to create built-in MD5 digest.  " +
                                                "Use -D" + KEY + "=a.b.c.YourMd5Checksummer" +
                                                " where your class must implement the interface " +
-                                               Md5Checksummer.class.getName());
+                                               Md5Checksummer.class.getName(), e);
             }
-            
+
         }
     }
-    
+
     /**
      * @param cname the name of the class that implements Md5Checksummer interface
      * @return instance
@@ -94,15 +96,16 @@ public class Md5ChecksummerFactory
         {
             throw new SecretShareException(msg + "class not found", e);
         }
-        finally 
-        {
-            
-        }
     }
-    
+
     // ==================================================
     // constructors
     // ==================================================
+
+    private Md5ChecksummerFactory()
+    {
+        // no instances
+    }
 
     // ==================================================
     // public methods

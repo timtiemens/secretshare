@@ -244,6 +244,11 @@ public class BigIntUtilities
     // constructors
     // ==================================================
 
+    private BigIntUtilities()
+    {
+        // no instances
+    }
+
     // ==================================================
     // public methods
     // ==================================================

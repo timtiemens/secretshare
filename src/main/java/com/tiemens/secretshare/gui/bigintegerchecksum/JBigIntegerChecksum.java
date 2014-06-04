@@ -36,7 +36,7 @@ extends JComponent // JPanel // JComponent
     /**
      * The UI class ID string.
      */
-    public static final String uiClassID = "BigIntegerChecksumUI";
+    public static final String UI_CLASS_ID = "BigIntegerChecksumUI";
 
     // ==================================================
     // class static methods
@@ -139,7 +139,7 @@ extends JComponent // JPanel // JComponent
     @Override
     public String getUIClassID()
     {
-        return uiClassID;
+        return UI_CLASS_ID;
     }
 
 

@@ -193,7 +193,9 @@ public class BigIntegerChecksumComboBox
                     throws BadLocationException
                 {
                     if (str == null || str.length() == 0)
+                    {
                         return;
+                    }
                     int size = combo.getItemCount();
                     String text = getText(0, getLength());
                     for (int i = 0; i < size; i++)
@@ -207,7 +209,9 @@ public class BigIntegerChecksumComboBox
                             {
                                 combo.setSelectedIndex(i);
                                 if (!combo.isPopupVisible())
-                                  combo.setPopupVisible(true);
+                                {
+                                    combo.setPopupVisible(true);
+                                }
                                 super.remove(0, getLength());
                                 super.insertString(0, item, a);
                                 return;
@@ -216,10 +220,12 @@ public class BigIntegerChecksumComboBox
                             {
                                 combo.setSelectedIndex(i);
                                 if (!combo.isPopupVisible())
+                                {
                                         combo.setPopupVisible(true);
-                                    super.remove(0, getLength());
-                                    super.insertString(0, item, a);
-                                    return;
+                                }
+                                super.remove(0, getLength());
+                                super.insertString(0, item, a);
+                                return;
                             }
                         }
                         else if (caseSensitive)
@@ -228,7 +234,9 @@ public class BigIntegerChecksumComboBox
                             {
                                 combo.setSelectedIndex(i);
                                 if (!combo.isPopupVisible())
+                                {
                                     combo.setPopupVisible(true);
+                                }
                                 super.remove(0, getLength());
                                 super.insertString(0, item, a);
                                 return;
@@ -237,7 +245,9 @@ public class BigIntegerChecksumComboBox
                             {
                                 combo.setSelectedIndex(i);
                                 if (!combo.isPopupVisible())
+                                {
                                     combo.setPopupVisible(true);
+                                }
                                 super.remove(0, getLength());
                                 super.insertString(0, item, a);
                                 return;

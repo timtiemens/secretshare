@@ -101,6 +101,11 @@ public class MainCombine
         return MainSplit.parseInt(argname, args, index);
     }
 
+    private MainCombine()
+    {
+        // no instances
+    }
+
 
 
     public static class CombineInput

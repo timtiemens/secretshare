@@ -343,7 +343,7 @@ public class SecretShareTest
         try
         {
             SecretShare.CombineOutput combine = secretShare.combine(shares);
-            Assert.fail(where + ": should have thrown exception, but did not");
+            Assert.fail(where + ": should have thrown exception, but did not, instead returned=" + combine);
         }
         catch (SecretShareException sse)
         {

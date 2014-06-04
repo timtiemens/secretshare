@@ -13,11 +13,11 @@ public class HexByteUtilities
     // ==================================================
 
 
-    public static byte[] hexToBytes(char[] hex) 
+    public static byte[] hexToBytes(char[] hex)
     {
         int length = hex.length / 2;
         byte[] raw = new byte[length];
-        for (int i = 0; i < length; i++) 
+        for (int i = 0; i < length; i++)
         {
             int high = Character.digit(hex[i * 2], 16);
             int low = Character.digit(hex[i * 2 + 1], 16);
@@ -31,7 +31,7 @@ public class HexByteUtilities
         return raw;
     }
 
-    public static byte[] hexToBytes(String hex) 
+    public static byte[] hexToBytes(String hex)
     {
       return hexToBytes(hex.toCharArray());
     }
@@ -42,7 +42,7 @@ public class HexByteUtilities
         return s2;
     }
 
-    
+
     // ==================================================
     // instance data
     // ==================================================
@@ -54,6 +54,11 @@ public class HexByteUtilities
     // ==================================================
     // constructors
     // ==================================================
+
+    private HexByteUtilities()
+    {
+        // no instances
+    }
 
     // ==================================================
     // public methods

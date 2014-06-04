@@ -67,12 +67,18 @@ public class EasyLinearEquation
     // ==================================================
     // class static data
     // ==================================================
-    // want to turn on debug?  See EasyLinearEquationUT.enableLogging()
-    public static Logger logger = Logger.getLogger(EasyLinearEquation.class.getName());
+    // want to turn on debug?  See EasyLinearEquationTest.enableLogging()
+    private static Logger logger = Logger.getLogger(EasyLinearEquation.class.getName());
 
     // ==================================================
     // class static methods
     // ==================================================
+
+    public static Logger getLogger()
+    {
+        return logger;
+    }
+
 
     public static BigInteger[][] convertIntToBigInteger(int[][] inMatrix)
     {
@@ -458,38 +464,6 @@ public class EasyLinearEquation
             }
             return list;
         }
-        /**
-         * Original implementation.  Wrong.
-         *
-         */
-        public static Trial pickSuccess2(List<Trial> list)
-        {
-            Trial ret = null;
-
-            for (Trial t : list)
-            {
-                if (t.correct)
-                {
-                    if (ret != null)
-                    {
-                        if (t.result.compareTo(ret.result) > 0)
-                        {
-                            ret = t;
-                        }
-                        else
-                        {
-                            System.out.println("Two different correct answers");
-                        }
-                    }
-                    else
-                    {
-                        ret = t;
-                    }
-                }
-            }
-            return ret;
-        }
-
     }
 
     private static class Row
@@ -850,6 +824,7 @@ public class EasyLinearEquation
             array[i] = current;
         }
     }
+
 
 
 

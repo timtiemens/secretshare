@@ -250,7 +250,9 @@ public class BasicBigIntegerChecksumUI
     protected int modelValueToOuterValue(BigIntegerChecksumModel.Value modelValue)
     {
         if (modelValue == null)
+        {
             return 0;
+        }
 
         // TODO:
         return 0;

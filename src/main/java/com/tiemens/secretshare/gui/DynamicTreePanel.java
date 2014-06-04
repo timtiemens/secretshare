@@ -27,12 +27,12 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 package com.tiemens.secretshare.gui;
 
 /*
- * This code is based on an example provided by Richard Stanford, 
+ * This code is based on an example provided by Richard Stanford,
  * a tutorial reader.
  */
 
@@ -46,18 +46,18 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class DynamicTreePanel 
-    extends JPanel 
-    implements ActionListener 
+public class DynamicTreePanel
+    extends JPanel
+    implements ActionListener
 {
     // ==================================================
     // class static data
     // ==================================================
-    
-    private static String ADD_COMMAND = "add";
-    private static String REMOVE_COMMAND = "remove";
-    private static String CLEAR_COMMAND = "clear";
-    
+
+    private static final String ADD_COMMAND = "add";
+    private static final String REMOVE_COMMAND = "remove";
+    private static final String CLEAR_COMMAND = "clear";
+
 
     // ==================================================
     // class static methods
@@ -68,8 +68,8 @@ public class DynamicTreePanel
     // ==================================================
     private int newNodeSuffix = 1;
     private DynamicTree treePanel;
-    private GuiFactory guiFactory;
-    
+    private final GuiFactory guiFactory;
+
     // ==================================================
     // factories
     // ==================================================
@@ -77,7 +77,7 @@ public class DynamicTreePanel
     // ==================================================
     // constructors
     // ==================================================
-    public DynamicTreePanel(GuiFactory inGuiFactory) 
+    public DynamicTreePanel(GuiFactory inGuiFactory)
     {
         super(new BorderLayout());
         guiFactory = inGuiFactory;
@@ -87,25 +87,25 @@ public class DynamicTreePanel
     // ==================================================
 
     /**
-     * Create the GUI. 
+     * Create the GUI.
      * Only invoked from the event-dispatching thread.
      */
-    public void createGUI() 
+    public void createGUI()
     {
         //Create the components.
         treePanel = new DynamicTree(guiFactory);
         treePanel.createGUI();
-        
+
         populateTree(treePanel);
 
         JButton addButton = new JButton("Add");
         addButton.setActionCommand(ADD_COMMAND);
         addButton.addActionListener(this);
-        
+
         JButton removeButton = new JButton("Remove");
         removeButton.setActionCommand(REMOVE_COMMAND);
         removeButton.addActionListener(this);
-        
+
         JButton clearButton = new JButton("Clear");
         clearButton.setActionCommand(CLEAR_COMMAND);
         clearButton.addActionListener(this);
@@ -116,17 +116,17 @@ public class DynamicTreePanel
 
         JPanel panel = new JPanel(new GridLayout(0,3));
         panel.add(addButton);
-        panel.add(removeButton); 
+        panel.add(removeButton);
         panel.add(clearButton);
         add(panel, BorderLayout.SOUTH);
     }
 
-    public void populateTree(DynamicTree treePanel) 
+    public void populateTree(DynamicTree treePanel)
     {
-        String p1Name = new String("Parent 1");
-        String p2Name = new String("Parent 2");
-        String c1Name = new String("Child 1");
-        String c2Name = new String("Child 2");
+        String p1Name = "Parent 1";
+        String p2Name = "Parent 2";
+        String c1Name = "Child 1";
+        String c2Name = "Child 2";
 
         DefaultMutableTreeNode p1, p2;
 
@@ -139,22 +139,23 @@ public class DynamicTreePanel
         treePanel.addObject(p2, c1Name);
         treePanel.addObject(p2, c2Name);
     }
-    
-    public void actionPerformed(ActionEvent e) 
+
+    @Override
+    public void actionPerformed(ActionEvent e)
     {
         String command = e.getActionCommand();
-        
-        if (ADD_COMMAND.equals(command)) 
+
+        if (ADD_COMMAND.equals(command))
         {
             //Add button clicked
             treePanel.addObject("New Node " + newNodeSuffix++);
-        } 
-        else if (REMOVE_COMMAND.equals(command)) 
+        }
+        else if (REMOVE_COMMAND.equals(command))
         {
             //Remove button clicked
             treePanel.removeCurrentNode();
         }
-        else if (CLEAR_COMMAND.equals(command)) 
+        else if (CLEAR_COMMAND.equals(command))
         {
             //Clear button clicked.
             treePanel.clear();

@@ -151,7 +151,7 @@ public class TicketTwoMain
         {
             kPieces.add(newShareInfo(pieces[i]));
         }
-        // EasyLinearEquationUT.enableLogging();
+        // EasyLinearEquationTest.enableLogging();
         SecretShare.CombineOutput solved = solver.combine(kPieces);
         BigInteger secret = solved.getSecret();
         return new String(secret.toByteArray(), "UTF-8");
