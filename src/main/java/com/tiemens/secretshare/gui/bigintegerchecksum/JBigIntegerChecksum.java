@@ -17,7 +17,6 @@
 package com.tiemens.secretshare.gui.bigintegerchecksum;
 
 import javax.swing.JComponent;
-import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
 import com.tiemens.secretshare.gui.bigintegerchecksum.ui.BasicBigIntegerChecksumUI;
@@ -134,7 +133,7 @@ extends JComponent // JPanel // JComponent
      * @return The name of the UI class that implements the LnF for this
      *         component.
      * @see JComponent#getUIClassID
-     * @see UIDefaults#getUI
+     * @see javax.swing.UIDefaults#getUI
      */
     @Override
     public String getUIClassID()

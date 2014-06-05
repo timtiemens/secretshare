@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import com.tiemens.secretshare.gui.GuiFactory;
 import com.tiemens.secretshare.gui.SecretSharePanel;
 
-public class SecretShareFrame
+public final class SecretShareFrame
 {
 
     /**
@@ -16,10 +16,11 @@ public class SecretShareFrame
         final GuiFactory guiFactory = new GuiFactory();
 
         final SecretShareFrame ssf = new SecretShareFrame(guiFactory);
-        
-        javax.swing.SwingUtilities.invokeLater(new Runnable() 
+
+        javax.swing.SwingUtilities.invokeLater(new Runnable()
         {
-            public void run() 
+            @Override
+            public void run()
             {
                 ssf.createAndShowGUI();
             }
@@ -39,9 +40,9 @@ public class SecretShareFrame
     // instance data
     // ==================================================
     private JFrame frame;
-    private GuiFactory guiFactory;
-    
-    
+    private final GuiFactory guiFactory;
+
+
     // ==================================================
     // factories
     // ==================================================
@@ -54,7 +55,7 @@ public class SecretShareFrame
     {
         guiFactory = inGuiFactory;
     }
-    
+
     // ==================================================
     // public methods
     // ==================================================
@@ -63,23 +64,23 @@ public class SecretShareFrame
     // non public methods
     // ==================================================
     /**
-     * Create AND show/display the GUI. 
+     * Create AND show/display the GUI.
      * Only invoked from the event-dispatching thread.
      */
     private void createAndShowGUI()
     {
         createGUI(guiFactory);
-        
+
         //Display the window.
         this.frame.pack();
         this.frame.setVisible(true);
     }
-    
+
     /**
-     * Create the GUI. 
+     * Create the GUI.
      * Only invoked from the event-dispatching thread.
      */
-    private void createGUI(GuiFactory guiFactory) 
+    private void createGUI(GuiFactory guiFactory)
     {
         //Create and set up the window.
         this.frame = new JFrame("Secret Share Application");
@@ -88,11 +89,11 @@ public class SecretShareFrame
         //Create and set up the content pane.
 //        DynamicTreePanel newContentPane = new DynamicTreePanel();
         SecretSharePanel newContentPanel = new SecretSharePanel(guiFactory);
-        
+
         newContentPanel.createGUI();
         newContentPanel.setOpaque(true); //content panes must be opaque
         this.frame.setContentPane(newContentPanel);
     }
-    
+
 
 }

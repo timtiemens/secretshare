@@ -24,7 +24,7 @@ import java.util.Random;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 
-public class BigIntUtilities
+public final class BigIntUtilities
 {
 
 
@@ -32,7 +32,6 @@ public class BigIntUtilities
     // class static data
     // ==================================================
     private static final String UTF8 = "UTF-8";
-
 
     // ==================================================
     // class static methods
@@ -149,6 +148,8 @@ public class BigIntUtilities
      */
     public static class Hex
     {
+        private static final int HEX_RADIX = 16;
+
         /**
          * @param value string to test
          * @return true if this value is a hex-encoded string (i.e. starts with "0x")
@@ -172,7 +173,6 @@ public class BigIntUtilities
          */
         public static BigInteger createBigInteger(String value)
         {
-            final int HEX_RADIX = 16;
             if (value == null)
             {
                 throw new SecretShareException("value cannot be null");
@@ -202,7 +202,6 @@ public class BigIntUtilities
          */
         public static String createHexString(BigInteger bigInteger)
         {
-            final int HEX_RADIX = 16;
             if (bigInteger == null)
             {
                 throw new SecretShareException("input cannot be null");

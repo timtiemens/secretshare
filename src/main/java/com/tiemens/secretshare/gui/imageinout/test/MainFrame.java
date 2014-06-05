@@ -1,6 +1,6 @@
 package com.tiemens.secretshare.gui.imageinout.test;
 
-public class MainFrame
+public final class MainFrame
 {
 
     /**
@@ -31,6 +31,11 @@ public class MainFrame
     // ==================================================
     // constructors
     // ==================================================
+
+    private MainFrame()
+    {
+        // no instances
+    }
 
     // ==================================================
     // public methods

@@ -26,7 +26,7 @@ import java.util.List;
 import com.tiemens.secretshare.engine.SecretShare;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 
-public class TicketTwoMain
+public final class TicketTwoMain
 {
     public static void main(String... args)
             throws UnsupportedEncodingException
@@ -155,5 +155,10 @@ public class TicketTwoMain
         SecretShare.CombineOutput solved = solver.combine(kPieces);
         BigInteger secret = solved.getSecret();
         return new String(secret.toByteArray(), "UTF-8");
+    }
+
+    private TicketTwoMain()
+    {
+        // no instances
     }
 }

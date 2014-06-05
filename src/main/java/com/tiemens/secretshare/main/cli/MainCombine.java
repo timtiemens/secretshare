@@ -42,7 +42,7 @@ import com.tiemens.secretshare.math.BigIntUtilities;
  * @author tiemens
  *
  */
-public class MainCombine
+public final class MainCombine
 {
 
     /**
@@ -417,7 +417,6 @@ public class MainCombine
 
     public static class CombineOutput
     {
-
         private BigInteger secret;
 
         @SuppressWarnings("unused")

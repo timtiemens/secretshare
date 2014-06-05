@@ -19,7 +19,7 @@ package com.tiemens.secretshare.md5sum;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 
-public class Md5ChecksummerFactory
+public final class Md5ChecksummerFactory
 {
 
     // ==================================================

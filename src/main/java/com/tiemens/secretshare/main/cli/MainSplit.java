@@ -39,7 +39,7 @@ import com.tiemens.secretshare.math.BigIntUtilities;
  * @author tiemens
  *
  */
-public class MainSplit
+public final class MainSplit
 {
 
     /**
@@ -467,6 +467,7 @@ public class MainSplit
         {
             this(true, inSplitInput);
         }
+
         public SplitOutput(boolean inPrintAllSharesAtOnce, SplitInput inSplitInput)
         {
             printAllSharesAtOnce = inPrintAllSharesAtOnce;
@@ -491,6 +492,23 @@ public class MainSplit
                 printSharesOnePerPage(out);
             }
         }
+
+        // ==================================================
+        // instance data
+        // ==================================================
+
+        // ==================================================
+        // constructors
+        // ==================================================
+
+        // ==================================================
+        // public methods
+        // ==================================================
+
+        // ==================================================
+        // non public methods
+        // ==================================================
+
         private boolean hasParanoidOutput()
         {
             return (paranoidOutput != null);
@@ -605,34 +623,6 @@ public class MainSplit
             out.println(fieldname + " = " + n);
         }
 
-        // ==================================================
-        // instance data
-        // ==================================================
-
-        private void field(PrintStream out,
-                           String label,
-                           BigInteger number)
-        {
-            if (number != null)
-            {
-                String spaces;
-                if (label.trim().equals(""))
-                {
-                    spaces = SPACES.substring(0, label.length());
-                }
-                else
-                {
-                    spaces = "." + SPACES.substring(0, label.length() - 1);
-                }
-
-                field(out, label, number.toString());
-                field(out, spaces, BigIntUtilities.Checksum.createMd5CheckSumString(number));
-            }
-            else
-            {
-                // no output
-            }
-        }
 
         private void field(PrintStream out,
                            String label,
@@ -673,18 +663,6 @@ public class MainSplit
         {
             markedValue(out, "Share (x:" + share.getIndex() + ")", share.getShare(), printAsBigIntCs);
         }
+    } // class SplitOutput
 
-
-        // ==================================================
-        // constructors
-        // ==================================================
-
-        // ==================================================
-        // public methods
-        // ==================================================
-
-        // ==================================================
-        // non public methods
-        // ==================================================
-    }
 }

@@ -457,6 +457,7 @@ public class SecretShare
     /**
      * @param outer - usually the one from SecretShare.publicInfo
      * @param list  - share info list that also have publicInfos
+     * @throws SecretShareException if something does not match
      */
     private void sanityCheckPublicInfos(PublicInfo      outer,
                                         List<ShareInfo> list)
@@ -478,9 +479,14 @@ public class SecretShare
         }
 
         // First way you are ok: if every list[x].getPublicInfo() == null
-        boolean anyShareNullsInList = false;  // any list[x] == null?
-        boolean allNullInList       = true;   // ALL list[x].publicInfo() == null?
-        boolean anyNullInList       = false;  // ANY list[x].publicInfo() == null?
+
+        // any list[x] == null?
+        boolean anyShareNullsInList = false;
+        // ALL list[x].publicInfo() == null?
+        boolean allNullInList       = true;
+        // ANY list[x].publicInfo() == null?
+        boolean anyNullInList       = false;
+
         for (ShareInfo share : list)
         {
             if (share != null)
@@ -522,26 +528,41 @@ public class SecretShare
             // See above: we only check if the share is not null
             if (share != null)
             {
-                if (outer.k != share.getPublicInfo().k)
-                {
-                    throw new SecretShareException("Public Info [" + i + "] mismatch on k, should be = "+
-                                                   outer.k + " but was = " + share.getPublicInfo().k);
-                }
-
-                // N is allowed to be null in 'outer' - make sure it matches
-                if (! matches(outer.n, share.getPublicInfo().n))
-                {
-                    throw new SecretShareException("Public Info [" + i + "] mismatch on n, should be = "+
-                            outer.n + " but was = " + share.getPublicInfo().n);
-                }
-
-                // primeModulus is allowed to be null in 'outer' - make sure it matches
-                if (! matches(outer.primeModulus, share.getPublicInfo().primeModulus))
-                {
-                    throw new SecretShareException("Public Info [" + i + "] mismatch on modulus, should be = "+
-                            outer.primeModulus + " but was = " + share.getPublicInfo().primeModulus);
-                }
+                sanityCheckShareInfo(outer, i, share);
             }
+        }
+    }
+
+    /**
+     *
+     * @param outer  - usually the one from SecretShare.publicInfo
+     * @param index - if not null, used to document location in list
+     * @param share - the shareInfo to check
+     * @throws SecretShareException if something does not match
+     */
+    private void sanityCheckShareInfo(final PublicInfo outer,
+                                      Integer index,
+                                      final ShareInfo share)
+    {
+        String indexInfo = index == null ? "" : "[" + index + " ] ";
+        if (outer.k != share.getPublicInfo().k)
+        {
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on k, should be = "+
+                                           outer.k + " but was = " + share.getPublicInfo().k);
+        }
+
+        // N is allowed to be null in 'outer' - make sure it matches
+        if (! matches(outer.n, share.getPublicInfo().n))
+        {
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on n, should be = "+
+                    outer.n + " but was = " + share.getPublicInfo().n);
+        }
+
+        // primeModulus is allowed to be null in 'outer' - make sure it matches
+        if (! matches(outer.primeModulus, share.getPublicInfo().primeModulus))
+        {
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on modulus, should be = "+
+                    outer.primeModulus + " but was = " + share.getPublicInfo().primeModulus);
         }
     }
 
@@ -859,7 +880,6 @@ public class SecretShare
         ret.maximumCombinationsAllowedToTest = maximumCombinationsToTest;
 
         BigInteger answer = null;
-        //PublicInfo publicInfo = shares.get(0).getPublicInfo();
 
         CombinationGenerator<ShareInfo> combo =
             new CombinationGenerator<ShareInfo>(shares,

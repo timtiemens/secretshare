@@ -62,13 +62,15 @@ import com.tiemens.secretshare.exceptions.SecretShareException;
  * @author tiemens
  *
  */
-public class EasyLinearEquation
+public final class EasyLinearEquation
 {
     // ==================================================
     // class static data
     // ==================================================
     // want to turn on debug?  See EasyLinearEquationTest.enableLogging()
     private static Logger logger = Logger.getLogger(EasyLinearEquation.class.getName());
+
+    private static boolean debugPrinting = false;
 
     // ==================================================
     // class static methods
@@ -642,7 +644,6 @@ public class EasyLinearEquation
             // safetyCheckDivision(result, divideby, original);
             return result;
         }
-        private final boolean debugPrinting = false;
 
         private void safetyCheckDivision(BigInteger result,
                                          BigInteger divideby,
@@ -824,8 +825,5 @@ public class EasyLinearEquation
             array[i] = current;
         }
     }
-
-
-
 
 }

@@ -31,7 +31,7 @@ import com.tiemens.secretshare.BuildVersion;
  * @author tiemens
  *
  */
-public class Main
+public final class Main
 {
     /**
      * @return version as a string

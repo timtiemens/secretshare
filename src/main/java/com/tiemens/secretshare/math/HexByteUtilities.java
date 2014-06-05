@@ -1,6 +1,6 @@
 package com.tiemens.secretshare.math;
 
-public class HexByteUtilities
+public final class HexByteUtilities
 {
 
 

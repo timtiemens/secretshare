@@ -346,7 +346,7 @@ public final class BigIntStringChecksum
     private static String insertDashesIntoHex(final String inAsHex)
     {
         String ret = "";
-        int LEN_PER_GROUP = 6;
+        final int lengthPerGroup = 6;
         String input = inAsHex;
         boolean returnIsNegative = false;
         if (input.startsWith("-"))
@@ -354,17 +354,17 @@ public final class BigIntStringChecksum
             returnIsNegative = true;
             input = input.substring(1);
         }
-        while ((input.length() % LEN_PER_GROUP) != 0)
+        while ((input.length() % lengthPerGroup) != 0)
         {
             input = "0" + input;
         }
         String sep = "";
-        for (int i = 0, n = input.length() / LEN_PER_GROUP; i < n; i++)
+        for (int i = 0, n = input.length() / lengthPerGroup; i < n; i++)
         {
             ret += sep;
             sep = "-";
-            ret += input.substring((i + 0) * LEN_PER_GROUP,
-                                   (i + 1) * LEN_PER_GROUP);
+            ret += input.substring((i + 0) * lengthPerGroup,
+                                   (i + 1) * lengthPerGroup);
         }
         if (returnIsNegative)
         {
