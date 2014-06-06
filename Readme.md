@@ -52,31 +52,32 @@ Use
    $ java -jar secretshare.jar combine
    ```
     
-3. Examples of command line invocations
+Examples of command line invocations
+-----
 
-  a. Creates a share size 6 with threshold 3 with "Cat" as the secret string.   Note: the low modulus of 16639793 limits the size of the secret number, which in turn limits the length of the secret string.
+  a. Create a share size 6 with threshold 3 with "Cat" as the secret string.   Note: the low modulus of 16639793 limits the size of the secret number, which in turn limits the length of the secret string.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -m 16639793 -sS "Cat"
   ```
 
-  b. Creates a share size 6 with threshold 3 as above, but pipes the output of "split" into the input of "combine", which then re-creates the secret number and the secret string "Cat".
+  b. Create a share size 6 with threshold 3 as above, but pipes the output of "split" to the input of "combine", which then re-creates the secret number and the secret string "Cat".
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -m 16639793 -sS "Cat" \
    | java -jar secretshare.jar combine -stdin
   ```
 
-  c. Creates a share size 6 with threshold 3 with a long secret string.  Note: no modulus was given, so a pre-defined 384-bit prime was used as the modulus.  384 bits allows 48 characters of secret string.
+  c. Create a share size 6 with threshold 3 as above, but with a long secret string.  Note: no modulus was given, so a pre-defined 384-bit prime was used as the modulus.  384 bits allows 48 characters of secret string.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat"
   ```
   
-  d.  Creates the same share as above, then pipes the output of "split" into the input of "combine", which prints out the secret string.
+  d.  Create the same share as above, then pipes the output of "split" into the input of "combine", which prints out the secret string.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat" \
    | java -jar secretshare.jar combine -stdin
   ```
 
-  e.  Create the same share as above, but uses a pre-defined 4096-bit prime modulus.  4096 bits allows 512 characters of secret string.
+  e.  Create the same share as above, but use a pre-defined 4096-bit prime modulus.  4096 bits allows 512 characters of secret string.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
   -prime4096
