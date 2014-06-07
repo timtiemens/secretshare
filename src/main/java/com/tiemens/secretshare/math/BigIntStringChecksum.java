@@ -419,7 +419,7 @@ public final class BigIntStringChecksum
 
     private static String pad(final String inHex)
     {
-        int LEN_PER_GROUP = DIGITS_PER_GROUP;
+        final int lengthPerGroup = DIGITS_PER_GROUP;
         String useHex = inHex;
         boolean returnIsNegative = false;
         if (useHex.startsWith("-"))
@@ -428,7 +428,7 @@ public final class BigIntStringChecksum
             returnIsNegative = true;
         }
         String ret = useHex;
-        while ((ret.length() % LEN_PER_GROUP) != 0)
+        while ((ret.length() % lengthPerGroup) != 0)
         {
             ret = "0" + ret;
         }

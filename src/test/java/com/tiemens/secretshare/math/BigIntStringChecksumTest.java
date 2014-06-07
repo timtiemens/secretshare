@@ -161,6 +161,28 @@ public class BigIntStringChecksumTest
     }
 
 
+    /**
+     * Test from the documentation on the leading "-".
+     *
+     */
+    @Test
+    public void testLeadingDash()
+    {
+        final String sameValue = "000064";
+        final String sameChecksum = "-BBC6EC";
+        BigInteger okNeg100 = BigIntStringChecksum.fromString("bigintcs:" + "-" + sameValue + sameChecksum).asBigInteger();
+        Assert.assertEquals("-100 failed", new BigInteger("-100"), okNeg100);
+
+        try
+        {
+            BigInteger failNeg100 = BigIntStringChecksum.fromString("bigintcs:" + "" + sameValue + sameChecksum).asBigInteger();
+            Assert.fail("100 has checksum error, but did not throw exception: " + failNeg100);
+        }
+        catch (SecretShareException e)
+        {
+            // ok
+        }
+    }
     // ==================================================
     // non public methods
     // ==================================================

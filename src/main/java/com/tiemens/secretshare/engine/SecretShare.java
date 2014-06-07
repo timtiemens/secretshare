@@ -184,9 +184,26 @@ public class SecretShare
 
     public static BigInteger getPrimeUsedFor4096bigSecretPayload()
     {
+        // GENERATE:
         // This big integer was created with probablePrime(BigInteger.valueOf(2L).pow(4100)).nextProbablePrime()
         // It took 28 seconds to generate [Run on Core i7 920 2.67Ghz]
-        // It took 25 minutes to check using alpertron.com.ar applet. [Run on Core2Duo E8500 3.16GHz CPU]
+
+        // CHECKING APPLET:
+        // It took 25 minutes to check using alpertron.com.ar/ECM.HTM applet. [Run on Core2Duo E8500 3.16GHz CPU]
+        // It took 18 minutes to check using alpertron.com.ar/ECM.HTM applet. [Run on Corei7-2600k 3.4GHz CPU, only 1 core working]
+        // The applet is labeled "Factorization using the Elliptic Curve Method"
+        //     and says "Rabin probabilistic prime check routine" and "Base used" hits 17000+
+        // Output:
+        //    Factorization complete in 0d 0h 17m 35s
+        //      ECM: 0 modular multiplications
+        //      Prime checking: 8449024 modular multiplications
+        //      Timings:   Primality test of 1 number: 0d 0h 17m 34.2s
+        //
+        // CHECKING COMMAND LINE: ("threads" set to 8)
+        // It took 5 minutes [Run on Corei7-2600K 3.4GHz CPU, 4 cores working - config to x8 more, running x4 more, result x3 faster]
+        //
+        // OTHER INFO:
+        // This number is 1,234 digits long
         BigInteger p4096one =
                 new BigInteger(
             "1671022210261044010706804337146599012127" +
@@ -224,7 +241,7 @@ public class SecretShare
 
         // No, these "0"s are not an error.
         //  The nextProbablePrime is only "735(hex)" away from 2^4100...
-        // In case you are wondering, this "bigintcs" encoding is a guard
+        // In case you are wondering, the "bigintcs" encoding is a guard
         //  against an accidental change in the string.
         //   (Big Integer Checksum)
         String bigintcs =

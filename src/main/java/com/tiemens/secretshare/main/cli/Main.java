@@ -81,10 +81,18 @@ public final class Main
             {
                 MainCombine.main(args, in, out);
             }
+            else if ("info".equalsIgnoreCase(cmd))
+            {
+                MainInfo.main(args, in, out);
+            }
+            else if ("bigintcs".equalsIgnoreCase(cmd))
+            {
+                MainBigIntCs.main(args, in, out);
+            }
             else
             {
                 out.println("Error: could not understand argument '" + cmd + "' - it must be " +
-                                   "either 'split' or 'combine'");
+                                   "either 'split', 'combine', 'info' or 'bigintcs'");
                 usage(out);
                 if (callExit)
                 {
