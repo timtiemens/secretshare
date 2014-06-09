@@ -26,6 +26,8 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.tiemens.secretshare.exceptions.SecretShareException;
+
 public class BigIntUtilitiesTest
 {
     // ==================================================
@@ -362,10 +364,49 @@ public class BigIntUtilitiesTest
             Assert.assertEquals("bits=" + bits + " value=" + value, bits2prime.get(bits), actual);
         }
     }
+
+    @Test
+    public void testCaseSensitivity()
+    {
+        final String origPart1 = "bigintcs:";
+        final String origPart2 = "000002-62c8fd-6ec81b-3c0584-136789-80ad34-";
+        final String origPart3 = "9269af-da237f-8ff3c9-";
+        final String origPart4 = "12BCCD"; // the checksum
+
+        subTestCaseSensitivity(origPart1, origPart2, origPart3, origPart4);
+
+        subTestCaseSensitivity(origPart1.toUpperCase(), origPart2, origPart3, origPart4);
+        subTestCaseSensitivity(origPart1, origPart2.toUpperCase(), origPart3, origPart4);
+        subTestCaseSensitivity(origPart1, origPart2, origPart3.toUpperCase(), origPart4);
+        subTestCaseSensitivity(origPart1, origPart2, origPart3, origPart4.toUpperCase());
+        subTestCaseSensitivity(origPart1.toUpperCase(), origPart2.toUpperCase(), origPart3.toUpperCase(), origPart4.toUpperCase());
+
+        subTestCaseSensitivity(origPart1.toLowerCase(), origPart2, origPart3, origPart4);
+        subTestCaseSensitivity(origPart1, origPart2.toLowerCase(), origPart3, origPart4);
+        subTestCaseSensitivity(origPart1, origPart2, origPart3.toLowerCase(), origPart4);
+        subTestCaseSensitivity(origPart1.toLowerCase(), origPart2.toLowerCase(), origPart3.toLowerCase(), origPart4.toLowerCase());
+
+    }
     // ==================================================
     // non public methods
     // ==================================================
 
+
+    private void subTestCaseSensitivity(String part1, String part2, String part3, String part4)
+    {
+        final String input = part1 + part2 + part3 + part4;
+        try
+        {
+            BigInteger ret = BigIntUtilities.Checksum.createBigInteger(input);
+            Assert.assertNotNull(ret);
+        }
+        catch (SecretShareException e)
+        {
+            e.printStackTrace();
+
+            Assert.fail("Case sensitivity failed for " + input);
+        }
+    }
 
     private void subtest(String in,
                          BigInteger expected)
