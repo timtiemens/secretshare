@@ -174,7 +174,7 @@ publishing {
                     url project.publishBaseUrl + "/internal"
                 }
             } else {
-                    // this 
+                    // this is a notice that 'publish' requires .publishBaseUrl
                     url "http://you.must.configure.project.publishBaseUrl"
             }
         }
