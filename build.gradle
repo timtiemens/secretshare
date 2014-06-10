@@ -168,7 +168,7 @@ publishing {
     repositories {
         maven {
             if (project.hasProperty('publishBaseUrl')) {
-                if (project.ext.isReleaseVersion) {
+                if (! project.ext.isReleaseVersion) {
                     url project.publishBaseUrl + "/snapshots"
                 } else {
                     url project.publishBaseUrl + "/internal"
