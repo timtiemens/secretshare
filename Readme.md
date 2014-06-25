@@ -39,7 +39,7 @@ Use
 -----
 
    There are two main ways to use the application: split and combine.
-   Split takes a secret (number or string) and splits it into 'n'shares.
+   Split takes a secret (number or string) and splits it into 'n' shares.
    Combine takes 'k' of 'n' shares and re-creates the secret (number or string).
 
    a. split  - To display usage:
@@ -106,11 +106,11 @@ b) using -primeN    on 512-character secret    ==   57.1 seconds
 
 Documentation
 ----
-[Original Sourceforge Secret Sharin in Java] - original SCM location.  Out-of-date.
+[Original Sourceforge Secret Sharing in Java] - original SCM location.  Out-of-date.
 
 [Resources] - more links to useful Shamir Secret Share documentation and projects
 
 
-[Original Sourceforge Secret Sharin in Java]:http://secretsharejava.sourceforge.net/
+[Original Sourceforge Secret Sharing in Java]:http://secretsharejava.sourceforge.net/
 [Resources]:extrastuff/resources.md
 
