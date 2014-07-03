@@ -38,7 +38,7 @@ public final class Main
      */
     public static String getVersionString()
     {
-        return BuildVersion.UI_VERSION;
+        return BuildVersion.getUiVersion();
     }
 
 
