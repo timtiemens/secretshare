@@ -15,7 +15,3 @@ jacoco {
     integrationTestTaskName = 'integTest'
 }
 
-jacocoTestReport {
-    additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
-}
-
