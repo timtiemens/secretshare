@@ -184,7 +184,7 @@ public final class MainBigIntCs
 
         // optional
         private final boolean printHeader = false;
-        private String separator = System.lineSeparator();
+        private String separator = System.getProperty("line.separator"); // jdk1.7: System.lineSeparator();
 
         // ==================================================
         // constructors
