@@ -3,8 +3,8 @@ Shamir's Secret Sharing in Java
 Release Notes  --
 v1.4.1
 ======
- o major - break API compatibility - only BuildVersion API changed)
- o major - break API compatibility - remove 'gui'
+ o minor - break API compatibility - BuildVersion API changed
+ o minor - break API compatibility - removed 'gui' package and classes
  o refactor BuildVersion from generated .java file to generated .properties file
    that is put into the .jar
  o remove gui source - it will be distributed in a separate artifact
