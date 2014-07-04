@@ -1,0 +1,22 @@
+import com.tiemens.secretshare.BuildVersion;
+
+task createBuildInfoFile << {
+    def buildInfoFile = new File("$buildDir/build-info.properties");
+    def buildinfo = new BuildVersion.BuildInfo.Builder()
+            .version( project.version.toString() )
+            .date(    new Date().format('yyyy-MM-dd HH:mm:ss') )
+            .buildNumber( System.env.SOURCE_BUILD_NUMBER )
+            .artifactGroup( project.group )
+            .artifactName(  project.archivesBaseName )
+            .build();
+    buildinfo.convertToPropertiesFile(buildInfoFile)
+}
+
+jar {
+    dependsOn createBuildInfoFile
+    from (buildDir) {
+        include 'build-info.properties'
+        into('com/tiemens/secretshare')
+    }
+}
+
