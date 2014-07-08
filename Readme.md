@@ -28,11 +28,15 @@ Installation
   a. Compile locally - build the project with gradle
 ```
     $ gradle build
-  [creates build/dist/lib/secretshare.jar]
-    $ cp build/libs/secretshare-1.3.0.jar ./secretshare.jar
+  [creates build/libs/secretshare-1.4.2-SNAPSHOT.jar]
+    $ cp build/libs/secretshare-1.4.2-SNAPSHOT.jar ./secretshare.jar
   [copies the .jar into the current directory]
 ```
-  b. Use artifact - [TODO: push .jar artifact to maven central, document groupId, etc. here]
+  b. Use artifact in your build - dependency information:
+      group:   com.tiemens
+       name:   secretshare
+    version:   1.4.1
+
 
 
 Use
