@@ -75,11 +75,11 @@ public class SecretShareTest
         final int k = 3;
         BigInteger prime = null;
 
-        prime = BigInteger.valueOf(59561);
+        prime = SecretShare.getPrimeUsedFor4096bigSecretPayload();
         SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime, "test first");
         SecretShare secretShare = new SecretShare(publicInfo);
-        final BigInteger secret = BigInteger.valueOf(45654L);
         Random random = new Random(1234L);
+        final BigInteger secret = new BigInteger(32 * 8, random);
         SecretShare.SplitSecretOutput generate = secretShare.split(secret, random);
 
         System.out.println("TestFirst, secret=" + secret);
