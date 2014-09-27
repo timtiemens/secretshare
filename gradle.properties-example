@@ -4,3 +4,12 @@ archivaBaseUrl=http://sitearchiva:8080/repository
 
 # PUBLISHING:
 publishBaseUrl=http://sitearchiva:8080/repository
+
+# (Maven Central) signing:
+signing.keyId=<your key id, the 8-character version, e.g. AC6132A9>
+signing.password=<your secring.gpg password>
+signing.secretKeyRingFile=<location-of-your>/.gnupg/secring.gpg
+
+# Maven Central Publishing (sonatype login credentials):
+ossrhUsername=<<your-sonatype-login-name>>
+ossrhPassword=<<your-sonatype-password>>

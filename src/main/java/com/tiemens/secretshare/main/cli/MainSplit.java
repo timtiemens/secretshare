@@ -39,11 +39,11 @@ import com.tiemens.secretshare.math.BigIntUtilities;
  * @author tiemens
  *
  */
-public class MainSplit
+public final class MainSplit
 {
 
     /**
-     * @param args
+     * @param args from command line
      */
     public static void main(String[] args)
     {
@@ -146,7 +146,7 @@ public class MainSplit
         {
             String m = "The argument of '" + value + "' " +
                                "is not a number.";
-            throw new SecretShareException(m);
+            throw new SecretShareException(m, e);
         }
         return ret;
     }
@@ -179,6 +179,11 @@ public class MainSplit
         {
             e.printStackTrace(out);
         }
+    }
+
+    private MainSplit()
+    {
+        // no instances
     }
 
 
@@ -408,9 +413,8 @@ public class MainSplit
         // ==================================================
         public SplitOutput output()
         {
-            SplitOutput ret = new SplitOutput();
+            SplitOutput ret = new SplitOutput(this);
             ret.setPrintAllSharesAtOnce(printAllSharesAtOnce);
-            ret.splitInput = this;
 
             SecretShare.PublicInfo publicInfo =
                 new SecretShare.PublicInfo(this.n,
@@ -419,9 +423,8 @@ public class MainSplit
                                            this.description);
 
             SecretShare secretShare = new SecretShare(publicInfo);
-            Random random = this.random;
 
-            SecretShare.SplitSecretOutput generate = secretShare.split(secret, random);
+            SecretShare.SplitSecretOutput generate = secretShare.split(this.secret, this.random);
 
             ret.splitSecretOutput = generate;
 
@@ -453,20 +456,22 @@ public class MainSplit
 
     public static class SplitOutput
     {
-        private static String SPACES = "                                              ";
+        private static final String SPACES = "                                              ";
         private boolean printAllSharesAtOnce = true;
 
-        public SplitInput splitInput;
+        private final SplitInput splitInput;
         private SplitSecretOutput splitSecretOutput;
         private ParanoidOutput paranoidOutput = null; // can be null
 
-        public SplitOutput()
+        public SplitOutput(SplitInput inSplitInput)
         {
-            this(true);
+            this(true, inSplitInput);
         }
-        public SplitOutput(boolean inPrintAllSharesAtOnce)
+
+        public SplitOutput(boolean inPrintAllSharesAtOnce, SplitInput inSplitInput)
         {
             printAllSharesAtOnce = inPrintAllSharesAtOnce;
+            splitInput = inSplitInput;
         }
 
         public void setPrintAllSharesAtOnce(boolean val)
@@ -487,6 +492,23 @@ public class MainSplit
                 printSharesOnePerPage(out);
             }
         }
+
+        // ==================================================
+        // instance data
+        // ==================================================
+
+        // ==================================================
+        // constructors
+        // ==================================================
+
+        // ==================================================
+        // public methods
+        // ==================================================
+
+        // ==================================================
+        // non public methods
+        // ==================================================
+
         private boolean hasParanoidOutput()
         {
             return (paranoidOutput != null);
@@ -495,6 +517,10 @@ public class MainSplit
         {
             if (hasParanoidOutput())
             {
+                if (splitInput == null)
+                {
+                    out.println("Programmer error: splitInput is null");
+                }
                 out.println(paranoidOutput.getParanoidCompleteOutput());
             }
         }
@@ -597,34 +623,6 @@ public class MainSplit
             out.println(fieldname + " = " + n);
         }
 
-        // ==================================================
-        // instance data
-        // ==================================================
-
-        private void field(PrintStream out,
-                           String label,
-                           BigInteger number)
-        {
-            if (number != null)
-            {
-                String spaces;
-                if (label.trim().equals(""))
-                {
-                    spaces = SPACES.substring(0, label.length());
-                }
-                else
-                {
-                    spaces = "." + SPACES.substring(0, label.length() - 1);
-                }
-
-                field(out, label, number.toString());
-                field(out, spaces, BigIntUtilities.Checksum.createMd5CheckSumString(number));
-            }
-            else
-            {
-                // no output
-            }
-        }
 
         private void field(PrintStream out,
                            String label,
@@ -641,7 +639,8 @@ public class MainSplit
                     pad = pad.substring(0, 30);
                     if (value.equals(""))
                     {
-                        sep = "  ";
+                        pad = label;
+                        sep = "";
                     }
                     else
                     {
@@ -664,18 +663,6 @@ public class MainSplit
         {
             markedValue(out, "Share (x:" + share.getIndex() + ")", share.getShare(), printAsBigIntCs);
         }
+    } // class SplitOutput
 
-
-        // ==================================================
-        // constructors
-        // ==================================================
-
-        // ==================================================
-        // public methods
-        // ==================================================
-
-        // ==================================================
-        // non public methods
-        // ==================================================
-    }
 }

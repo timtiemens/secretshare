@@ -361,7 +361,6 @@ public class MainReadmeTest {
 
         public void output(PrintStream out)
         {
-            String sep = "";
             for (int i = 0, n = commands.size(); i < n; i++)
             {
                 String indent;
@@ -440,8 +439,5 @@ public class MainReadmeTest {
             }
             return ret;
         }
-
-
-
     }
 }

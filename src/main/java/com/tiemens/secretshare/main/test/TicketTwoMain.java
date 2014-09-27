@@ -26,7 +26,7 @@ import java.util.List;
 import com.tiemens.secretshare.engine.SecretShare;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 
-public class TicketTwoMain
+public final class TicketTwoMain
 {
     public static void main(String... args)
             throws UnsupportedEncodingException
@@ -72,6 +72,8 @@ public class TicketTwoMain
         System.out.println("Any " + k + " pieces: " + Arrays.toString(kPieces));
         String reconstructed = mergePiecesIntoSecret(kPieces);
         System.out.println("Reconstructed secret=" + reconstructed);
+
+        System.out.println("Finish");
     }
 
     static BigInteger stringToBigInteger(String in)
@@ -149,9 +151,14 @@ public class TicketTwoMain
         {
             kPieces.add(newShareInfo(pieces[i]));
         }
-        // EasyLinearEquationUT.enableLogging();
+        // EasyLinearEquationTest.enableLogging();
         SecretShare.CombineOutput solved = solver.combine(kPieces);
         BigInteger secret = solved.getSecret();
         return new String(secret.toByteArray(), "UTF-8");
+    }
+
+    private TicketTwoMain()
+    {
+        // no instances
     }
 }

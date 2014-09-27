@@ -20,29 +20,31 @@ package com.tiemens.secretshare.main.cli;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+import com.tiemens.secretshare.BuildVersion;
+
 /**
  * "Dispatch" main program.
- * Based on the 1st argument, calls one of:
+ * Based on the first argument in args[], this calls one of:
  *   split
  *   combine
  *
  * @author tiemens
  *
  */
-public class Main
+public final class Main
 {
     /**
      * @return version as a string
      */
     public static String getVersionString()
     {
-        return "1.3.0";
+        return BuildVersion.getUiVersion();
     }
 
 
 
     /**
-     * @param args
+     * @param args from command line
      */
     public static void main(String[] args)
     {
@@ -79,10 +81,18 @@ public class Main
             {
                 MainCombine.main(args, in, out);
             }
+            else if ("info".equalsIgnoreCase(cmd))
+            {
+                MainInfo.main(args, in, out);
+            }
+            else if ("bigintcs".equalsIgnoreCase(cmd))
+            {
+                MainBigIntCs.main(args, in, out);
+            }
             else
             {
                 out.println("Error: could not understand argument '" + cmd + "' - it must be " +
-                                   "either 'split' or 'combine'");
+                                   "either 'split', 'combine', 'info' or 'bigintcs'");
                 usage(out);
                 if (callExit)
                 {
@@ -122,6 +132,11 @@ public class Main
     // ==================================================
     // constructors
     // ==================================================
+
+    private Main()
+    {
+        // no instances
+    }
 
     // ==================================================
     // public methods

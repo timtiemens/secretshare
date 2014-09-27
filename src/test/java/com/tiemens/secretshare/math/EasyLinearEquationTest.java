@@ -267,7 +267,7 @@ public class EasyLinearEquationTest
         // [b] add the handler
         // [c] set the logger's level
 
-        Logger l = EasyLinearEquation.logger;
+        Logger l = EasyLinearEquation.getLogger();
         Handler lh = new ConsoleHandler();
         lh.setFormatter(oneLineFormatter());
         // don't forget to do this:
@@ -280,10 +280,10 @@ public class EasyLinearEquationTest
         l.addHandler(lh);
         // and this:
         l.setLevel(Level.ALL);
-        if (EasyLinearEquation.logger.isLoggable(Level.FINE))
+        if (EasyLinearEquation.getLogger().isLoggable(Level.FINE))
         {
             System.out.println("ok");
-            EasyLinearEquation.logger.fine("Hi there");
+            EasyLinearEquation.getLogger().fine("Hi there");
         }
         else
         {

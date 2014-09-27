@@ -1,9 +1,12 @@
 /build
+/.gradle
+/buildSrc/build
+/buildSrc/.gradle
 /bin
 /.project
 /.classpath
 /.settings
 /hide
-/.gradle
 /secretshare.jar
 /gradle.properties
+*~

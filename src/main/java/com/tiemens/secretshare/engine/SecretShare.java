@@ -114,7 +114,8 @@ public class SecretShare
     /**
      * NOTE: you should prefer createAppropriateModulusForSecret() over this method.
      *
-     *
+     * @param secret as biginteger
+     * @return prime modulus big enough for secret
      */
     public static BigInteger createRandomModulusForSecret(BigInteger secret)
     {
@@ -126,7 +127,9 @@ public class SecretShare
     /**
      * NOTE: you should prefer createAppropriateModulusForSecret() over this method.
      *
-     *
+     * @param secret as biginteger
+     * @param random you provide the random
+     * @return prime modulus big enough for secret*
      */
     public static BigInteger createRandomModulusForSecret(BigInteger secret,
                                                           Random random)
@@ -181,9 +184,26 @@ public class SecretShare
 
     public static BigInteger getPrimeUsedFor4096bigSecretPayload()
     {
+        // GENERATE:
         // This big integer was created with probablePrime(BigInteger.valueOf(2L).pow(4100)).nextProbablePrime()
         // It took 28 seconds to generate [Run on Core i7 920 2.67Ghz]
-        // It took 25 minutes to check using alpertron.com.ar applet. [Run on Core2Duo E8500 3.16GHz CPU]
+
+        // CHECKING APPLET:
+        // It took 25 minutes to check using alpertron.com.ar/ECM.HTM applet. [Run on Core2Duo E8500 3.16GHz CPU]
+        // It took 18 minutes to check using alpertron.com.ar/ECM.HTM applet. [Run on Corei7-2600k 3.4GHz CPU, only 1 core working]
+        // The applet is labeled "Factorization using the Elliptic Curve Method"
+        //     and says "Rabin probabilistic prime check routine" and "Base used" hits 17000+
+        // Output:
+        //    Factorization complete in 0d 0h 17m 35s
+        //      ECM: 0 modular multiplications
+        //      Prime checking: 8449024 modular multiplications
+        //      Timings:   Primality test of 1 number: 0d 0h 17m 34.2s
+        //
+        // CHECKING COMMAND LINE: ("threads" set to 8)
+        // It took 5 minutes [Run on Corei7-2600K 3.4GHz CPU, 4 cores working - config to x8 more, running x4 more, result x3 faster]
+        //
+        // OTHER INFO:
+        // This number is 1,234 digits long
         BigInteger p4096one =
                 new BigInteger(
             "1671022210261044010706804337146599012127" +
@@ -221,7 +241,7 @@ public class SecretShare
 
         // No, these "0"s are not an error.
         //  The nextProbablePrime is only "735(hex)" away from 2^4100...
-        // In case you are wondering, this "bigintcs" encoding is a guard
+        // In case you are wondering, the "bigintcs" encoding is a guard
         //  against an accidental change in the string.
         //   (Big Integer Checksum)
         String bigintcs =
@@ -290,6 +310,12 @@ public class SecretShare
 
     /**
      * Guard against accidental changes to the strings.
+     *
+     * @param which caller
+     * @param expected value as biginteger
+     * @param asbigintcs value as big-integer-checksum string
+     * @return expected or throw exception
+     * @throws SecretShareException if expected does not match asbigintcs
      */
     private static BigInteger checkAndReturn(String which,
                                              BigInteger expected,
@@ -406,6 +432,8 @@ public class SecretShare
     {
         CombineOutput ret = null;
 
+        sanityCheckPublicInfos(publicInfo, usetheseshares);
+
         if (publicInfo.getK() > usetheseshares.size())
         {
             throw new SecretShareException("Must have " + publicInfo.getK() +
@@ -414,6 +442,7 @@ public class SecretShare
         }
 
         checkForDuplicatesOrThrow(usetheseshares);
+
 
         final int size = publicInfo.getK();
         BigInteger[] xarray = new BigInteger[size];
@@ -442,6 +471,129 @@ public class SecretShare
         return ret;
     }
 
+    /**
+     * @param outer - usually the one from SecretShare.publicInfo
+     * @param list  - share info list that also have publicInfos
+     * @throws SecretShareException if something does not match
+     */
+    private void sanityCheckPublicInfos(PublicInfo      outer,
+                                        List<ShareInfo> list)
+    {
+        // Basic sanity checks:
+        if (outer == null)
+        {
+            throw new SecretShareException("Public Info [outer] cannot be null");
+        }
+        if (outer.k <= 0)
+        {
+            throw new SecretShareException("Public Info [outer] k must be positive, k=" + outer.k);
+        }
+        // Note: there is no restriction on outer.primeModulus -- it is allowed to be null
+
+        if (list == null)
+        {
+            throw new SecretShareException("Public Info [list] cannot be null");
+        }
+
+        // First way you are ok: if every list[x].getPublicInfo() == null
+
+        // any list[x] == null?
+        boolean anyShareNullsInList = false;
+        // ALL list[x].publicInfo() == null?
+        boolean allNullInList       = true;
+        // ANY list[x].publicInfo() == null?
+        boolean anyNullInList       = false;
+
+        for (ShareInfo share : list)
+        {
+            if (share != null)
+            {
+                if (share.getPublicInfo() != null)
+                {
+                    allNullInList = false;
+                }
+                else
+                {
+                    anyNullInList = true;
+                }
+            }
+            else
+            {
+                anyShareNullsInList = true;
+            }
+        }
+
+        if (allNullInList)
+        {
+            return;
+        }
+        // For now, if there are SOME nulls in the list or SOME null-publicInfos in list, then OK
+        if (anyShareNullsInList)
+        {
+            // could throw an exception here, but for now, don't
+        }
+        if (anyNullInList)
+        {
+            // could throw an exception here, but for now, don't
+        }
+
+
+        // Next -- make sure all 'n' and 'k' match
+        for (int i = 0, n = list.size(); i < n; i++)
+        {
+            final ShareInfo share = list.get(i);
+            // See above: we only check if the share is not null
+            if (share != null)
+            {
+                sanityCheckShareInfo(outer, i, share);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param outer  - usually the one from SecretShare.publicInfo
+     * @param index - if not null, used to document location in list
+     * @param share - the shareInfo to check
+     * @throws SecretShareException if something does not match
+     */
+    private void sanityCheckShareInfo(final PublicInfo outer,
+                                      Integer index,
+                                      final ShareInfo share)
+    {
+        String indexInfo = index == null ? "" : "[" + index + " ] ";
+        if (outer.k != share.getPublicInfo().k)
+        {
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on k, should be = "+
+                                           outer.k + " but was = " + share.getPublicInfo().k);
+        }
+
+        // N is allowed to be null in 'outer' - make sure it matches
+        if (! matches(outer.n, share.getPublicInfo().n))
+        {
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on n, should be = "+
+                    outer.n + " but was = " + share.getPublicInfo().n);
+        }
+
+        // primeModulus is allowed to be null in 'outer' - make sure it matches
+        if (! matches(outer.primeModulus, share.getPublicInfo().primeModulus))
+        {
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on modulus, should be = "+
+                    outer.primeModulus + " but was = " + share.getPublicInfo().primeModulus);
+        }
+    }
+
+    private boolean matches(Object a, Object b)
+    {
+        if (a == null)
+        {
+            return b == null;
+        }
+        else
+        {
+            return a.equals(b);
+        }
+    }
     private void checkForDuplicatesOrThrow(List<ShareInfo> shares)
     {
         Set<ShareInfo> seen = new HashSet<ShareInfo>();
@@ -745,7 +897,6 @@ public class SecretShare
         ret.maximumCombinationsAllowedToTest = maximumCombinationsToTest;
 
         BigInteger answer = null;
-        PublicInfo publicInfo = shares.get(0).getPublicInfo();
 
         CombinationGenerator<ShareInfo> combo =
             new CombinationGenerator<ShareInfo>(shares,

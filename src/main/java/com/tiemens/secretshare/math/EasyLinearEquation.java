@@ -38,7 +38,7 @@ import com.tiemens.secretshare.exceptions.SecretShareException;
  *  1491   83   32   22
  *   329    5   13   22
  *   122    3    2   19
- * and stored in this class as a List<Row> objects.
+ * and stored in this class as a List[Row] objects.
  *
  * Then, this class can "solve" it into the 'diagonal 1', giving:
  *   11    1    0    0
@@ -62,17 +62,25 @@ import com.tiemens.secretshare.exceptions.SecretShareException;
  * @author tiemens
  *
  */
-public class EasyLinearEquation
+public final class EasyLinearEquation
 {
     // ==================================================
     // class static data
     // ==================================================
-    // want to turn on debug?  See EasyLinearEquationUT.enableLogging()
-    public static Logger logger = Logger.getLogger(EasyLinearEquation.class.getName());
+    // want to turn on debug?  See EasyLinearEquationTest.enableLogging()
+    private static Logger logger = Logger.getLogger(EasyLinearEquation.class.getName());
+
+    private static boolean debugPrinting = false;
 
     // ==================================================
     // class static methods
     // ==================================================
+
+    public static Logger getLogger()
+    {
+        return logger;
+    }
+
 
     public static BigInteger[][] convertIntToBigInteger(int[][] inMatrix)
     {
@@ -458,38 +466,6 @@ public class EasyLinearEquation
             }
             return list;
         }
-        /**
-         * Original implementation.  Wrong.
-         *
-         */
-        public static Trial pickSuccess2(List<Trial> list)
-        {
-            Trial ret = null;
-
-            for (Trial t : list)
-            {
-                if (t.correct)
-                {
-                    if (ret != null)
-                    {
-                        if (t.result.compareTo(ret.result) > 0)
-                        {
-                            ret = t;
-                        }
-                        else
-                        {
-                            System.out.println("Two different correct answers");
-                        }
-                    }
-                    else
-                    {
-                        ret = t;
-                    }
-                }
-            }
-            return ret;
-        }
-
     }
 
     private static class Row
@@ -668,7 +644,6 @@ public class EasyLinearEquation
             // safetyCheckDivision(result, divideby, original);
             return result;
         }
-        private final boolean debugPrinting = false;
 
         private void safetyCheckDivision(BigInteger result,
                                          BigInteger divideby,
@@ -850,7 +825,5 @@ public class EasyLinearEquation
             array[i] = current;
         }
     }
-
-
 
 }

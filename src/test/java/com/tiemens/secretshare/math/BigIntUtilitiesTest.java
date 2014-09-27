@@ -19,10 +19,14 @@ package com.tiemens.secretshare.math;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.tiemens.secretshare.exceptions.SecretShareException;
 
 public class BigIntUtilitiesTest
 {
@@ -328,10 +332,81 @@ public class BigIntUtilitiesTest
             }
         }
     }
+
+    @Test
+    public void testCreatePrimeBiggerRandom()
+    {
+        // without control of the Random instance, testing is very limited:
+        BigInteger value = new BigInteger("16");  // i.e. 5 bits means 32+ means 37 is smallest possible
+        BigInteger expectedBiggerThan = new BigInteger("37");
+        // actual will be 37, 41, 47, 53, etc., depending on Random we don't control
+        BigInteger actual = BigIntUtilities.createPrimeBigger(value);
+        Assert.assertTrue("actual=" + actual + " expected=" + expectedBiggerThan,
+                           actual.compareTo(expectedBiggerThan) >= 0);
+    }
+
+
+    @Test
+    public void testCreatePrimeBiggerNotRandom()
+    {
+        Map<Integer, BigInteger> bits2prime = new HashMap<Integer, BigInteger>();
+        bits2prime.put(1, new BigInteger("7"));
+        bits2prime.put(2, new BigInteger("13"));
+        bits2prime.put(3, new BigInteger("23"));
+        bits2prime.put(4, new BigInteger("37"));
+
+        for (Integer bits : bits2prime.keySet()) {
+            Random random = new Random(100);
+            int intvalue = 1 << bits;
+            BigInteger value = new BigInteger("" + intvalue);
+            BigInteger actual = BigIntUtilities.createPrimeBigger(value, random);
+            System.out.println(" value=" + value + " actual=" + actual);
+            Assert.assertEquals("bits=" + bits + " value=" + value, bits2prime.get(bits), actual);
+        }
+    }
+
+    @Test
+    public void testCaseSensitivity()
+    {
+        final String origPart1 = "bigintcs:";
+        final String origPart2 = "000002-62c8fd-6ec81b-3c0584-136789-80ad34-";
+        final String origPart3 = "9269af-da237f-8ff3c9-";
+        final String origPart4 = "12BCCD"; // the checksum
+
+        subTestCaseSensitivity(origPart1, origPart2, origPart3, origPart4);
+
+        subTestCaseSensitivity(origPart1.toUpperCase(), origPart2, origPart3, origPart4);
+        subTestCaseSensitivity(origPart1, origPart2.toUpperCase(), origPart3, origPart4);
+        subTestCaseSensitivity(origPart1, origPart2, origPart3.toUpperCase(), origPart4);
+        subTestCaseSensitivity(origPart1, origPart2, origPart3, origPart4.toUpperCase());
+        subTestCaseSensitivity(origPart1.toUpperCase(), origPart2.toUpperCase(), origPart3.toUpperCase(), origPart4.toUpperCase());
+
+        subTestCaseSensitivity(origPart1.toLowerCase(), origPart2, origPart3, origPart4);
+        subTestCaseSensitivity(origPart1, origPart2.toLowerCase(), origPart3, origPart4);
+        subTestCaseSensitivity(origPart1, origPart2, origPart3.toLowerCase(), origPart4);
+        subTestCaseSensitivity(origPart1.toLowerCase(), origPart2.toLowerCase(), origPart3.toLowerCase(), origPart4.toLowerCase());
+
+    }
     // ==================================================
     // non public methods
     // ==================================================
 
+
+    private void subTestCaseSensitivity(String part1, String part2, String part3, String part4)
+    {
+        final String input = part1 + part2 + part3 + part4;
+        try
+        {
+            BigInteger ret = BigIntUtilities.Checksum.createBigInteger(input);
+            Assert.assertNotNull(ret);
+        }
+        catch (SecretShareException e)
+        {
+            e.printStackTrace();
+
+            Assert.fail("Case sensitivity failed for " + input);
+        }
+    }
 
     private void subtest(String in,
                          BigInteger expected)
@@ -342,6 +417,7 @@ public class BigIntUtilitiesTest
                            BigIntUtilities.Checksum.createMd5CheckSumString(actual));
         Assert.assertEquals("test s=" + in, expected, actual);
     }
+
 
     private static boolean passesMillerRabin(BigInteger us,
                                              int iterations,
@@ -380,4 +456,6 @@ public class BigIntUtilitiesTest
         }
         return true;
     }
+
+
 }

@@ -1,22 +1,33 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-
+apply from: "$rootDir/gradle/versioning.gradle"
+apply from: "$rootDir/gradle/jacoco.gradle"
+apply plugin: 'sonar-runner'
+apply plugin: 'signing'
+apply plugin: 'maven'
+    
 //
 // target:  'build'     - does not run integration tests
 // target:  'integTest' - runs integration tests (about 5 minutes worth)
-// target:  'publish'   - push to archiva (as guest)
+// target:  'publish'   - push to local archiva (as guest)
+// target:  'uploadArchives' - push to maven central (sonatype, as user)
+// target:  'jacocoTestReport'    'jacocoIntegTestReport' - 
+// target:  'sonarRunner' - publish data to locally running SonarCube
+// target:  'signArchives' - test signature operation
 //
 
 group = 'com.tiemens'
-version = '1.3.0'
+archivesBaseName = 'secretshare'
+version = '1.4.2-SNAPSHOT'
+project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 sourceCompatibility = 1.6
 
 
 dependencies {
-    compile     group: 'com.miglayout', name: 'miglayout',        version: '3.7.4'
+    compile     group: 'com.miglayout', name: 'miglayout',      version: '3.7.4'
 
-    testCompile group: 'junit',         name: 'junit',            version: '4+'
+    testCompile group: 'junit',         name: 'junit',          version: '4.11'
 }
 
 repositories {
@@ -84,6 +95,16 @@ artifacts {
     archives javadocJar
 }
 
+signing {
+    required { 
+        isReleaseVersion && 
+        gradle.taskGraph.hasTask("uploadArchives")  &&
+        project.hasProperty("ossrhUsername")
+    }
+    sign configurations.archives
+}
+
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -94,20 +115,141 @@ publishing {
             artifact javadocJar {
                 classifier "javadoc"
             }
+            // A: reference: http://forums.gradle.org/gradle/topics/maven_publishing_plugin_doesnt_upload_generated_pom_file
+            // B: reference: http://books.sonatype.com/nexus-book/reference/bundles.html
+            // C: reference: http://blog.sonatype.com/2009/09/maven-tips-and-tricks-using-github/
+           // D: reference https://github.com/resteasy/Resteasy/blob/master/jaxrs/pom.xml
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 
+                    "Shamir's Secret Share in Java")
+                root.appendNode('url', 
+                    'https://github.com/timtiemens/secretshare')
+                // strange packaging is missing:
+                root.appendNode('packaging', 'jar')
+                root.appendNode('name', "SecretShare core")
+
+                def scm = root.appendNode('scm')
+                scm.appendNode('url', 
+                    //D:  'http://github.com/resteasy/Resteasy/tree/master/'
+                         'https://github.com/timtiemens/secretshare/tree/' + 
+                                   'v' + version + '/')
+                scm.appendNode('connection', 
+                    //A: 'scm:https://bmuschko@github.com/bmuschko/gradle-cloudbees-plugin.git'
+                    //B: 'scm:git:git://github.com/sonatype/sample-project.git')
+                    //C: 'scm:git:git@github.com:tobrien/git-demo.git'
+                    //D: 'scm:git:git://github.com/resteasy/Resteasy.git'
+                         'scm:git:git://github.com/timtiemens/secretshare.git')
+                scm.appendNode('developerConnection', 
+                    //A: 'scm:git://github.com/bmuschko/gradle-cloudbees-plugin.git'
+                    //B: 'scm:git:git://github.com/sonatype-sample-project.git')
+                    //C: 'scm:git:git@github.com:tobrien/git-demo.git'
+                    //D: 'scm:git:git@github.com:resteasy/Resteasy.git'
+                         'scm:git:git@github.com:timtiemens/secretshare.git')
+
+
+
+                def license = root.appendNode('licenses').appendNode('license')
+                license.appendNode('name', 
+                    'GNU Lesser General Public License (LGPL), Version 2.1')
+                license.appendNode('url', 
+                    'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html')
+                license.appendNode('distribution', 'repo')
+
+                def developer = root.appendNode('developers').appendNode('developer')
+                developer.appendNode('id', 'timtiemens')
+                developer.appendNode('name', 'Tim Tiemens')
+                // developer.appendNode('email', 'timremote@gmail.com')
+                developer.appendNode('url', 'https://github.com/timtiemens')
+            }
         }
     }
 
     repositories {
         maven {
-            if (project.version.contains("SNAPSHOT")) {
-                url project.publishBaseUrl + "/snapshots"
+            if (project.hasProperty('publishBaseUrl')) {
+                if (! project.ext.isReleaseVersion) {
+                    url project.publishBaseUrl + "/snapshots"
+                } else {
+                    url project.publishBaseUrl + "/internal"
+                }
             } else {
-                url project.publishBaseUrl + "/internal"
+                    // this is a notice that 'publish' requires .publishBaseUrl
+                    url "http://you.must.configure.project.publishBaseUrl"
             }
         }
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+ext.useOssrhUsername = 
+   project.hasProperty("ossrhUsername") ? ossrhUsername : "fake"
+ext.useOssrhPassword = 
+   project.hasProperty("ossrhPassword") ? ossrhPassword : "fake"
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: useOssrhUsername, password: useOssrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: useOssrhUsername, password: useOssrhPassword)
+      }
+
+      pom.project {
+        name 'SecretShare core'
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description "Shamir's Secret Share in Java"
+        url 'https://github.com/timtiemens/secretshare'
+
+        scm {
+          connection 'scm:git:git://github.com/timtiemens/secretshare.git'
+          developerConnection 'scm:git:git@github.com:timtiemens/secretshare.git'
+          url 'https://github.com/timtiemens/secretshare/tree/' + 
+                                   'v' + version + '/'
+        }
+
+        licenses {
+          license {
+            name 'GNU Lesser General Public License (LGPL), Version 2.1'
+            url 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html'
+          }
+        }
+
+        developers {
+          developer {
+            id 'timtiemens'
+            name 'Tim Tiemens'
+            email 'timremote@gmail.com'
+            url 'https://github.com/timtiemens'
+          }
+        }
+      }
+    }
+  }
 }
+
+
+
+buildscript {
+    repositories {
+    }
+}
+
+sonarRunner {
+    sonarProperties {
+        property 'sonar.projectName', 'secretshare'
+        property 'sonar.projectDescription', "Shamir's Secret Share in Java"
+        property 'sonar.sourceEncoding', 'UTF-8'
+        properties['sonar.tests'] += sourceSets.integTest.allSource.srcDirs
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}
+

@@ -29,7 +29,7 @@ import com.tiemens.secretshare.md5sum.Md5ChecksummerFactory;
  * values to be encoded as a hex string with a checksum.
  *
  * Syntax:
- *   bigintcs:HHHHHH-HHHHHH-CCCCCC
+ *   bigintcs:hhhhhh-hhhhhh-CCCCCC
  * Example:
  *   bigintcs:bd2c52-b16d74-d51456-d0f89a-30c932-b2f6c1-3a9ce3-7b4387-0F2CA0
  *
@@ -39,13 +39,17 @@ import com.tiemens.secretshare.md5sum.Md5ChecksummerFactory;
  *    'bigintcs:-000064-BBC6EC' = -100
  *    'bigintcs:000064-BBC6EC'  = error
  *
- * The "HHHHHH-" section is repeated as many times as needed.
- * The first "HHHHHH-" section is 0-padded as needed.
- * The first section is either "HHHHHH" or "-HHHHHH" [dash means negative BigInteger].
+ * The "hhhhhh-" section is repeated as many times as needed.
+ * The first "hhhhhh-" section is 0-padded as needed.
+ * The first section is either "hhhhhh" or "-hhhhhh" [dash means negative BigInteger].
  *
- * The case of the digits "a-f" versus "A-F" does not matter.
- * Convention is that the HHHHHH- section is lower case,
+ * The case of the hex digits "a-f" versus "A-F" does not matter.
+ *
+ * Convention is that the hhhhhh- section is lower case,
  *                    the CCCCCC- section is upper case.
+ *
+ * Also, the checksum is COMPUTED using all lower-case hhhhhh- sections, even if the input is
+ *       not given that way.
  *
  */
 public final class BigIntStringChecksum
@@ -55,10 +59,11 @@ public final class BigIntStringChecksum
     // ==================================================
 
     /**
-     * The Prefix string that identifies the 6hex-6hex-md5sum6hex pattern
-     *   we've invented here.
+     * The prefix string that identifies the 6hex-6hex-md5sum6hex pattern
+     *   we've invented to signify a BigIntegerChecksum value.
+     * This value must be in lower case.
      */
-    public static final String PREFIX_BIGINT_DASH_CHECKSUM = "bigintcs:";
+    public static final String PREFIX_BIGINT_DASH_CHECKSUM = "bigintcs:".toLowerCase();
 
     /**
      * Constant for how many characters/digits are in each "6hex" section.
@@ -84,7 +89,7 @@ public final class BigIntStringChecksum
 
     /**
      * Contains a hex-encoded string of the md5sum of "asHex".
-     * Our implementation is limited to 6-characters.
+     * Our implementation is limited to 6 characters of checksum.
      */
     private final String       md5checksum;
 
@@ -98,7 +103,7 @@ public final class BigIntStringChecksum
      *   to parse correctly.
      *
      * @param input the string to check
-     * @return true if the string starts with
+     * @return true if the string starts with (case-insensitive)
      *                 BigIntStringChecksum.PREFIX_BIGINT_DASH_CHECKSUM
      *         false all other cases
      */
@@ -107,7 +112,7 @@ public final class BigIntStringChecksum
         boolean ret = false;
         if (input != null)
         {
-            ret = input.startsWith(PREFIX_BIGINT_DASH_CHECKSUM);
+            ret = input.toLowerCase().startsWith(PREFIX_BIGINT_DASH_CHECKSUM);
         }
         else
         {
@@ -118,8 +123,11 @@ public final class BigIntStringChecksum
 
     /**
      * Take input string, and create the instance.
+     * As of version 1.3.2 forward, the case of the INPUT is not relevant.
+     * Note, however, that when the Checksum CCCCCC is computed, the hex hhhhhh- string
+     *                is LOWER CASE.
      *
-     * @param bics string in "bigintcs:HHHHHH-HHHHHH-CCCCCC" format
+     * @param bics string in "bigintcs:hhhhhh-hhhhhh-CCCCCC" format
      * @return big integer string checksum object
      * @throws SecretShareException on error, such as null input, OR
      *               input doesn't start with correct prefix OR
@@ -178,8 +186,8 @@ public final class BigIntStringChecksum
                         PREFIX_BIGINT_DASH_CHECKSUM + "'",
                         bics);
         }
-        // This should never throw an exception here.
-        // But, if it does, better now than later:
+        // The call to .asBigInteger() should never throw an exception at this point.
+        // But, if it is going to throw an exception, it is better to do it now rather than later:
         ret.asBigInteger();
 
         return ret;
@@ -188,7 +196,7 @@ public final class BigIntStringChecksum
     /**
      * Take string as input, and either return an instance or return null.
      *
-     * @param bics string in "bigintcs:HHHHHH-HHHHHH-CCCCCC" format
+     * @param bics string in "bigintcs:hhhhhh-hhhhhh-CCCCCC" format
      * @return big integer string checksum object
      *         OR  null if incorrect format, error parsing, etc.
      */
@@ -346,7 +354,7 @@ public final class BigIntStringChecksum
     private static String insertDashesIntoHex(final String inAsHex)
     {
         String ret = "";
-        int LEN_PER_GROUP = 6;
+        final int lengthPerGroup = 6;
         String input = inAsHex;
         boolean returnIsNegative = false;
         if (input.startsWith("-"))
@@ -354,17 +362,17 @@ public final class BigIntStringChecksum
             returnIsNegative = true;
             input = input.substring(1);
         }
-        while ((input.length() % LEN_PER_GROUP) != 0)
+        while ((input.length() % lengthPerGroup) != 0)
         {
             input = "0" + input;
         }
         String sep = "";
-        for (int i = 0, n = input.length() / LEN_PER_GROUP; i < n; i++)
+        for (int i = 0, n = input.length() / lengthPerGroup; i < n; i++)
         {
             ret += sep;
             sep = "-";
-            ret += input.substring((i + 0) * LEN_PER_GROUP,
-                                   (i + 1) * LEN_PER_GROUP);
+            ret += input.substring((i + 0) * lengthPerGroup,
+                                   (i + 1) * lengthPerGroup);
         }
         if (returnIsNegative)
         {
@@ -419,7 +427,7 @@ public final class BigIntStringChecksum
 
     private static String pad(final String inHex)
     {
-        int LEN_PER_GROUP = DIGITS_PER_GROUP;
+        final int lengthPerGroup = DIGITS_PER_GROUP;
         String useHex = inHex;
         boolean returnIsNegative = false;
         if (useHex.startsWith("-"))
@@ -428,7 +436,7 @@ public final class BigIntStringChecksum
             returnIsNegative = true;
         }
         String ret = useHex;
-        while ((ret.length() % LEN_PER_GROUP) != 0)
+        while ((ret.length() % lengthPerGroup) != 0)
         {
             ret = "0" + ret;
         }
