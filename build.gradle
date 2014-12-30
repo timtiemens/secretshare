@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply from: "$rootDir/gradle/versioning.gradle"
-apply from: "$rootDir/gradle/jacoco.gradle"
+apply plugin: 'jacoco'
 apply plugin: 'sonar-runner'
 apply plugin: 'signing'
 apply plugin: 'maven'
@@ -51,21 +51,65 @@ sourceSets {
 
 test {
     exclude '**/*IntegTest.class'
-    reports.html.destination = file ("$reports.html.destination/test")
-    reports.junitXml.destination = file ("$reports.junitXml.destination/test")
+//    reports.html.destination = file ("$reports.html.destination/test")
+//    reports.junitXml.destination = file ("$reports.junitXml.destination/test")
+  // "no such property: testReportDir
+//    testReportDir = file("$buildDir/reports/test")
+//    testResultsDir = file ("$buildDir/results/test")
+
 }
 
 task integTest(type: Test, group: 'Build') {
+
     testClassesDir = sourceSets.integTest.output.classesDir
     classpath = sourceSets.integTest.runtimeClasspath
     include '**/*IntegTest.class'
+
+ // old
     reports.html.destination = file ("$reports.html.destination/integTest")
     reports.junitXml.destination = file ("$reports.junitXml.destination/integTest")
+
+    jacoco {
+    // new stuff  - does not work
+//    testReportDir = file("$buildDir/reports/tests/IT")
+//    testResultsDir = file("$buildDir/test-results/IT")
+
+
+//    ignoreFailures = true
+
+        // for gradle 1.6
+        // destPath = file("$buildDir/jacoco/IT/jacocoIT.exec")
+        // classDumpPath = file("$buildDir/jacoco/IT/classpathdumps")
+
+        // for gradle 1.7+
+        destinationFile = file("$buildDir/jacoco/IT/jacocoIT.exec")
+        classDumpFile = file("$buildDir/jacoco/IT/classpathdumps")
+    }
+
     
     // Your choice:  
     //  check.dependsOn integTest - makes 'build'->check->integTest  runs in 5 minutes
     //  ELSE comment out, and 'build'->check                         runs in 12 seconds
     //check.dependsOn integTest
+}
+
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+    reportsDir = file("$buildDir/reports/jacoco")
+  // integrationTestTaskName has gone away...
+//   integrationTestTaskName = 'integTest'
+
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html {
+            enabled true
+            destination "{buildDir}/reports/jacoco/jacocohtml"
+        } //.destination "${buildDir}/jacocoHtml"
+    }
 }
 
 jar {
@@ -248,6 +292,6 @@ sonarRunner {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.2.1'
 }
 
