@@ -419,9 +419,9 @@ public class BigIntUtilitiesTest
     }
 
 
-    private static boolean passesMillerRabin(BigInteger us,
-                                             int iterations,
-                                             Random rnd)
+    public static boolean passesMillerRabin(BigInteger us,
+                                            int iterations,
+                                            Random rnd)
     {
         final BigInteger ONE = BigInteger.ONE;
         final BigInteger TWO = BigInteger.valueOf(2);
