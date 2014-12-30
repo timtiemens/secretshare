@@ -49,50 +49,6 @@ sourceSets {
     }
 }
 
-test {
-    exclude '**/*IntegTest.class'
-//    reports.html.destination = file ("$reports.html.destination/test")
-//    reports.junitXml.destination = file ("$reports.junitXml.destination/test")
-  // "no such property: testReportDir
-//    testReportDir = file("$buildDir/reports/test")
-//    testResultsDir = file ("$buildDir/results/test")
-
-}
-
-task integTest(type: Test, group: 'Build') {
-
-    testClassesDir = sourceSets.integTest.output.classesDir
-    classpath = sourceSets.integTest.runtimeClasspath
-    include '**/*IntegTest.class'
-
- // old
-    reports.html.destination = file ("$reports.html.destination/integTest")
-    reports.junitXml.destination = file ("$reports.junitXml.destination/integTest")
-
-    jacoco {
-    // new stuff  - does not work
-//    testReportDir = file("$buildDir/reports/tests/IT")
-//    testResultsDir = file("$buildDir/test-results/IT")
-
-
-//    ignoreFailures = true
-
-        // for gradle 1.6
-        // destPath = file("$buildDir/jacoco/IT/jacocoIT.exec")
-        // classDumpPath = file("$buildDir/jacoco/IT/classpathdumps")
-
-        // for gradle 1.7+
-        destinationFile = file("$buildDir/jacoco/IT/jacocoIT.exec")
-        classDumpFile = file("$buildDir/jacoco/IT/classpathdumps")
-    }
-
-    
-    // Your choice:  
-    //  check.dependsOn integTest - makes 'build'->check->integTest  runs in 5 minutes
-    //  ELSE comment out, and 'build'->check                         runs in 12 seconds
-    //check.dependsOn integTest
-}
-
 jacoco {
     toolVersion = "0.7.1.201405082137"
     reportsDir = file("$buildDir/reports/jacoco")
@@ -101,14 +57,81 @@ jacoco {
 
 }
 
+test {
+    exclude '**/*IntegTest.class'
+
+    jacoco {
+        // for gradle 1.7+
+        destinationFile = file("$buildDir/jacoco/test/jacocoTest.exec")
+        classDumpFile = file("$buildDir/jacoco/test/classpathdumps")
+    }
+}
+
+task integTest(type: Test, group: 'Build') {
+   outputs.upToDateWhen { false } //?
+
+    testClassesDir = sourceSets.integTest.output.classesDir
+    classpath = sourceSets.integTest.runtimeClasspath
+    include '**/*IntegTest.class'
+
+    finalizedBy {
+       tasks.integTestReport
+    }
+    jacoco {
+       append = false
+       // for gradle 1.7+
+       destinationFile = file("$buildDir/jacoco/integTest/jacocoIntegTest.exec")
+       classDumpFile = file("$buildDir/jacoco/integTest/classpathdumps")
+    }
+    
+    // Your choice on when to run integTest:
+    //  a) check.dependsOn integTest - 
+    //       causes  'build' -> check -> integTest    and runs in 5 minutes
+    //  b) comment out // check.dependsOn integTest -
+    //       causes  'build' -> check                 and runs in 12 seconds
+    //check.dependsOn integTest
+}
+
+
 jacocoTestReport {
     reports {
         xml.enabled false
         csv.enabled false
-        html {
+        html {          //html.destination 
             enabled true
-            destination "{buildDir}/reports/jacoco/jacocohtml"
-        } //.destination "${buildDir}/jacocoHtml"
+            destination "${buildDir}/reports/jacoco/testHtml"
+        } 
+    }
+}
+jacocoTestReport.dependsOn test
+
+
+task('integTestReport', type: JacocoReport) {
+    executionData project.tasks.integTest
+
+//    sourceDirectories = project.files(project.sourceSets.integTest.allSource.srcDirs)
+    sourceDirectories = 
+//          project.files(project.sourceSets.integTest.allSource.srcDirs) +
+          project.files(project.sourceSets.test.allSource.srcDirs)
+//    classDirectories = project.sourceSets.integTest.output
+    classDirectories = 
+          project.sourceSets.integTest.output +
+          project.sourceSets.test.output
+//  If you use runtimeClasspath, the report will include stuff from 
+//      org.junit.**, junit.**, org.hamcrest.**, etc.
+//    classDirectories = project.sourceSets.integTest.runtimeClasspath
+
+//    def reportDir = project.reporting.file("jacoco/integTest_client/html")
+    def reportDir = file("${buildDir}/reports/jacoco/integTestHtml")
+    reports {
+//      html.destination = reportDir
+        html  {
+            enabled true
+            destination "${reportDir}"
+        }
+    }
+    doLast {
+       println "Jacoco report for integ client created: file://${reportDir.toURI().path}"
     }
 }
 
