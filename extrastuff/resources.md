@@ -8,7 +8,7 @@ Clojure
 
 [Shamir Secret Sharing for Clojure based on secretsharejava] 
 
-Wonderful application in Clojure.  
+Wonderful application in Clojure.
 Currently based on version 1.3.1 of this library.
 
 Java
