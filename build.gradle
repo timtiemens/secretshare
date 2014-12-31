@@ -1,3 +1,13 @@
+// target:  'build'          - does not run integration tests
+// target:  'integTest'      - runs integration tests (about 5 minutes worth)
+// target:  'publish'        - push to local archiva (as guest)
+// target:  'uploadArchives' - push to maven central (sonatype, as user)
+// target:  'jacocoTestReport'      - code coverage from unit tests
+// target:  'jacocoIntegTestReport' - coverage from integration tests and UTs
+// target:  'sonarRunner'    - publish data to locally running SonarCube
+// target:  'signArchives'   - test signature operation
+//
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
@@ -7,16 +17,6 @@ apply plugin: 'sonar-runner'
 apply plugin: 'signing'
 apply plugin: 'maven'
     
-//
-// target:  'build'     - does not run integration tests
-// target:  'integTest' - runs integration tests (about 5 minutes worth)
-// target:  'publish'   - push to local archiva (as guest)
-// target:  'uploadArchives' - push to maven central (sonatype, as user)
-// target:  'jacocoTestReport'    'jacocoIntegTestReport' - 
-// target:  'sonarRunner' - publish data to locally running SonarCube
-// target:  'signArchives' - test signature operation
-//
-
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
 version = '1.4.2-SNAPSHOT'
@@ -67,10 +67,12 @@ task integTest(type: Test, group: 'Build') {
     reports.html.destination = file ("$reports.html.destination/integTest")
     reports.junitXml.destination = file ("$reports.junitXml.destination/integTest")
     
-    // Your choice:  
-    //  check.dependsOn integTest - makes 'build'->check->integTest  runs in 5 minutes
-    //  ELSE comment out, and 'build'->check                         runs in 12 seconds
-    //check.dependsOn integTest
+    // Your choice on when to run integTest:
+    //  a) check.dependsOn integTest -
+    //         causes 'build' -> check -> integTest     and runs in 5 minutes
+    //  b) comment out // check.dependsOn integTest -
+    //         causes 'build' -> check                  and runs in 12 seconds
+    //comment out// check.dependsOn integTest
 }
 
 jacocoTestReport {
