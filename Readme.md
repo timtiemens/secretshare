@@ -110,10 +110,10 @@ Examples of command line invocations
 Important Notes about Shares of the Secret
 -----
 Note that each share of the secret requires at least four pieces: 
-1. the "k" value [same for all shares],
-2. the "modulus" value [same for all shares],
-3. the "x" value [unique for this share],
-4. the "share" value [unique for this share]
+ 1. the "k" value [same for all shares],
+ 2. the "modulus" value [same for all shares],
+ 3. the "x" value [unique for this share],
+ 4. the "share" value [unique for this share]
 
 Optional - if you have split multiple secrets into shares,
 it is also nice to have the UUID of the split operation,
