@@ -20,23 +20,28 @@ The following are used to completely build and test the project:
 This is needed for the (Unit and Integration) Test .java files to compile.
  
  
-Installation
+Build
 ------
-1. Compile locally or use artifact.
 
-  a. Compile locally - build the project with gradle
+1. Compile locally - build the project with gradlew (gradle wrapper)
 ```
     $ ./gradlew build
   [creates build/libs/secretshare-1.4.2-SNAPSHOT.jar]
     $ cp build/libs/secretshare-1.4.2-SNAPSHOT.jar ./secretshare.jar
   [copies the .jar into the current directory]
 ```
-  b. Use artifact in your build - dependency information:
+
+Officially Released Artifact
+------
+
+2. Use the artifact in your build - dependency information:
 ```
       group:   com.tiemens
        name:   secretshare
     version:   1.4.1
 ```
+Central Repository - [SecretShare1.4.1] - to see dependency information
+formatted for Maven, Ivy, Grape, Gradle, Buildr, etc.
 
 
 Use
@@ -108,13 +113,18 @@ Note that each share of the secret requires at least four pieces:
 3) the "x" value [unique for this share],
 4) the "share" value [unique for this share]
 
-And, if you have split multiple secrets into shares, it is also nice to have the UUID of the split, so that you can make sure all your shares belong to the same split.  Due to the nature of the algorithm, when given shares from different splits, the 'combine' operation will produce a key, but it will not be the correct key.
+Optional - if you have split multiple secrets into shares,
+it is also nice to have the UUID of the split operation,
+so that you can make sure all your shares belong to the same split.
+Due to the nature of the algorithm, shares from different splits
+will 'combine' and will produce a ''secret'' (string or number),
+but it will not be the original secret.
 
 
 Note on the Secret
 -----
 From above, you can see the largest pre-defined prime modulus is 4096 bits, which only allows 512 characters of secret.
-In case it isn't obvious, the best way to use the secret share program is to use it to split the secret key that was used by a symmetric encryption program to encrypt the actual secret --  i.e. split and share the key, not the secret.
+In case it isn't obvious, the best way to use the secret share program is to use it to split the secret key that was used by a symmetric encryption program to encrypt the actual secret --  i.e. split and share the key, not the original secret content.
 See gpg -c (aka gpg --symmetric) for an example of symmetric encryption.  See openssl enc for another example of symmetric encryption.
 
 A complete scenario:
@@ -129,7 +139,7 @@ $ cat PAYLOAD.txt
 $ openssl enc -pass pass:TheKeyUsedToEncrypt -aes-256-cbc -salt \
               -in PAYLOAD.txt -out PAYLOAD.enc
 $ ls -l PAYLOAD.enc
--rw-r--r--  1 timtiemens  users   128 Dec 29 16:58 PAYLOAD.enc
+-rw-r--r--  1 timtiemens  users   128 Dec 29 19:40 PAYLOAD.enc
 
   # Create the shares from the key.
   # Use '-printIndiv' to make it easier to distribute the shares.
@@ -163,7 +173,8 @@ Share (x:6) = bigintcs:000054-686834-140c20-092e06-dd44b5-f315c0-7d118c-9D944F
 
   #  time passes 
 
-  # Later, somebody acquires 3 share - #2, #4 and #5 and recovers the key:
+  # Later, somebody acquires 3 shares - for example, #2, #4 and #5 -
+  #  and then does this:
  
 $ java -jar secretshare.jar combine -k 3 \
    -s2 1882356874773438980155973947620693982153929916 \
@@ -173,7 +184,7 @@ Secret Share version 1.4.2-SNAPSHOT
 secret.number = '1882356743151517032574974075571664781995241588'
 secret.string = 'TheKeyUsedToEncrypt'
 
-  # Then, using PAYLOAD.enc and the key, recovers the secret PAYLOAD:
+  # Then, using PAYLOAD.enc and the secret.string, recovers the secret PAYLOAD:
 
 $ openssl enc -d -pass pass:TheKeyUsedToEncrypt -aes-256-cbc \
               -in PAYLOAD.enc -out RECOVER.txt
@@ -208,4 +219,4 @@ Documentation
 
 [Original Sourceforge Secret Sharing in Java]:http://secretsharejava.sourceforge.net/
 [Resources]:extrastuff/resources.md
-
+[SecretShare1.4.1]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.1

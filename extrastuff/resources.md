@@ -8,7 +8,8 @@ Clojure
 
 [Shamir Secret Sharing for Clojure based on secretsharejava] 
 
-Wonderful application in Clojure.  Based on this library as hosted at SourceForge.
+Wonderful application in Clojure.  
+Currently based on version 1.3.1 of this library.
 
 Java
 ----
@@ -29,14 +30,15 @@ Adobe Flex/Flash
 
 [Shamir's "How to share a Secret"]
 
-No source available [which means it should not be trusted]. Simple "share format" of NNkkFFhhhhhhhhhhh (example: 01033ED38FFE2E2F57CDE8BB) where NN is the "x"/01, kk is the "k"/03, ff are useless flags/3E, and the rest is hex encoding of the characters in this secret share.
+No source available [which means it should not be trusted]. Simple "share format" of NNkkFFhhhhhhhhhhh (example: 01033ED38FFE2E2F57CDE8BB) where NN is the "x"/01, kk is the "k"/03, FF are useless flags (3E in the example), and the rest is hex encoding of the characters in this secret share.
 
 C
 ----------
 
 [Shamir's Secret Sharing Scheme]
 
-Too simple "share format" of NN-hhhhhhhhhh where NN/x is provided, but not "k"
+Too simple "share format" of NN-hhhhhhhhhh where "n" and "x" are provided, but not the required value "k" (which means this implementation 
+was never fully tested)
 
 
 Information
@@ -58,7 +60,7 @@ Same as above, but in the Big Integer Checksum format:
 
 4096 bits = bigintcs:100000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000000-000735-4C590B
 
-Fun note: the 4096 bit prime is 2^4100 + 0x735.  It was found by running .nextProbablePrime( 2^4100 ).  It was further tested as prime with 100,000 rounds of Miller-Rabin.
+Fun note: the 4096 bit prime is 2^4100 + 0x735.  It was found by running .nextProbablePrime( 2^4100 ).  It was further tested and confirmed to be prime with 100,000 rounds of Miller-Rabin (which took 50,000 seconds, or almost 14 hours).
 
 Package note:  you can print these modulus values with 
 ```
