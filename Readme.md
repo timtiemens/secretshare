@@ -170,12 +170,12 @@ Share (x:4) = bigintcs:000054-6866a6-a5200b-8ec9c9-25a572-156647-e47fc4-3AF50D
 Share (x:5) = bigintcs:000054-68675a-b5feb1-02ed11-badf65-8e0f83-0887d0-6B58F1
 Share (x:6) = bigintcs:000054-686834-140c20-092e06-dd44b5-f315c0-7d118c-9D944F
 
-  # Give the keys x1, x2, x3, x4, x5 and x6 away.
+  # Give the keys x:1, x:2, x:3, x:4, x:5 and x:6 away.
   # Give the file PAYLOAD.enc away, or publish it somewhere public.
 
   #  time passes 
 
-  # Later, somebody acquires 3 shares - for example, #2, #4 and #5 -
+  # Later, somebody acquires 3 shares - for example, x:2, x:4 and x:5 -
   #  and then does this:
  
 $ java -jar secretshare.jar combine -k 3 \
