@@ -16,6 +16,9 @@
  *******************************************************************************/
 package com.tiemens.secretshare.math;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -187,6 +190,24 @@ public class BigIntStringChecksumTest
             // ok
         }
     }
+
+    @Test
+    public void testfromStringOrNull() {
+        assertNull(BigIntStringChecksum.fromStringOrNull(null));
+        assertNull(BigIntStringChecksum.fromStringOrNull("invalid"));
+
+        // completely wrong format
+        assertNull(BigIntStringChecksum.fromStringOrNull("bigintcs:" + "001" +  "-BBC"));
+
+        // completely invalid value
+        assertNull(BigIntStringChecksum.fromStringOrNull("bigintcs:" + "001234" +  "-BBC6EC"));
+
+        // positive versus negative - the checksum only works for the negative
+        assertNull(BigIntStringChecksum.fromStringOrNull("bigintcs:" + "000064" +  "-BBC6EC"));
+        assertNotNull(BigIntStringChecksum.fromStringOrNull("bigintcs:-000064-BBC6EC"));
+    }
+
+
     // ==================================================
     // non public methods
     // ==================================================
