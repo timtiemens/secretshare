@@ -1,6 +1,11 @@
 Shamir's Secret Sharing in Java
 
 Release Notes  --
+
+v1.4.2
+======
+ o upgrade to gradle 2.x; upgrade jacoco plugin to standard plugin
+
 v1.4.1
 ======
  o minor - break API compatibility - BuildVersion API changed
