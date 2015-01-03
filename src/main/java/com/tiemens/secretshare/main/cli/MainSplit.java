@@ -219,6 +219,9 @@ public final class MainSplit
         // if true, print on 1 sheet of paper; otherwise use 'n' sheets and repeat the header
         private boolean printAllSharesAtOnce = true;
 
+        // if true, print the original equation
+        private boolean debugPrintEquationCoefficients = false;
+
         // ==================================================
         // constructors
         // ==================================================
@@ -311,7 +314,6 @@ public final class MainSplit
                         ret.modulus = new BigInteger(thearg);
                     }
                 }
-
                 else if ("-paranoid".equals(args[i]))
                 {
                     i++;
@@ -331,6 +333,10 @@ public final class MainSplit
                 else if (args[i].startsWith("-printIndiv"))  // -printIndividual
                 {
                     ret.printAllSharesAtOnce = false;
+                }
+                else if (args[i].startsWith("-debugPrintEquationCoefficients"))
+                {
+                    ret.debugPrintEquationCoefficients = true;
                 }
                 else if (args[i].startsWith("-"))
                 {
@@ -484,11 +490,13 @@ public final class MainSplit
             if (printAllSharesAtOnce)
             {
                 printParanoidCompleteOutput(out);
+                printPolynomialEquation(out);
                 printHeaderInfo(out);
                 printSharesAllAtOnce(out);
             }
             else
             {
+                printPolynomialEquation(out);
                 printSharesOnePerPage(out);
             }
         }
@@ -508,6 +516,14 @@ public final class MainSplit
         // ==================================================
         // non public methods
         // ==================================================
+
+        private void printPolynomialEquation(PrintStream out)
+        {
+            if (splitInput.debugPrintEquationCoefficients)
+            {
+                splitSecretOutput.debugPrintEquationCoefficients(out);
+            }
+        }
 
         private boolean hasParanoidOutput()
         {

@@ -101,7 +101,7 @@ Examples of command line invocations
   g.  Combine 3 shares to recreate the original secret.
   ```
   $ java -jar secretshare.jar combine -k 3 \
-     -prime384
+     -prime384 \
       -s2 1882356874773438980155973947620693982153929916 \
       -s4 1882357204724127580025723830249209987221192644 \
       -s5 1882357444072759374568880025530775541595539408
@@ -109,13 +109,18 @@ Examples of command line invocations
 
 Important Notes about Shares of the Secret
 -----
-Note that each share of the secret requires at least four pieces: 
+Note that each share of the secret requires at least these pieces:
  1. the "k" value [same for all shares],
- 2. the "modulus" value [same for all shares],
- 3. the "x" value [unique for this share],
- 4. the "share" value [unique for this share]
+ 2. the "x" value     [unique for this share],
+ 3. the "share" value [unique for this share]
 
-Optional - if you have split multiple secrets into shares,
+Optional -  the "modulus" value [same for all shares]
+  It is still unclear under what circumstances the modulus is required.
+  If no calculation in the split was larger than the modulus, then it is never required.
+  TODO: create an explicit test where modulus was triggered, confirm split-combine still work.
+
+Optional - the UUID of the split [same for all shares]
+  If you have split multiple secrets into shares,
 it is also nice to have the UUID of the split operation,
 so that you can make sure all your shares belong to the same split.
 Due to the nature of the algorithm, shares from different splits

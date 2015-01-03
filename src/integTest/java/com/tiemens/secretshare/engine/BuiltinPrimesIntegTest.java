@@ -77,7 +77,8 @@ public class BuiltinPrimesIntegTest
      *    10,000    2.32 seconds
      */
     @Test
-    public void testRabinMiller384() {
+    public void testRabinMiller384()
+    {
         BigInteger prime384 = SecretShare.getPrimeUsedFor384bitSecretPayload();
         subtest("384", prime384, iterations);
     }
@@ -88,7 +89,8 @@ public class BuiltinPrimesIntegTest
      *    10,000    1261 seconds
      */
     @Test
-    public void testRabinMiller4096() {
+    public void testRabinMiller4096()
+    {
         BigInteger prime4096 = SecretShare.getPrimeUsedFor4096bigSecretPayload();
         subtest("4096", prime4096, iterations);
     }
@@ -98,12 +100,14 @@ public class BuiltinPrimesIntegTest
     // ==================================================
 
 
-    private void subtest(String where, BigInteger prime, int iterations) {
+    private void subtest(String where, BigInteger prime, int iterations)
+    {
         boolean b = BigIntUtilitiesTest.passesMillerRabin(prime, iterations, generateWithFixedSeed());
         Assert.assertTrue("Rabin-Miller (" + iterations + ") failed on " + where, b);
     }
 
-    private Random generateWithFixedSeed() {
+    private Random generateWithFixedSeed()
+    {
         // if anything does go wrong, we want to be able to reproduce it
         Random ret = new SecureRandom();
         ret.setSeed(1212L);
@@ -119,6 +123,5 @@ public class BuiltinPrimesIntegTest
         //l.addHandler(lh);
         //l.setLevel(Level.ALL);
     }
-
 
 }
