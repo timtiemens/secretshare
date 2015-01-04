@@ -57,12 +57,16 @@ public class BuiltinPrimesIntegTest
 
     //
     // mac-corei7 = macbook pro, corei7, 2.3GHz
+    // vm-amd = virtualbox, FX-8350 8 core, 4.0GHz
+    // vm-corei7 = vmworkstation, corei7, 2.67GHz (original i7)
     //
 
     /**
      * On the mac-corei7, this test takes
      *     1,000
      *    10,000    0.65 seconds
+     * On the vm-corei7,
+     *    100,000  15.1 seconds
      */
     @Test
     public void testRabinMiller192()
@@ -75,6 +79,8 @@ public class BuiltinPrimesIntegTest
      * On the mac-corei7, this test takes
      *     1,000
      *    10,000    2.32 seconds
+     * On the vm-corei7,
+     *    100,000  74 seconds
      */
     @Test
     public void testRabinMiller384()
@@ -87,6 +93,11 @@ public class BuiltinPrimesIntegTest
      * On the mac-corei7, this test takes
      *     1,000     125 seconds
      *    10,000    1261 seconds
+     * On the vm-amd,
+     *     1,000     203 seconds
+     * On the vm-corei7,
+     *     1,000     504 seconds
+     *   100,000  50,627 seconds
      */
     @Test
     public void testRabinMiller4096()
