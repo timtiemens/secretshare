@@ -1,5 +1,6 @@
 // target:  'build'          - does not run integration tests
 // target:  'integTest'      - runs integration tests (about 5 minutes worth)
+// target:  'installApp'     - creates .jar
 // target:  'publish'        - push to local archiva (as guest)
 // target:  'uploadArchives' - push to maven central (sonatype, as user)
 // target:  'jacocoTestReport'      - code coverage from unit tests
@@ -16,15 +17,17 @@ apply plugin: 'jacoco'
 apply plugin: 'sonar-runner'
 apply plugin: 'signing'
 apply plugin: 'maven'
+apply plugin: 'application'
     
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
 version = '1.4.2-SNAPSHOT'
 project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
-sourceCompatibility = 1.6
-
+sourceCompatibility = 1.7
+mainClassName = 'com.tiemens.secretshare.main.cli.Main'
 
 dependencies {
+    compile     group: 'com.google.zxing', name: 'core',        version: '3.1.0'
     testCompile group: 'junit',         name: 'junit',          version: '4.11'
 }
 
