@@ -192,7 +192,7 @@ public final class MainInfo
 
         private void printHeaderInfo(PrintStream out)
         {
-            field(out, "Secret Share version " + Main.getVersionString(), "");
+            field(out, Main.getVersionLine(), "");
 
         }
 
