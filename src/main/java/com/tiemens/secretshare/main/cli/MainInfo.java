@@ -67,7 +67,7 @@ public final class MainInfo
     {
         out.println("Usage:");
         out.println(" info");
-        // so far, no options  ... out.println("  -k <k>        the threshold");
+        // so far, no options available for 'info' command
         // out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         // out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
         // out.println("  -prime192     for modulus, use built-in 192-bit prime");
@@ -193,7 +193,6 @@ public final class MainInfo
         private void printHeaderInfo(PrintStream out)
         {
             field(out, Main.getVersionLine(), "");
-
         }
 
         private void markedValue(PrintStream out,

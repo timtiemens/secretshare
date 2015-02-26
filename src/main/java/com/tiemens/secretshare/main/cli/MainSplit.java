@@ -71,12 +71,12 @@ public final class MainSplit
     public static void usage(PrintStream out)
     {
         out.println("Usage:");
-        out.println(" split -k <k> -n <n> -sN|-sS secret " +               // required
+        out.println(" split -k <k> -n <n> -sN|-sS <secret> " +               // required
                     "  [-prime4096|-prime384|-prime192|-primeN] [-d <desc>] [-paranoid <p>] "); // optional
         out.println("  -k <k>        the threshold");
         out.println("  -n <k>        the number of shares to generate");
-        out.println("  -sN           the secret as a number, e.g. '124332' or 'bigintcs:01e5ac-787852'");
-        out.println("  -sS           the secret as a string, e.g. 'My Secret'");
+        out.println("  -sN <secret>  the secret as a number, e.g. '-sN 124332' or '-sN bigintcs:01e5ac-787852'");
+        out.println("  -sS <secret>  the secret as a string, e.g. '-sS MySecretString'");
         out.println("  -d <desc>     description of the secret");
         out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
@@ -86,7 +86,7 @@ public final class MainSplit
         out.println("  -primeRandom  for modulus, use a random prime (that is bigger than secret)");
         out.println("  -m <modulus>  for modulus, use <modulus>, e.g. '11753999' or 'bigintcs:b35a0f-F89BEC'");
         out.println("  -primeNone    no modulus, do NOT use any modulus");
-        out.println("  -paranoid <p> test combine combinations, maximum of <p> tests");
+        out.println("  -paranoid <p> test combine combinations, up to a maximum of <p> tests");
         out.println("  -printOne     put all shares on 1 sheet of paper");
         out.println("  -printIndiv   put 1 share per sheet, use 'n' sheets of paper");
 

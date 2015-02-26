@@ -851,8 +851,8 @@ public class SecretShare
 
     /**
      * When the secret is split, this is the information that is returned.
-     * Note: This is NOT the "public" information, since the polynomial
-     *       used in splitting the secret is in this object.
+     * Note: This object is NOT the "public" information, since the polynomial
+     *         used in splitting the secret is in this object.
      *       The "public" information is the '.getShareInfos()' method.
      */
     public static class SplitSecretOutput

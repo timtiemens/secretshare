@@ -74,17 +74,18 @@ public final class MainCombine
     public static void usage(PrintStream out)
     {
         out.println("Usage:");
-        out.println(" combine -k <k>  -s<n> <secret-N> ..." +               // required
-                    "  [-prime4096|-prime384|-prime192|-primeN <m>|-primeNone] -stdin"); // optional
+        out.println(" combine -k <k>  -s<a> <share-A> -s<b> <share-B> [...]" +             // required
+                    "  [-prime4096|-prime384|-prime192|-primeN <m>|-primeNone] [-stdin]"); // optional
         out.println("  -k <k>        the threshold");
-        out.println("  -s<n> <s>     secret#n as a number e.g. '124332' or 'bigintcs:123456-DC0AE1'");
-        out.println("     ...           repeat this argument <k> times");
+        out.println("  -s<a> <A>     share:a as a number or bingintcs, e.g. '-s1 124332' means share x:1 value was 124332");
+        out.println("     [...]         repeat the [-s<b> <B>] pair a total of <k> times");
+        out.println("  -stdin        read share values from standard input, in the format as written by 'split'");
         out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
         out.println("  -prime192     for modulus, use built-in 192-bit prime");
         out.println("  -primeN <m>   for modulus use m, e.g. '59561' or 'bigintcs:12345-DC0AE1'");
         out.println("  -primeNone    modulus, do NOT use any modulus");
-        out.println("  -stdin        read values from standard input, as written by 'split'");
+
     }
 
     private static BigInteger parseBigInteger(String argname,
