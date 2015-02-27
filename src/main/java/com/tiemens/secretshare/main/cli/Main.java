@@ -19,6 +19,8 @@ package com.tiemens.secretshare.main.cli;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import com.tiemens.secretshare.BuildVersion;
 
@@ -42,12 +44,22 @@ public final class Main
     }
 
 
+    public static void debugClasspath() {
+        ClassLoader cl = ClassLoader.getSystemClassLoader();
+
+        URL[] urls = ((URLClassLoader)cl).getURLs();
+
+        for (URL url: urls) {
+            System.out.println(url.getFile());
+        }
+    }
 
     /**
      * @param args from command line
      */
     public static void main(String[] args)
     {
+        //debugClasspath();
         main(args, System.in, System.out, true);
     }
 
@@ -88,6 +100,10 @@ public final class Main
             else if ("bigintcs".equalsIgnoreCase(cmd))
             {
                 MainBigIntCs.main(args, in, out);
+            }
+            else if ("qrcode".equalsIgnoreCase(cmd))
+            {
+                MainQrCode.main(args, in, out);
             }
             else
             {

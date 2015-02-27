@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.Scanner;
 
@@ -25,17 +27,32 @@ public class MainQrCode {
 
     // Tutorial: http://zxing.org/w/docs/javadoc/index.html
 
+    public static void main(String[] args, InputStream in, PrintStream out) {
+        try {
+            main(args);
+        } catch (IOException e) {
+            e.printStackTrace(out);
+        }
+    }
+
+    // TODO: this is just sample "generate a qr-code image" code
     public static void main(String[] args) throws IOException {
-        String myCodeText = "http://Crunchify.com/";
+        String myCodeText = "http://www.abc.com/";
         String inputFilePath = "build/qr-input.txt";
         // myCodeText = new String(Files.readAllBytes(Paths.get(inputFilePath)), StandardCharsets.UTF_8); // jdk1.7
         myCodeText = new Scanner( new File(inputFilePath) ).useDelimiter("\\A").next();
         String filePath;
-        if (args.length > 0) {
+        filePath =  "build/qr-output.png";
+        for (int i = 0, n = args.length; i < n; i++)
+        {
+            if (args[i] == null)
+            {
+                continue;
+            }
+
             filePath = args[0];
-        } else {
-            filePath =  "build/CrunchifyQR.png";
         }
+
         int size = 125;
         String fileType = "png";
         File myFile = new File(filePath);
@@ -69,5 +86,6 @@ public class MainQrCode {
         }
         System.out.println("\n\nYou have successfully created QR Code.");
     }
+
 }
 

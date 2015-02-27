@@ -1,6 +1,7 @@
 // target:  'build'          - does not run integration tests
 // target:  'integTest'      - runs integration tests (about 5 minutes worth)
-// target:  'installApp'     - creates .jar
+// target:  'installApp'     - creates install directory for application+jars
+// target:  'secretshareOneJar' - create one-jar application+jars
 // target:  'publish'        - push to local archiva (as guest)
 // target:  'uploadArchives' - push to maven central (sonatype, as user)
 // target:  'jacocoTestReport'      - code coverage from unit tests
@@ -18,6 +19,7 @@ apply plugin: 'sonar-runner'
 apply plugin: 'signing'
 apply plugin: 'maven'
 apply plugin: 'application'
+apply plugin: 'gradle-one-jar'
     
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
@@ -277,7 +279,21 @@ uploadArchives {
 
 buildscript {
     repositories {
+        mavenCentral()
     }
+    dependencies {
+        classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+    }
+}
+
+// Create the 'one jar' file, i.e. the application plus all dependency .jars
+task secretshareOneJar(type: OneJar) {
+    mainClass = 'com.tiemens.secretshare.main.cli.Main'
+    archiveName = "${baseName}-all-${version}.${extension}"
+    manifest {
+        attributes 'Timestamp' : String.valueOf(System.currentTimeMillis())
+    }
+    additionalDir = file('src/main/resources/onejar')
 }
 
 sonarRunner {
