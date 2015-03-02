@@ -63,4 +63,20 @@ public abstract class NumberSimplex <E extends Number> {
     // 3 -6 1 = 7
     // 1 2 1 = 5
     // -2 5 -2 = -1
+
+    // AX = B
+    // pivot on a(ij) to obtain
+    // AbarXbar = Bbar
+    // Abar = a(rs) =
+    //   if r!=i and s!=j   1/a(ij)*det(a(rs) a(rj)
+    //                                  a(is) a(ij))
+    //   if r!=1 and s==j   a(rj) / a(ij)
+    //   if r==i and s!=j   -1*a(is)/ a(ij)
+    //   if r==i and s==j    1/a(ij)
+    // Bbar = (b1 .. b(i-1) x(j) b(i+1) ... b(m))
+    // Xbar = (x1 .. x(j-1) b(j) x(j+1) ... x(n))
+    //
+    //
+    // det(c11 c12)
+    //    (c21 c22)  = c11*c22 - c21*c12
 }
