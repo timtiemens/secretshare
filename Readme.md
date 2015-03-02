@@ -217,6 +217,34 @@ a) using -prime4096 on 512-character secret    ==    0.3 seconds
 b) using -primeN    on 512-character secret    ==   57.1 seconds
 ```
 
+Note on the size of 'k'
+----
+Value 'k' versus recorded runtimes to complete the "combine" operation:
+k = 19      3 seconds
+k = 20     10 seconds
+k = 21     39 seconds
+k = 22    156 seconds
+k = 23    646 seconds
+k = 24   2460 seconds  41 minutes
+k = 25                164 minutes
+k = 26                656 minutes   11 hours
+k = 27                              44 hours
+k = 28                             176 hours   7.3 days
+k = 29                                        30   days
+k = 30                                       120   days
+The formula is roughly 10 * 4^(k - 20) seconds.
+For k = 90, that works out to be  = 10 * 4^(90 - 20) = 1E42 seconds.
+Since a year has ~3E7 seconds, that will never happen.
+
+So, k=25 is a pretty good practical limit, or k=20 for "immediate" results.
+
+NOTE: 'split' is perfectly capable of generating k=50, k=100, or even
+      k=1000 in a reasonable amount of time (k=1000 took 35 seconds).
+      Note, however, that you will never [as a matter of practice] be
+      able to recover the original secret from the shares with the
+      secretshare.jar application.  For k=1000, perhaps a super computer cluster
+      could solve the matrix and recreate the original secret.  Maybe.
+
 Documentation
 ----
 [Original Sourceforge Secret Sharing in Java] - original SCM location.  Out-of-date.

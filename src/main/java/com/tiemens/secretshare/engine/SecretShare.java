@@ -457,6 +457,7 @@ public class SecretShare
         {
             ele = ele.createWithPrimeModulus(publicInfo.getPrimeModulus());
         }
+
         EasyLinearEquation.EasySolve solve = ele.solve();
 
         BigInteger solveSecret = solve.getAnswer(1);
@@ -898,7 +899,7 @@ public class SecretShare
     }
 
     public ParanoidOutput combineParanoid(List<ShareInfo> shares,
-                                          Integer maximumCombinationsToTest)
+                                          BigInteger maximumCombinationsToTest)
     {
         ParanoidOutput ret = new ParanoidOutput();
         ret.maximumCombinationsAllowedToTest = maximumCombinationsToTest;
@@ -910,36 +911,36 @@ public class SecretShare
                                                 publicInfo.getK());
         ret.totalNumberOfCombinations = combo.getTotalNumberOfCombinations();
 
-        final int percentEvery = 30;  // or 10 for every 10%
-        int outputEvery = 100;
+        final BigInteger percentEvery = BigInteger.valueOf(30);  // or 10 for every 10%
+        BigInteger outputEvery = BigInteger.valueOf(100);
         if (maximumCombinationsToTest != null)
         {
-            if (BigInteger.valueOf(maximumCombinationsToTest)
+            if (maximumCombinationsToTest
                     .compareTo(combo.getTotalNumberOfCombinations()) > 0)
             {
-                maximumCombinationsToTest = combo.getTotalNumberOfCombinations().intValue();
-                outputEvery = (maximumCombinationsToTest * percentEvery ) / 100 + 1;
+                maximumCombinationsToTest = combo.getTotalNumberOfCombinations();
+                outputEvery = maximumCombinationsToTest.multiply(percentEvery).divide(BigInteger.valueOf(100)).add(BigInteger.ONE);
             }
         }
         else
         {
-            outputEvery = (combo.getTotalNumberOfCombinations().intValue() * percentEvery ) / 100  + 1;
+            outputEvery = combo.getTotalNumberOfCombinations().multiply(percentEvery).divide(BigInteger.valueOf(100)).add(BigInteger.ONE);
         }
 
 
-        int count = -1;
+        BigInteger count = BigInteger.valueOf(-1);
         for (List<SecretShare.ShareInfo> usetheseshares : combo)
         {
-            count++;
+            count = count.add(BigInteger.ONE);
             if (maximumCombinationsToTest != null)
             {
-                if (count > maximumCombinationsToTest)
+                if (count.compareTo(maximumCombinationsToTest) >= 0)
                 {
                     break;
                 }
             }
 
-            if ((count % outputEvery) == 0)
+            if (count.mod(outputEvery).compareTo(BigInteger.ZERO) == 0)
             {
                 ret.recordCombination(combo.getCurrentCombinationNumber(),
                                       combo.getIndexesAsString(),
@@ -994,7 +995,7 @@ public class SecretShare
      */
     public static class ParanoidOutput
     {
-        private Integer maximumCombinationsAllowedToTest; // null means "all"
+        private BigInteger maximumCombinationsAllowedToTest; // null means "all"
         private BigInteger totalNumberOfCombinations;
         private final List<String> combinations = new ArrayList<String>();
         private BigInteger agreedAnswerEveryTime;

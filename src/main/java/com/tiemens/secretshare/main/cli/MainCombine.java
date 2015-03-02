@@ -31,6 +31,7 @@ import com.tiemens.secretshare.engine.SecretShare.PublicInfo;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.exceptions.SecretShareException;
 import com.tiemens.secretshare.math.BigIntUtilities;
+import com.tiemens.secretshare.math.EasyLinearEquation;
 
 /**
  * Main command line for the "combine" (aka "recover") of a secret.
@@ -199,6 +200,7 @@ public final class MainCombine
                     MainSplit.checkIndex("s", args, i);
                     // put in "standard" format and parse that string:
                     String line = "Share (x:" + number + ") = " + args[i];
+                    // TODO: BUG: if you put "-s" in front of "-k", this throws NullPointerException
                     SecretShare.ShareInfo share = ret.parseEqualShare("-s", line);
 
                     ret.addIfNotDuplicate(share);
@@ -272,6 +274,11 @@ public final class MainCombine
                 {
                     SecretShare.ShareInfo share = parseEqualShare("share", line);
                     addIfNotDuplicate(share);
+                }
+                else if (line.startsWith("Debug"))
+                {
+                    // TODO: more specific?
+                    EasyLinearEquation.enableLogging();
                 }
                 else
                 {
@@ -385,6 +392,7 @@ public final class MainCombine
         private static void checkRequired(String argname,
                                           Object obj)
         {
+            System.out.println("IIII: obj=" + obj);
             if (obj == null)
             {
                 throw new SecretShareException("Argument '" + argname + "' is required.");

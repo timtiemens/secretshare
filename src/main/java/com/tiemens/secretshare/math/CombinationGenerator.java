@@ -19,6 +19,7 @@ package com.tiemens.secretshare.math;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +27,14 @@ import java.util.NoSuchElementException;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 
+/**
+ * Combinations - selections of some members of the set where order is disregarded.
+ *    The combination of n things taken k at a time without repetition
+ *
+ * @author timtiemens
+ *
+ * @param <E>
+ */
 public class CombinationGenerator<E>
         implements Iterator<List<E>>,
                    Iterable<List<E>>
@@ -42,14 +51,21 @@ public class CombinationGenerator<E>
     {
         System.out.println("fact(5)=" + factorial(5));
         System.out.println("fact(3)=" + factorial(3));
-        List<String> list = Arrays.asList("1", "2", "3", "4", "5");
-        CombinationGenerator<String> combos = new CombinationGenerator<String>(list, 3);
-        int count = 1;
+        runOne(3, Arrays.asList("1", "2", "3", "4", "5"));
+        runOne(4, Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h"));
+
+        // picking 3 from 8 is basically the same as picking 5 from 8, i.e.
+        //   "picking 3 to get rid of" is basically the same as "picking 5 to keep"
+        // runOne(3, Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h"));
+        // runOne(5, Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h"));
+    }
+
+    public static void runOne(final int numberToPick, List<String> list) {
+        CombinationGenerator<String> combos = new CombinationGenerator<String>(list, numberToPick);
         System.out.println("Total number=" + combos.getTotalNumberOfCombinations());
         for(List<String> combination : combos)
         {
-            System.out.println(count + ": " + combination + " {" + combos.indexesAsString + "}");
-            count++;
+            System.out.println(combos.getCurrentCombinationNumber() + ": " + combination + " {" + combos.indexesAsString + "}");
         }
     }
 
@@ -78,7 +94,11 @@ public class CombinationGenerator<E>
     // constructors
     // ==================================================
 
-    public CombinationGenerator(final List<E> inList,
+    /**
+     * @param inItems collection of items to choose from
+     * @param inChoiceSize number items to choose at a time ("k")
+     */
+    public CombinationGenerator(final Collection<E> inItems,
                                 final int inChoiceSize)
     {
         if (inChoiceSize < 1)
@@ -86,12 +106,12 @@ public class CombinationGenerator<E>
             throw new SecretShareException("choice size cannot be less than 1:" + inChoiceSize);
         }
 
-        if (inChoiceSize > inList.size())
+        if (inChoiceSize > inItems.size())
         {
             throw new SecretShareException("choice size cannot be greater than size");
         }
 
-        List<E> ourlist = new ArrayList<E>(inList);
+        List<E> ourlist = new ArrayList<E>(inItems);
 
         this.list = Collections.unmodifiableList(ourlist);
 
@@ -114,8 +134,8 @@ public class CombinationGenerator<E>
      * @param k
      * @return value from equation above
      */
-    private BigInteger computeNfactdivkNkFact(final int n,
-                                              final int k)
+    private static BigInteger computeNfactdivkNkFact(final int n,
+                                                     final int k)
     {
         final int nminusk = n - k;
 

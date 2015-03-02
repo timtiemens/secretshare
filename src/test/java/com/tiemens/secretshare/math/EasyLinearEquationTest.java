@@ -18,16 +18,7 @@ package com.tiemens.secretshare.math;
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.math.BigInteger;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -260,63 +251,8 @@ public class EasyLinearEquationTest
 
     public static void enableLogging()
     {
-        // example code to turn on ALL logging
-        //
-        // To see logging:
-        // [a] set the handler's level
-        // [b] add the handler
-        // [c] set the logger's level
-
-        Logger l = EasyLinearEquation.getLogger();
-        Handler lh = new ConsoleHandler();
-        lh.setFormatter(oneLineFormatter());
-        // don't forget to do this:
-        lh.setLevel(Level.ALL);
-
-        // alternative: write log to file:
-        //lh = new FileHandler("log.txt");
-
-        // need this too:
-        l.addHandler(lh);
-        // and this:
-        l.setLevel(Level.ALL);
-        if (EasyLinearEquation.getLogger().isLoggable(Level.FINE))
-        {
-            System.out.println("ok");
-            EasyLinearEquation.getLogger().fine("Hi there");
-        }
-        else
-        {
-            System.out.println("failed");
-        }
+        EasyLinearEquation.enableLogging();
     }
 
-    public static Formatter oneLineFormatter()
-    {
-        return new SimpleFormatter()
-        {
-            @Override
-            public synchronized String format(LogRecord record)
-            {
-                StringBuffer sb = new StringBuffer();
-                String message = formatMessage(record);
-                //sb.append(record.getLevel().getLocalizedName());
-                //sb.append(": ");
-                sb.append(message);
-                sb.append("\n");
-                if (record.getThrown() != null) {
-                    try {
-                        StringWriter sw = new StringWriter();
-                        PrintWriter pw = new PrintWriter(sw);
-                        record.getThrown().printStackTrace(pw);
-                        pw.close();
-                    sb.append(sw.toString());
-                    } catch (Exception ex) {
-                    }
-                }
-                return sb.toString();
-                }
 
-        };
-    }
 }

@@ -208,7 +208,7 @@ public final class MainSplit
 
         // optional:
         //    paranoid: null = do nothing, paranoid < 0 = do all, otherwise paranoid = # of tests
-        private Integer paranoid;
+        private BigInteger paranoid;
 
         // optional description
         private String description = null;
@@ -319,11 +319,11 @@ public final class MainSplit
                     i++;
                     if ("all".equals(args[i]))
                     {
-                        ret.paranoid = -1;
+                        ret.paranoid = BigInteger.valueOf(-1);
                     }
                     else
                     {
-                        ret.paranoid = parseInt("paranoid", args, i);
+                        ret.paranoid = parseBigInteger("paranoid", args, i);
                     }
                 }
                 else if ("-printOne".equals(args[i]))
@@ -436,11 +436,7 @@ public final class MainSplit
 
             if (paranoid != null)
             {
-                Integer parg = paranoid;
-                if (parg < 0)
-                {
-                    parg = null;
-                }
+                BigInteger parg = nullIfLessThanZero(paranoid);
 
                 ret.paranoidOutput =
                         secretShare.combineParanoid(generate.getShareInfos(),
@@ -454,6 +450,20 @@ public final class MainSplit
             return ret;
         }
 
+        public static BigInteger nullIfLessThanZero(BigInteger in)
+        {
+            BigInteger ret = in;
+
+            if (in != null)
+            {
+                if (in.compareTo(BigInteger.ZERO) < 0)
+                {
+                    ret = null;
+                }
+            }
+
+            return ret;
+        }
 
         // ==================================================
         // non public methods

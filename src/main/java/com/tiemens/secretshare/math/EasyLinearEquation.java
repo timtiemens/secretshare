@@ -16,11 +16,18 @@
  *******************************************************************************/
 package com.tiemens.secretshare.math;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 
@@ -67,7 +74,7 @@ public final class EasyLinearEquation
     // ==================================================
     // class static data
     // ==================================================
-    // want to turn on debug?  See EasyLinearEquationTest.enableLogging()
+    // want to turn on debug?  See EasyLinearEquation.enableLogging()
     private static Logger logger = Logger.getLogger(EasyLinearEquation.class.getName());
 
     private static boolean debugPrinting = false;
@@ -229,9 +236,12 @@ public final class EasyLinearEquation
     public EasySolve solve()
     {
         EasySolve ret = null;
+        logger.info("Enter ELE.solve");
 
         List<Row> solverows = new ArrayList<Row>();
         solverows.addAll(rows);
+        logger.info(" after .addAll on rows.size=" + rows.size());
+        logger.info("Note: .isFineEnabled=" + logger.isLoggable(Level.FINE));
         debugRows("Initial rows", solverows, modulus);
         for (int workrowindex = 0, maxindex = solverows.size(); workrowindex < maxindex; workrowindex++)
         {
@@ -826,4 +836,64 @@ public final class EasyLinearEquation
         }
     }
 
+    public static void enableLogging()
+    {
+        // example code to turn on ALL logging
+        //
+        // To see logging:
+        // [a] set the handler's level
+        // [b] add the handler
+        // [c] set the logger's level
+
+        Logger l = EasyLinearEquation.getLogger();
+        Handler lh = new ConsoleHandler();
+        lh.setFormatter(oneLineFormatter());
+        // don't forget to do this:
+        lh.setLevel(Level.ALL);
+
+        // alternative: write log to file:
+        //lh = new FileHandler("log.txt");
+
+        // need this too:
+        l.addHandler(lh);
+        // and this:
+        l.setLevel(Level.ALL);
+        if (EasyLinearEquation.getLogger().isLoggable(Level.FINE))
+        {
+            System.out.println("ok");
+            EasyLinearEquation.getLogger().fine("Hi there");
+        }
+        else
+        {
+            System.out.println("failed");
+        }
+    }
+    public static Formatter oneLineFormatter()
+    {
+        return new SimpleFormatter()
+        {
+            @Override
+            public synchronized String format(LogRecord record)
+            {
+                StringBuffer sb = new StringBuffer();
+                String message = formatMessage(record);
+                //sb.append(record.getLevel().getLocalizedName());
+                //sb.append(": ");
+                sb.append(message);
+                sb.append("\n");
+                if (record.getThrown() != null) {
+                    try {
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        record.getThrown().printStackTrace(pw);
+                        pw.close();
+                    sb.append(sw.toString());
+                    } catch (Exception ex) {
+                    }
+                }
+                return sb.toString();
+                }
+
+        };
+    }
 }
