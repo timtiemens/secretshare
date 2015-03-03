@@ -67,20 +67,36 @@ public final class MainBigIntCs
     public static void usage(PrintStream out)
     {
         out.println("Usage:");
-        out.println(" bigintcs -mode <bics2bi|bics2s|bi2s|bi2bics|s2bics|s2bi> " +
+        out.println(" bigintcs -h -mode <bics2bi|bics2s|bi2s|bi2bics|s2bics|s2bi> " +
                     "  [-v] [-in <bics|bi|s>] [-out <bics|bi|s>] [-sepSpace|-sepNewline] value [value2 ...]");
-        out.println("  -mode <m>     set operation mode");
-        out.println("     m=s        String, converted to bytes, then printed as a number");
-        out.println("     m=bi       String, converted to Big Integer, then printed as a number");
-        out.println("     m=bics     String, parsed and checksummed to Big Integer Checksum, then printed as a number");
+        out.println("  -h            print usage");
+        out.println("  -in <m>       set input mode");
+        out.println("     s          String, converted to array of bytes, constructing a Big Integer [default]");
+        out.println("     bi         String, parsed to Big Integer, used as a Big Integer");
+        out.println("     bics       String, parsed and checksummed to Big Integer Checksum, then used as a Big Integer");
+        out.println("  -out <m>      set output mode");
+        out.println("     s          Output Big Integer as array of bytes to construct a String");
+        out.println("     bi         Output Big Integer .toString()");
+        out.println("     bics       Output Big Integer Checksum .toString() [default]");
+        out.println("  -mode <m>     set both input and output operation mode");
+        out.println("     s2bi       -in s -out bi");
+        out.println("     s2bics     -in s -out bics   [default]");
+        out.println("     bi2s       -in bi -out s");
+        out.println("     bics2bi    -in bics -out bi");
         out.println("  -v            print version on 1st line");
         out.println("  -sepSpace     outputs with spaces between values");
-        out.println("  -sepNewLine   outputs with newlines between values");
-        out.println("  Note: s(tring) 'Cat' = 4415860");
-        out.println("  Note: s(tring) '123' = 3224115  (NOT 123)");
-        out.println("  Note: s(tring) 'a'   = 97 (ascii 'a')");
-        out.println("  Note: s(tring) 'ab'  = 24930 (ascii 'a' * 256 + ascii)");
-        out.println("  Note: bi       '123' = 123");
+        out.println("  -sepNewLine   outputs with newlines between values [default]");
+        out.println("  Example: s2bi 'a'   = 97 (ascii 'a')");
+        out.println("  Example: bi2s '97'  = a");
+        out.println("  Example: s2bi 'ab'  = 24930 (ascii 'a' * 256 + ascii 'b')");
+        out.println("  Example: s2bi '1'   = 49  (NOT '1')");
+        out.println("  Example: s2bi '123' = 3224115  (NOT '123')");
+        out.println("  Example: s2bics 'Cat' = bigintcs:436174-7BF975");
+        out.println("  Example: bics2s 'bigintcs:436174-7BF975' = Cat");
+        out.println("  Example: s2bi 'Cat' = 4415860");
+        out.println("  Example: bi2bics '4415860' = bigintcs:436174-7BF975");
+
+
     }
 
 
@@ -123,7 +139,12 @@ public final class MainBigIntCs
     {
         bics, bi, s;
 
-        // use 'valueOf(String)' for lookups
+        /**
+         * @param in type to find
+         * @param argName to display if an error happens
+         * @return Type or throw exception
+         * @throws SecretShareException if 'in' is not found
+         */
         public static Type findByString(String in, String argName)
         {
             Type ret = valueOf(in);
@@ -145,7 +166,12 @@ public final class MainBigIntCs
         bi2bics,   bi2bi,   bi2s,
         s2bics,    s2bi,    s2s;
 
-        // use 'valueOf(String)' for lookups
+        /**
+         * @param in combination type2type to find
+         * @param argName to display if an error happens
+         * @return Type2Type or throw exception
+         * @throws SecretShareException if 'in' is not found
+         */
         public static Type2Type findByString(String in, String argName)
         {
             Type2Type ret = valueOf(in);
@@ -186,7 +212,7 @@ public final class MainBigIntCs
         private Type outputType = Type.bics;
 
         // optional
-        private final boolean printHeader = false;
+        private boolean printHeader = false;
         private String separator = systemLineSeparator;
 
         // ==================================================
@@ -234,6 +260,10 @@ public final class MainBigIntCs
                 {
                     ret.separator = systemLineSeparator;
                 }
+                else if ("-v".equals(args[i]))
+                {
+                    ret.printHeader = true;
+                }
                 else if (args[i].startsWith("-"))
                 {
                     String m = "Argument '" + args[i] + "' not understood";
@@ -276,7 +306,6 @@ public final class MainBigIntCs
 
             return ret;
         }
-
 
         // ==================================================
         // non public methods
@@ -426,7 +455,7 @@ public final class MainBigIntCs
         }
         private void printHeaderInfo(PrintStream out)
         {
-            out.print("Secret Share version " + Main.getVersionString());
+            out.print(Main.getVersionLine());
             out.print(bigintcsInput.separator);
         }
 
