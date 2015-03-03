@@ -6,10 +6,12 @@ public abstract class NumberMatrix <E extends Number> {
     protected E[][] matrix;
 
     /** Abstract method to create a matrix */
-    protected abstract E[][] create(int i,int j);
+    protected abstract E[][] create(int height, int width);
 
     /** Abstract method for defining zero for the matrix element */
     protected abstract E zero();
+
+    protected abstract E one();
 
     /** Abstract method for creating a cell with equivalent value "v" */
     protected abstract E createValue(int v);
@@ -23,6 +25,14 @@ public abstract class NumberMatrix <E extends Number> {
     /** Abstract method for multiplying two elements of the matrices */
     protected abstract E multiply(E o1, E o2);
 
+    /** Abstract */
+    protected abstract E reciprocal(E o1);
+
+    /** Abstract */
+    protected abstract E negate(E o1);
+
+
+
     public E[][] getArray() {
         return matrix;
     }
@@ -32,8 +42,8 @@ public abstract class NumberMatrix <E extends Number> {
         matrix = in;
     }
 
-    public NumberMatrix(int i, int j) {
-        matrix = create(i, j);
+    public NumberMatrix(int height, int width) {
+        matrix = create(height, width);
     }
 
     public int getHeight() {
@@ -42,6 +52,10 @@ public abstract class NumberMatrix <E extends Number> {
 
     public int getWidth() {
         return matrix[0].length;
+    }
+
+    public final boolean isValueOne(E other) {
+        return one().equals(other);
     }
 
     public void fill(int j, int ... rowsandcols) {
@@ -113,15 +127,24 @@ public abstract class NumberMatrix <E extends Number> {
       return result;
     }
     //  det(a(rs) a(rj)
-    //      a(is) a(ij))
-    // called as det(1, 1, 2, 2)
-    // det(c11 c12)
-    //    (c21 c22)  = c11*c22 - c21*c12
+    //      a(is) a(ij))  = a(rs)*a(ij)  -  a(is)*a(rj)
+    //
+    // det(c11 c12)                        ( a b )
+    //    (c21 c22)  = c11*c22 - c21*c12   ( c d )
+    //   called as det(0, 0, 1, 1) -- index starts at 0
     public E determinant(E[][] matrix, int r, int s, int i, int j)
     {
-        E first = multiply(matrix[r][s], matrix[i][j]);
-        E second = multiply(matrix[i][s], matrix[r][j]);
-        return subtract(first, second);
+        E a, b, c, d;
+        a = matrix[r][s];
+        b = matrix[r][j];
+        c = matrix[i][s];
+        d = matrix[i][j];
+        E ad  = multiply(a, d); // matrix[r][s], matrix[i][j]);
+        E bc = multiply(b, c); // matrix[i][s], matrix[r][j]);
+        E ret = subtract(ad, bc);
+        System.out.println("|" + a + " " + b + "|");
+        System.out.println("|" + c + " " + d + "|    =" + ret);
+        return ret;
     }
 
     public void printResult(PrintStream out) {

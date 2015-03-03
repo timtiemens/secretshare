@@ -8,20 +8,26 @@ public class BigRationalMatrix extends NumberMatrix<BigRational> {
         super(in);
     }
 
-    public BigRationalMatrix(int i, int j) {
-        super(i, j);
+    public BigRationalMatrix(int height, int width) {
+        super(height, width);
     }
 
 
     @Override
-    protected BigRational[][] create(int i, int j) {
-        return new BigRational[i][j];
+    protected BigRational[][] create(int height, int width) {
+        return new BigRational[height][width];
     }
 
     @Override
     protected BigRational zero() {
         return BigRational.ZERO;
     }
+
+    @Override
+    protected BigRational one() {
+        return BigRational.ONE;
+    }
+
 
     @Override
     protected BigRational add(BigRational o1, BigRational o2) {
@@ -39,9 +45,20 @@ public class BigRationalMatrix extends NumberMatrix<BigRational> {
     }
 
     @Override
+    protected BigRational reciprocal(BigRational o1) {
+        return o1.reciprocal();
+    }
+
+    @Override
+    protected BigRational negate(BigRational o1) {
+        return o1.negate();
+    }
+
+    @Override
     protected BigRational createValue(int v) {
         return new BigRational(v);
     }
+
 
 
 
