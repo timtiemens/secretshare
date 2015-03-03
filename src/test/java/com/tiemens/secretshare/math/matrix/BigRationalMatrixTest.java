@@ -38,7 +38,8 @@ public class BigRationalMatrixTest {
                        4, 5, 6);
         matrix.printResult(System.out);
         BigRational det1122 = matrix.determinant(matrix.getArray(), 0, 0, 1, 1);
-        System.out.println("det1122=" + det1122);
+        Assert.assertEquals(new BigRational(5 - 8), det1122);
+        BigRational det1122 = matrix.determinant(matrix.getArray(), 0, 0, 1, 1);
         Assert.assertEquals(new BigRational(5 - 8), det1122);
     }
 
