@@ -142,13 +142,18 @@ public abstract class NumberMatrix <E extends Number> {
         E ad  = multiply(a, d); // matrix[r][s], matrix[i][j]);
         E bc = multiply(b, c); // matrix[i][s], matrix[r][j]);
         E ret = subtract(ad, bc);
-        System.out.println("|" + a + " " + b + "|");
-        System.out.println("|" + c + " " + d + "|    =" + ret);
+        //System.out.println("|" + a + " " + b + "|");
+        //System.out.println("|" + c + " " + d + "|    =" + ret);
         return ret;
     }
 
     public void printResult(PrintStream out) {
         printResult(getArray(), out);
+    }
+
+    public static void print(String string, Number[][] matrix2, PrintStream out) {
+        out.println(string);
+        printResult(matrix2, out);
     }
 
     public static void printResult(Number[][] m1, PrintStream out) {
@@ -188,6 +193,7 @@ public abstract class NumberMatrix <E extends Number> {
         out.println();
       }
     }
+
 
 
 

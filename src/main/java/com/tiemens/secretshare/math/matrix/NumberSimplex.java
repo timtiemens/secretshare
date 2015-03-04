@@ -9,37 +9,53 @@ import java.util.Map;
 
 public class NumberSimplex <E extends Number> {
 
+    // ==================================================
+    // class static data
+    // ==================================================
+
+    // ==================================================
+    // class static methods
+    // ==================================================
+
+    // ==================================================
+    // instance data
+    // ==================================================
+
     /** Abstract method to create a matrix */
     private final NumberMatrix<E> matrix;
-    private final int constantsInThisColumnIndex; // 0-to-width
+    /** index of the "B" column - i.e. the index of the constants */
+    private final int constantsInThisColumnIndex; // 0-based index
 
+    // computed values
     private NumberOrVariable<E>[] mTop;
     private NumberOrVariable<E>[] mSide;
     private E[][] mArrayhide;
     private Map<NumberOrVariable<E>, E> mAnswers;
 
+    // ==================================================
+    // factories
+    // ==================================================
+
+    // ==================================================
+    // constructors
+    // ==================================================
+
+
     public NumberSimplex(NumberMatrix<E> inMatrix, int inConstantsIndex)
     {
         matrix = inMatrix;
         constantsInThisColumnIndex = inConstantsIndex;
+        //System.out.println("SIMPLEX cons matrix.h=" + matrix.getHeight() + " matrix.w=" + matrix.getWidth() + " m.array.length=" +
+        //                   matrix.getArray().length + " m.array[0].length=" + matrix.getArray()[0].length);
+
     }
 
-    /**
-     * @param i range 0-to-
-     * @return answer
-     */
-    public E getAnswer(int i) {
-        E ret = mAnswers.get(createVariableForIndex(i));
-        if (ret != null) {
-            return ret;
-        } else {
-            throw new ArithmeticException("Could not find answer at index " + i + " answers=" + mAnswers);
-        }
-    }
 
-    public E getConstantNumbered(int j) {
-        return matrix.getArray()[j][constantsInThisColumnIndex];
-    }
+    // ==================================================
+    // public methods
+    // ==================================================
+
+    // .initForSolve(), then .solve(), then .getAnswer()
 
     public void initForSolve(PrintStream out)
     {
@@ -48,15 +64,13 @@ public class NumberSimplex <E extends Number> {
 
         mTop = fillInTopVariables(width - 1);
         mSide = fillInConstants(height);
+        //System.out.println("INIT-SOLVE matrix.h=" + matrix.getHeight() + " matrix.w=" + matrix.getWidth() + " m.array.length=" +
+        //        matrix.getArray().length + " m.array[0].length=" + matrix.getArray()[0].length);
         mArrayhide = fillInArray(matrix.getArray(), constantsInThisColumnIndex);
 
-        System.out.println("TOP.length = " + mTop.length);
+        System.out.println("INIT-SOLVE, TOP.length = " + mTop.length + " matrix.height=" + height + " matrix.w=" + width);
         print(out);
 
-    }
-
-    private void print(PrintStream out) {
-        print(mTop, mArrayhide, mSide, out);
     }
 
     public void solve(PrintStream out) {
@@ -78,6 +92,33 @@ public class NumberSimplex <E extends Number> {
         mAnswers = computeAnswers(mTop, mArrayhide, mSide);
         printAnswers(out, mAnswers);
     }
+
+    /**
+     * @param i range 0-to-
+     * @return answer
+     */
+    public E getAnswer(int i) {
+        E ret = mAnswers.get(createVariableForIndex(i));
+        if (ret != null) {
+            return ret;
+        } else {
+            throw new ArithmeticException("Could not find answer at index " + i + " answers=" + mAnswers);
+        }
+    }
+
+    public E getConstantNumbered(int j) {
+        return matrix.getArray()[j][constantsInThisColumnIndex];
+    }
+
+
+    // ==================================================
+    // non public methods
+    // ==================================================
+
+    private void print(PrintStream out) {
+        print(mTop, mArrayhide, mSide, out);
+    }
+
 
     private void printAnswers(PrintStream out, Map<NumberOrVariable<E>, E> answers) {
         for (NumberOrVariable<E> var : answers.keySet()) {
@@ -216,10 +257,11 @@ public class NumberSimplex <E extends Number> {
 
     private E[][] fillInArray(E[][] origin, int ignoreThisColumnIndex) {
         final int height = origin.length;
-        final int width = origin[0].length - 1;
-        System.out.println("w=" + width + " height=" + height);
+        final int width = origin[0].length;
+        final int widthForReturn = width - 1;
+        //System.out.println("origin.w=" + width + " origin.height=" + height);
 
-        E[][] ret = create(height, width);
+        E[][] ret = create(height, widthForReturn);
 
         for (int i = 0; i < height; i++) {
             int targetJindex = 0;
@@ -232,7 +274,7 @@ public class NumberSimplex <E extends Number> {
                 }
             }
         }
-        System.out.println("Started at (w=" + width + " h=" + height + ") ended at (w=" + ret[0].length + " h=" + ret.length + ")");
+        //System.out.println("Started at (w=" + width + " h=" + height + ") ended at (w=" + ret[0].length + " h=" + ret.length + ")");
         return ret;
     }
 
@@ -399,7 +441,7 @@ public class NumberSimplex <E extends Number> {
                 } else {
                     throw new ArithmeticException("Programmer error");
                 }
-                System.out.println("h=" + height + " w=" + width + " r=" + r + " s=" + s + " val=" + ret[r][s]);
+                //System.out.println("h=" + height + " w=" + width + " r=" + r + " s=" + s + " val=" + ret[r][s]);
             }
         }
 
@@ -410,8 +452,8 @@ public class NumberSimplex <E extends Number> {
     private E[][] createSameSize(E[][] array) {
         int height = array.length;
         int width = array[0].length;
-        E[][] ret = create(array.length, array[0].length);
-        System.out.println("Same size of h=" + height + " w=" + width + " result h=" + ret.length + " w=" + ret[0].length);
+        E[][] ret = create(height, width);
+        //System.out.println("Same size of h=" + height + " w=" + width + " result h=" + ret.length + " w=" + ret[0].length);
         return ret;
     }
 

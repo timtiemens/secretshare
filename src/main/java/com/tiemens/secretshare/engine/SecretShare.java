@@ -31,9 +31,13 @@ import java.util.UUID;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 import com.tiemens.secretshare.math.BigIntStringChecksum;
+import com.tiemens.secretshare.math.BigRational;
 import com.tiemens.secretshare.math.CombinationGenerator;
 import com.tiemens.secretshare.math.EasyLinearEquation;
 import com.tiemens.secretshare.math.PolyEquationImpl;
+import com.tiemens.secretshare.math.matrix.BigRationalMatrix;
+import com.tiemens.secretshare.math.matrix.NumberMatrix;
+import com.tiemens.secretshare.math.matrix.NumberSimplex;
 
 /**
  * Main class for the "Shamir's Secret Sharing" implementation.
@@ -457,9 +461,31 @@ public class SecretShare
         {
             ele = ele.createWithPrimeModulus(publicInfo.getPrimeModulus());
         }
-        EasyLinearEquation.EasySolve solve = ele.solve();
 
-        BigInteger solveSecret = solve.getAnswer(1);
+        BigInteger solveSecret = null;
+
+        if (false)
+        {
+            EasyLinearEquation.EasySolve solve = ele.solve();
+
+            solveSecret = solve.getAnswer(1);
+        }
+        else
+        {
+            BigInteger[][] matrix = ele.getMatrix();
+            NumberMatrix.print("SS.java", matrix, System.out);
+            System.out.println("CVT matrix.height=" + matrix.length + " width=" + matrix[0].length);
+            BigRationalMatrix brm = BigRationalMatrix.create(matrix);
+            NumberMatrix.print("SS.java brm", brm.getArray(), System.out);
+
+            NumberSimplex<BigRational> simplex = new NumberSimplex<BigRational>(brm, 0);
+            simplex.initForSolve(System.out);
+            simplex.solve(System.out);
+
+            BigRational answer = simplex.getAnswer(0);
+            solveSecret = answer.bigIntegerValue();
+        }
+
         if (publicInfo.getPrimeModulus() != null)
         {
             solveSecret = solveSecret.mod(publicInfo.getPrimeModulus());

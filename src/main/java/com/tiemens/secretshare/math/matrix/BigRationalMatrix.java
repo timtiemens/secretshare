@@ -1,5 +1,7 @@
 package com.tiemens.secretshare.math.matrix;
 
+import java.math.BigInteger;
+
 import com.tiemens.secretshare.math.BigRational;
 
 public class BigRationalMatrix extends NumberMatrix<BigRational> {
@@ -12,6 +14,17 @@ public class BigRationalMatrix extends NumberMatrix<BigRational> {
         super(height, width);
     }
 
+    public static BigRationalMatrix create(BigInteger[][] matrix) {
+        final int height = matrix.length;
+        final int width = matrix[0].length;
+        BigRational[][] in = new BigRational[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                in[i][j] = new BigRational(matrix[i][j]);
+            }
+        }
+        return new BigRationalMatrix(in);
+    }
 
     @Override
     protected BigRational[][] create(int height, int width) {

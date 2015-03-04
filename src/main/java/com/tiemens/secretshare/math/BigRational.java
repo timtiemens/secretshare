@@ -42,6 +42,13 @@ public class BigRational extends Number implements Comparable<BigRational>
     // factories
     // ==================================================
 
+    // ==================================================
+    // constructors
+    // ==================================================
+
+    public BigRational(BigInteger value) {
+        this(value, BigInteger.ONE);
+    }
 
     public BigRational(BigInteger numerator, BigInteger denominator)
     {
@@ -78,6 +85,7 @@ public class BigRational extends Number implements Comparable<BigRational>
         }
     }
 
+
     private void init(BigInteger num, BigInteger denom)
     {
         if (denom.equals(BigInteger.ZERO))
@@ -97,6 +105,11 @@ public class BigRational extends Number implements Comparable<BigRational>
             numerator = numerator.negate();
         }
     }
+
+
+    // ==================================================
+    // public methods
+    // ==================================================
 
     public BigInteger getNumerator() {
         return numerator;
@@ -258,5 +271,12 @@ public class BigRational extends Number implements Comparable<BigRational>
         return quotient.doubleValue();
     }
 
+    public BigInteger bigIntegerValue() {
+        if (denominator.equals(BigInteger.ONE)) {
+            return numerator;
+        } else {
+            throw new ArithmeticException("denominator is not 1, it is " + denominator);
+        }
+    }
 
 }
