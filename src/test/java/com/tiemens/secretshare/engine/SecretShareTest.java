@@ -71,7 +71,7 @@ public class SecretShareTest
     @Test
     public void testFirst()
     {
-        final int n = 6;
+        final int n = 16;
         final int k = 3;
         BigInteger prime = null;
 

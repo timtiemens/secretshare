@@ -226,6 +226,21 @@ public final class EasyLinearEquation
     // public methods
     // ==================================================
 
+    public BigInteger[][] getMatrix()
+    {
+        BigInteger[][] ret = new BigInteger[rows.size()][rows.get(0).size()];
+
+        final int height = ret.length;
+        final int width = ret[0].length;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                ret[i][j] = rows.get(i).getColumn(j);
+            }
+        }
+
+        return ret;
+    }
+
     public EasySolve solve()
     {
         EasySolve ret = null;
@@ -485,6 +500,14 @@ public final class EasyLinearEquation
             cols = new BigInteger[in.length];
             System.arraycopy(in, 0, cols, 0, cols.length);
         }
+        public int size()
+        {
+            return cols.length;
+        }
+        public BigInteger getColumn(final int index)
+        {
+            return cols[index];
+        }
         /**
          * @return row with col[0] non-zero and one-and-only-one other column non-zero,
          *           all the other columns must be ZERO    OR
@@ -679,10 +702,6 @@ public final class EasyLinearEquation
             }
             return ret;
         }
-        public BigInteger getColumn(final int index)
-        {
-            return cols[index];
-        }
         /**
          * @param index of column to cancel (range 1-to-n)
          * @param otherrow to use for the cancel operation
@@ -798,7 +817,7 @@ public final class EasyLinearEquation
         {
             return multiplyConstant(BigInteger.valueOf(-1));
         }
-    }
+    } // class Row
 
 
 

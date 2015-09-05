@@ -41,7 +41,8 @@ public final class Main
         return BuildVersion.getUiVersion();
     }
 
-    public static String getVersionLine() {
+    public static String getVersionLine()
+    {
         return "Secret Share version " + Main.getVersionString();
     }
 
