@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 
-public class NumberSimplex <E extends Number> {
+public class NumberSimplex <E extends Number>
+{
 
     // ==================================================
     // class static data
@@ -68,26 +69,29 @@ public class NumberSimplex <E extends Number> {
         //        matrix.getArray().length + " m.array[0].length=" + matrix.getArray()[0].length);
         mArrayhide = fillInArray(matrix.getArray(), constantsInThisColumnIndex);
 
-        System.out.println("INIT-SOLVE, TOP.length = " + mTop.length + " matrix.height=" + height + " matrix.w=" + width);
-        print(out);
+        nullPrintln(out, "INIT-SOLVE, TOP.length = " + mTop.length + " matrix.height=" + height + " matrix.w=" + width);
+        printTopArraySide(out);
 
     }
 
-    public void solve(PrintStream out) {
+    public void solve(PrintStream out)
+    {
         final int height = mArrayhide.length;
         final int width = mArrayhide[0].length;
-        if (height != width) {
+        if (height != width)
+        {
             throw new ArithmeticException("h=" + height + " w=" + width + " must match");
         }
 
         final int numberOfPivots = width;
 
-        for (int p = 0; p < numberOfPivots; p++) {
+        for (int p = 0; p < numberOfPivots; p++)
+        {
             Pairij pairij = findPivot(mArrayhide);
             pivot(pairij.i, pairij.j);
 
-            out.println("PIVOT COMPLETE, #" + p + " pivot=" + pairij);
-            print (out);
+            nullPrintln(out, "PIVOT COMPLETE, #" + p + " pivot=" + pairij);
+            printTopArraySide(out);
         }
         mAnswers = computeAnswers(mTop, mArrayhide, mSide);
         printAnswers(out, mAnswers);
@@ -97,16 +101,21 @@ public class NumberSimplex <E extends Number> {
      * @param i range 0-to-
      * @return answer
      */
-    public E getAnswer(int i) {
+    public E getAnswer(int i)
+    {
         E ret = mAnswers.get(createVariableForIndex(i));
-        if (ret != null) {
+        if (ret != null)
+        {
             return ret;
-        } else {
+        }
+        else
+        {
             throw new ArithmeticException("Could not find answer at index " + i + " answers=" + mAnswers);
         }
     }
 
-    public E getConstantNumbered(int j) {
+    public E getConstantNumbered(int j)
+    {
         return matrix.getArray()[j][constantsInThisColumnIndex];
     }
 
@@ -115,13 +124,27 @@ public class NumberSimplex <E extends Number> {
     // non public methods
     // ==================================================
 
-    private void print(PrintStream out) {
+    private void nullPrintln(PrintStream out, String line)
+    {
+        if (out != null)
+        {
+            out.println(line);
+        }
+    }
+    private void printTopArraySide(PrintStream out)
+    {
         print(mTop, mArrayhide, mSide, out);
     }
 
 
-    private void printAnswers(PrintStream out, Map<NumberOrVariable<E>, E> answers) {
-        for (NumberOrVariable<E> var : answers.keySet()) {
+    private void printAnswers(PrintStream out, Map<NumberOrVariable<E>, E> answers)
+    {
+        if (out == null)
+        {
+            return;
+        }
+        for (NumberOrVariable<E> var : answers.keySet())
+        {
             out.print(var);
             out.print("=");
             out.print(answers.get(var));
@@ -129,26 +152,34 @@ public class NumberSimplex <E extends Number> {
         }
     }
 
-    private Map<NumberOrVariable<E>, E> computeAnswers(NumberOrVariable<E>[] tops, E[][] array,
-                                                       NumberOrVariable<E>[] sides) {
+    private Map<NumberOrVariable<E>, E> computeAnswers(NumberOrVariable<E>[] tops,
+                                                       E[][] array,
+                                                       NumberOrVariable<E>[] sides)
+    {
         Map<NumberOrVariable<E>, E> ret = new HashMap<NumberOrVariable<E>, E>();
 
         // sanity checks:
-        for (NumberOrVariable<E> v : tops) {
-            if (v.isVariable()) {
+        for (NumberOrVariable<E> v : tops)
+        {
+            if (v.isVariable())
+            {
                 throw new ArithmeticException("Not a number: " + v);
             }
         }
-        for (NumberOrVariable<E> v : sides) {
-            if (v.isNumber()) {
+        for (NumberOrVariable<E> v : sides)
+        {
+            if (v.isNumber())
+            {
                 throw new ArithmeticException("Not a variable: " + v);
             }
         }
         final int height = array.length;
         final int width = array[0].length;
-        for (int i = 0; i < height; i++) {
+        for (int i = 0; i < height; i++)
+        {
             E answer = zero();
-            for (int j = 0; j < width; j++) {
+            for (int j = 0; j < width; j++)
+            {
                 answer = add(answer, multiply(array[i][j], tops[j].getNumber()));
             }
 
@@ -159,7 +190,8 @@ public class NumberSimplex <E extends Number> {
 
 
 
-    private void pivot(int i, int j) {
+    private void pivot(int i, int j)
+    {
         mArrayhide = createAbar(mArrayhide, i, j);
 
         // Swap top and side
@@ -168,28 +200,38 @@ public class NumberSimplex <E extends Number> {
         mTop[j] = tmp;
     }
 
-    private Pairij findPivot(E[][] array) {
+    private Pairij findPivot(E[][] array)
+    {
         List<Pairij> allPossible = findAllPossiblePivots(array);
-        if (allPossible.size() > 0) {
+        if (allPossible.size() > 0)
+        {
             return allPossible.get(0);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
-    private List<Pairij> findAllPossiblePivots(E[][] array) {
+    private List<Pairij> findAllPossiblePivots(E[][] array)
+    {
         Pairij retValueIsOne = null;
         List<Pairij> ret = new ArrayList<Pairij>();
         final int height = array.length;
         final int width = array[0].length;
         AllDone:
-        for (int i = 0; i < height; i++) {
-            if (mSide[i].isNumber()) {
-                for (int j = 0; j < width; j++) {
-                    if (mTop[j].isVariable()) {
+        for (int i = 0; i < height; i++)
+        {
+            if (mSide[i].isNumber())
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    if (mTop[j].isVariable())
+                    {
                         // candidate found:
                         Pairij pair = new Pairij(i, j);
-                        if (isValueOne(array[i][j])) {
+                        if (isValueOne(array[i][j]))
+                        {
                             retValueIsOne = pair;
                             break AllDone;
                         }
@@ -200,7 +242,8 @@ public class NumberSimplex <E extends Number> {
         }
 
         // Now make sure value "1" has priority slot #0 ...
-        if (retValueIsOne != null) {
+        if (retValueIsOne != null)
+        {
             ret.clear();
             ret.add(retValueIsOne);
         }
@@ -209,36 +252,48 @@ public class NumberSimplex <E extends Number> {
     }
 
 
-    public static class Pairij {
+    public static class Pairij
+    {
         public final int i;
         public final int j;
 
-        public Pairij(int i2, int j2) {
+        public Pairij(int i2, int j2)
+        {
             i = i2;
             j = j2;
         }
         @Override
-        public String toString() {
+        public String toString()
+        {
             return "Pairij[i=" + i + " j=" + j + "]";
         }
     }
 
     private void print(NumberOrVariable<E>[] top,
-                       E[][] array, NumberOrVariable<E>[] side,
-                       PrintStream out) {
+                       E[][] array,
+                       NumberOrVariable<E>[] side,
+                       PrintStream out)
+    {
+        if (out == null)
+        {
+            return;
+        }
         final int width = array[0].length;
         final int height = array.length;
         String sep = "";
-        for (int j = 0; j < width; j++) {
+        for (int j = 0; j < width; j++)
+        {
             out.print(sep);
             sep = " ";
             out.print(top[j]);
         }
         out.println("");
 
-        for (int i = 0; i < height; i++) {
+        for (int i = 0; i < height; i++)
+        {
             sep = "";
-            for (int j = 0; j < width; j++) {
+            for (int j = 0; j < width; j++)
+            {
                 out.print(sep);
                 sep = " ";
                 out.print(array[i][j]);
@@ -255,7 +310,8 @@ public class NumberSimplex <E extends Number> {
         return new NumberOrVariable[size];
     }
 
-    private E[][] fillInArray(E[][] origin, int ignoreThisColumnIndex) {
+    private E[][] fillInArray(E[][] origin, int ignoreThisColumnIndex)
+    {
         final int height = origin.length;
         final int width = origin[0].length;
         final int widthForReturn = width - 1;
@@ -263,13 +319,18 @@ public class NumberSimplex <E extends Number> {
 
         E[][] ret = create(height, widthForReturn);
 
-        for (int i = 0; i < height; i++) {
+        for (int i = 0; i < height; i++)
+        {
             int targetJindex = 0;
-            for (int j = 0; j < width; j++) {
-                if (j != ignoreThisColumnIndex) {
+            for (int j = 0; j < width; j++)
+            {
+                if (j != ignoreThisColumnIndex)
+                {
                     ret[i][targetJindex] = origin[i][j];
                     targetJindex++;
-                } else {
+                }
+                else
+                {
                     // skip this column
                 }
             }
@@ -280,7 +341,8 @@ public class NumberSimplex <E extends Number> {
 
 
 
-    private NumberOrVariable<E>[] fillInConstants(int height) {
+    private NumberOrVariable<E>[] fillInConstants(int height)
+    {
         NumberOrVariable<E>[] ret = createNumberOrVariable(height);
         for (int j = 0; j < height; j++)
         {
@@ -289,7 +351,8 @@ public class NumberSimplex <E extends Number> {
         return ret;
     }
 
-    private NumberOrVariable<E>[] fillInTopVariables(int width) {
+    private NumberOrVariable<E>[] fillInTopVariables(int width)
+    {
         NumberOrVariable<E>[] ret = createNumberOrVariable(width);
         for (int i = 0; i < width; i++)
         {
@@ -298,7 +361,8 @@ public class NumberSimplex <E extends Number> {
         return ret;
     }
 
-    private NumberOrVariable<E> createVariableForIndex(int i) {
+    private NumberOrVariable<E> createVariableForIndex(int i)
+    {
         return new NumberOrVariable<E>(Integer.toHexString(i + 10));
     }
 
@@ -340,15 +404,20 @@ public class NumberSimplex <E extends Number> {
             return variable;
         }
         @Override
-        public String toString() {
-            if (isNumber()) {
+        public String toString()
+        {
+            if (isNumber())
+            {
                 return number.toString();
-            } else {
+            }
+            else
+            {
                 return variable;
             }
         }
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             final int prime = 31;
             int result = 1;
             result = prime * result
@@ -358,7 +427,8 @@ public class NumberSimplex <E extends Number> {
             return result;
         }
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(Object obj)
+        {
             if (this == obj)
                 return true;
             if (obj == null)
@@ -378,7 +448,6 @@ public class NumberSimplex <E extends Number> {
                 return false;
             return true;
         }
-
     }
 
 
@@ -418,27 +487,39 @@ public class NumberSimplex <E extends Number> {
     //
     // det(c11 c12)
     //    (c21 c22)  = c11*c22 - c21*c12
-    private E[][] createAbar(E[][] array, int i, int j) {
+    private E[][] createAbar(E[][] array, int i, int j)
+    {
         E[][] ret = createSameSize(array);
         int height = ret.length;
         int width = ret[0].length;
-        for (int r = 0; r < height; r++) {
-            for (int s = 0; s < width; s++) {
-                if ((r != i) && (s != j)) {
+        for (int r = 0; r < height; r++)
+        {
+            for (int s = 0; s < width; s++)
+            {
+                if ((r != i) && (s != j))
+                {
                     E det = determinant(array, r, s, i, j);
                     E oneOverAij = reciprocal(array[i][j]);
                     ret[r][s] = multiply(det, oneOverAij);
-                } else if ((r != i) && (s == j)) {
+                }
+                else if ((r != i) && (s == j))
+                {
                     E oneOverAij = reciprocal(array[i][j]);
                     ret[r][s] = multiply(array[r][j], oneOverAij);
-                } else if ((r == i) && (s != j)) {
+                }
+                else if ((r == i) && (s != j))
+                {
                     E oneOverAij = reciprocal(array[i][j]);
                     E negAis = negate(array[i][s]);
                     ret[r][s] = multiply(negAis, oneOverAij);
-                } else if ((r == i) && (s == j)) {
+                }
+                else if ((r == i) && (s == j))
+                {
                     E oneOverAij = reciprocal(array[i][j]);
                     ret[r][s] = oneOverAij;
-                } else {
+                }
+                else
+                {
                     throw new ArithmeticException("Programmer error");
                 }
                 //System.out.println("h=" + height + " w=" + width + " r=" + r + " s=" + s + " val=" + ret[r][s]);
@@ -449,7 +530,8 @@ public class NumberSimplex <E extends Number> {
     }
 
 
-    private E[][] createSameSize(E[][] array) {
+    private E[][] createSameSize(E[][] array)
+    {
         int height = array.length;
         int width = array[0].length;
         E[][] ret = create(height, width);
@@ -459,38 +541,43 @@ public class NumberSimplex <E extends Number> {
 
 
 
-    private E[][] create(int height, int width) {
+    private E[][] create(int height, int width)
+    {
         return matrix.create(height, width);
     }
 
-    public boolean isValueOne(E v) {
+    public boolean isValueOne(E v)
+    {
         return matrix.isValueOne(v);
     }
 
-    private E negate(E v) {
+    private E negate(E v)
+    {
         return matrix.negate(v);
     }
 
-    private E multiply(E o1, E o2) {
+    private E multiply(E o1, E o2)
+    {
         return matrix.multiply(o1, o2);
     }
 
-    private E add(E o1, E o2) {
+    private E add(E o1, E o2)
+    {
         return matrix.add(o1, o2);
     }
 
-    private E reciprocal(E v) {
+    private E reciprocal(E v)
+    {
         return matrix.reciprocal(v);
     }
 
-    private E determinant(E[][] array, int r, int s, int i, int j) {
+    private E determinant(E[][] array, int r, int s, int i, int j)
+    {
         return matrix.determinant(array, r, s, i, j);
     }
 
-    private E zero() {
+    private E zero()
+    {
         return matrix.zero();
     }
-
-
-
 }

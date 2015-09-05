@@ -58,6 +58,7 @@ public class SecretShareIntegTest
     /**
      * This test takes 65 to 80 seconds to run 1000 trials.
      * corei7 down to 20 seconds.
+     * corei7 simplex 24 seconds.
      */
     @Test
     public void testMassiveLoop384()
@@ -68,6 +69,7 @@ public class SecretShareIntegTest
     /**
      * This test takes 65 to 80 seconds to run 1000 trials.
      * corei7 down to 20 seconds.
+     * corei7 simplex 74 seconds.
      */
     @Test
     public void testMassiveLoop4096()
@@ -114,6 +116,8 @@ public class SecretShareIntegTest
 
     /**
      * corei7 27 seconds.
+     * corei7 simplex 670 seconds, with "lots of printing".
+     * corei7 simplex 52 seconds with "no printing".
      */
     @Test
     public void testBig192()
@@ -129,6 +133,7 @@ public class SecretShareIntegTest
 
     /**
      * corei7 15 seconds.
+     * corei7 simplex 26 seconds.
      */
     @Test
     public void testBig384()
@@ -177,7 +182,9 @@ public class SecretShareIntegTest
      */
     private BigInteger subtestReconstruction(List<SecretShare.ShareInfo> shares)
     {
-        if (true)
+        boolean doSubtestAllCombinations = true;
+
+        if (doSubtestAllCombinations)
         {
             subtestAllCombinations(shares);
         }
@@ -223,6 +230,7 @@ public class SecretShareIntegTest
 
     /**
      * corei7 112 seconds.
+     * corei7 simplex 103 seconds
      */
     @Test
     public void testUntilItFails()
@@ -283,6 +291,7 @@ public class SecretShareIntegTest
 
     /**
      * corei7 37 seconds.
+     * corei7 simplex 33 seconds
      */
     @Test
     public void testCreateRandomModulus()

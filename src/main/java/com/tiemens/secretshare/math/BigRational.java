@@ -271,12 +271,45 @@ public class BigRational extends Number implements Comparable<BigRational>
         return quotient.doubleValue();
     }
 
-    public BigInteger bigIntegerValue() {
-        if (denominator.equals(BigInteger.ONE)) {
+    public boolean isBigInteger()
+    {
+        return denominator.equals(BigInteger.ONE);
+    }
+
+    public BigInteger bigIntegerValue()
+    {
+        if (isBigInteger())
+        {
             return numerator;
         } else {
             throw new ArithmeticException("denominator is not 1, it is " + denominator);
         }
     }
 
+    public BigInteger computeBigIntegerMod(BigInteger prime)
+    {
+        if (isBigInteger())
+        {
+            return bigIntegerValue();
+        }
+        else
+        {
+            BigRational candidate = this;
+            int count = 0;
+            while ((! candidate.isBigInteger()) && (count < 5))
+            {
+                //System.out.println("FAILED biginteger of " + candidate.toString() + " mod=" + prime);
+
+                BigRational trial = new BigRational(numerator.add(prime), denominator);
+                if (trial.isBigInteger()) {
+                    return trial.bigIntegerValue();
+                } else {
+                    candidate = trial;
+                }
+                count++;
+            }
+            // this will throw an exception:
+            return candidate.bigIntegerValue();
+        }
+    }
 }
