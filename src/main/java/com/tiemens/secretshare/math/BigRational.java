@@ -294,22 +294,44 @@ public class BigRational extends Number implements Comparable<BigRational>
         }
         else
         {
-            BigRational candidate = this;
+            //
+            // Hideous implementation:  starting from this, loop, each time adding and subtracting prime
+            //                          until a BigInteger appears
+            //
+            BigRational candidateGrow = this;
+            BigRational candidateShrink = this;
             int count = 0;
-            while ((! candidate.isBigInteger()) && (count < 5))
+            while ((! candidateGrow.isBigInteger()) && (! candidateShrink.isBigInteger()) && (count < 50000))
             {
                 //System.out.println("FAILED biginteger of " + candidate.toString() + " mod=" + prime);
 
-                BigRational trial = new BigRational(numerator.add(prime), denominator);
-                if (trial.isBigInteger()) {
-                    return trial.bigIntegerValue();
-                } else {
-                    candidate = trial;
+                BigRational trialGrow = new BigRational(candidateGrow.numerator.add(prime), candidateGrow.denominator);
+                if (trialGrow.isBigInteger())
+                {
+                    return trialGrow.bigIntegerValue();
+                }
+                else
+                {
+                    candidateGrow = trialGrow;
+                }
+
+                BigRational trialShrink = new BigRational(candidateShrink.numerator.subtract(prime), candidateShrink.denominator);
+                if (trialShrink.isBigInteger())
+                {
+                    return trialShrink.bigIntegerValue();
+                }
+                else
+                {
+                    candidateShrink = trialShrink;
                 }
                 count++;
             }
-            // this will throw an exception:
-            return candidate.bigIntegerValue();
+            //System.out.println("BigRational = " + this.toString());
+            //System.out.println(" mod div by = " + prime);
+            //System.out.println("last candiate = " + candidateGrow);
+
+            // If you reach here, this call will throw an exception:
+            return candidateGrow.bigIntegerValue();
         }
     }
 }

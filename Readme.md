@@ -248,7 +248,7 @@ k = 280  1662 seconds  28 minutes
 k = 650                                                        1 year
 k = 1000  346276986880 seconds ....                       11,000 years
 The formula is roughly "4 times longer for each +50 in k".
-From k=280 on down, all times are calculcated.  k=280 is the last "measured".
+From k=280 on down, all times are calculated.  k=280 is the last "measured".
 So, k=280 is a pretty good practical limit, or k=95 for "immediate" results
 
 N.B.: Earlier versions of secretshare (1.4.1 and earlier) used a very
