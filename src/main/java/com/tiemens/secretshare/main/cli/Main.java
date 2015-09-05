@@ -41,6 +41,9 @@ public final class Main
         return BuildVersion.getUiVersion();
     }
 
+    public static String getVersionLine() {
+        return "Secret Share version " + Main.getVersionString();
+    }
 
 
     /**
@@ -110,7 +113,7 @@ public final class Main
 
     private static void usage(PrintStream out)
     {
-        out.println("Usage:  java -jar secretshare.jar <split>|<combine>");
+        out.println("Usage:  java -jar secretshare.jar <split>|<combine>|<info>|<bigintcs>");
     }
 
     // ==================================================
@@ -137,6 +140,9 @@ public final class Main
     {
         // no instances
     }
+
+
+
 
     // ==================================================
     // public methods
