@@ -1,6 +1,6 @@
 // target:  'build'          - does not run integration tests
 // target:  'integTest'      - runs integration tests (about 5 minutes worth)
-// target:  'publish'        - push to local archiva (as guest)
+// target:  'publish'        - push to local (archiva, as guest)
 // target:  'uploadArchives' - push to maven central (sonatype, as user)
 // target:  'jacocoTestReport'      - code coverage from unit tests
 // target:  'jacocoIntegTestReport' - coverage from integration tests and UTs
@@ -19,7 +19,7 @@ apply plugin: 'maven'
     
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
-version = '1.4.2-SNAPSHOT'
+version = '1.4.2'
 project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 sourceCompatibility = 1.6
 

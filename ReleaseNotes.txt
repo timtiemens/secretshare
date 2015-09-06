@@ -7,6 +7,7 @@ v1.4.2
  o upgrade to gradle 2.x; upgrade jacoco plugin to standard plugin
  o ShareInfo.equals() now correctly uses "k" to determine equality
  o add option -debugPrintEquationCoefficients to print coefficients/equation
+ o completely re-implement matrix solving; now uses "simplex" method
  + TODO: make the random-coefficients "bigger"
 
 v1.4.1
