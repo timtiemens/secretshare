@@ -1,0 +1,8 @@
+com.tiemens.secretshare
+com.tiemens.secretshare.engine
+com.tiemens.secretshare.exceptions
+com.tiemens.secretshare.main.cli
+com.tiemens.secretshare.main.test
+com.tiemens.secretshare.math
+com.tiemens.secretshare.math.matrix
+com.tiemens.secretshare.md5sum
