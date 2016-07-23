@@ -125,7 +125,13 @@ public class NumberSimplex <E extends Number>
             BigInteger assign = null;
             E answer = getAnswer(i);
             if (answer instanceof BigRational) {
-                assign = ((BigRational) answer).bigIntegerValue();
+                BigRational bigrational = (BigRational) answer;
+                if (bigrational.isBigInteger()) {
+                    assign = bigrational.bigIntegerValue();
+                } else {
+                    System.out.println("*** WARN: coefficient not Integer: " + bigrational);
+                    assign = null;
+                }
             }
             ret[i] = assign;
         }
