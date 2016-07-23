@@ -1,10 +1,13 @@
 package com.tiemens.secretshare.math.matrix;
 
 import java.io.PrintStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.tiemens.secretshare.math.BigRational;
 
 
 public class NumberSimplex <E extends Number>
@@ -112,6 +115,22 @@ public class NumberSimplex <E extends Number>
         {
             throw new ArithmeticException("Could not find answer at index " + i + " answers=" + mAnswers);
         }
+    }
+
+    public BigInteger[] getCoeffsAsBigInteger() {
+        final int size = mArrayhide.length;
+
+        BigInteger[] ret = new BigInteger[size];
+        for (int i = 0, n = size; i < n; i++) {
+            BigInteger assign = null;
+            E answer = getAnswer(i);
+            if (answer instanceof BigRational) {
+                assign = ((BigRational) answer).bigIntegerValue();
+            }
+            ret[i] = assign;
+        }
+
+        return ret;
     }
 
     public E getConstantNumbered(int j)
@@ -580,4 +599,6 @@ public class NumberSimplex <E extends Number>
     {
         return matrix.zero();
     }
+
+
 }

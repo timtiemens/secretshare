@@ -406,6 +406,11 @@ public class SecretShare
         // [b] set the constant coefficient to the secret:
         coeffs[0] = secret;
 
+        return splitByCoeffsOnly(coeffs);
+    }
+
+    /* default */ SplitSecretOutput splitByCoeffsOnly(BigInteger[] coeffs)
+    {
         final PolyEquationImpl equation = new PolyEquationImpl(coeffs);
 
         SplitSecretOutput ret = new SplitSecretOutput(this.publicInfo,
@@ -486,6 +491,7 @@ public class SecretShare
             ele = ele.createWithPrimeModulus(publicInfo.getPrimeModulus());
         }
 
+        BigInteger[] coeffs = null;
         BigInteger solveSecret = null;
 
         if (false)
@@ -507,6 +513,7 @@ public class SecretShare
             simplex.solve(out);
 
             BigRational answer = simplex.getAnswer(0);
+            coeffs = simplex.getCoeffsAsBigInteger();
             if (publicInfo.getPrimeModulus() != null)
             {
                 solveSecret = answer.computeBigIntegerMod(publicInfo.getPrimeModulus());
@@ -521,7 +528,7 @@ public class SecretShare
         {
             solveSecret = solveSecret.mod(publicInfo.getPrimeModulus());
         }
-        ret = new CombineOutput(solveSecret);
+        ret = new CombineOutput(solveSecret, coeffs);
 
 
         return ret;
@@ -752,6 +759,15 @@ public class SecretShare
                 }
             }
         }
+        public static PublicInfo copyIncreaseNby(PublicInfo copy, int increase) {
+            if (increase < 0) {
+                throw new SecretShareException("increase must not be negative: " + increase);
+            }
+            return new PublicInfo(copy.n + increase,
+                                  copy.k,
+                                  copy.primeModulus,
+                                  copy.description);
+        }
 
         @Override
         public String toString()
@@ -809,6 +825,8 @@ public class SecretShare
         {
             return date;
         }
+
+
     }
 
     /**
@@ -1032,15 +1050,35 @@ public class SecretShare
     public static class CombineOutput
     {
         private final BigInteger secret;
+        /** coeffs[0] == secret */
+        private final BigInteger[] coeffs;
 
         public CombineOutput(final BigInteger inSecret)
         {
+            this(inSecret, null);
+        }
+
+        public CombineOutput(final BigInteger inSecret, final BigInteger[] inCoeffs)
+        {
             secret = inSecret;
+            if (inCoeffs != null)
+            {
+                coeffs = new BigInteger[inCoeffs.length];
+                System.arraycopy(inCoeffs, 0, coeffs, 0, inCoeffs.length);
+            }
+            else
+            {
+                coeffs = null;
+            }
         }
 
         public final BigInteger getSecret()
         {
             return secret;
+        }
+        public final BigInteger[] getCoeffs()
+        {
+            return coeffs;
         }
     }
 
