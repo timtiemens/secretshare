@@ -43,6 +43,9 @@ public final class BuildVersion
     // ==================================================
     // class static methods
     // ==================================================
+    public static void disableFailureInLoad() {
+        BuildVersion.ignoreFailureUnitTest = true;
+    }
 
     // ==================================================
     // instance data
@@ -499,4 +502,7 @@ public final class BuildVersion
             }
         }
     } // class BuildInfo
+
+
+
 }

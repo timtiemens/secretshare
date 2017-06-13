@@ -26,8 +26,8 @@ Build
 1. Compile locally - build the project with gradlew (gradle wrapper)
 ```
     $ ./gradlew build
-  [creates build/libs/secretshare-1.4.2.jar]
-    $ cp build/libs/secretshare-1.4.2.jar ./secretshare.jar
+  [creates build/libs/secretshare-1.4.3.jar]
+    $ cp build/libs/secretshare-1.4.3.jar ./secretshare.jar
   [copies the .jar into the current directory]
 ```
 
@@ -79,29 +79,28 @@ Examples of command line invocations
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat"
   ```
-  
-  d.  Create the same share as above, then pipes the output of "split" into the input of "combine", which prints out the secret string.
+
+  d. Create the same share as above, then pipes the output of "split" into the input of "combine", which prints out the secret string.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat" \
    | java -jar secretshare.jar combine -stdin
   ```
 
-  e.  Create the same share as above, but use a pre-defined 4096-bit prime modulus.  The 4096 bit prime allows 512 characters of secret string.
+  e. Create the same share as above, but use a pre-defined 4096 bit prime modulus.  The 4096 bit prime allows 512 characters of secret string.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
-  -prime4096
+      -prime4096
   ```
 
-  f.  Create the same share as above, but output in a manner better suited for splitting up the shares in order to give them out individually with all required information.
+  f. Create the same share as above, but output in a manner better suited for splitting up the shares in order to give them out individually with all required information.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
-  -prime4096 -printIndiv
+      -prime4096 -printIndiv
   ```
 
-  g.  Combine 3 shares to recreate the original secret.
+  g. Combine 3 shares to recreate the original secret.
   ```
-  $ java -jar secretshare.jar combine -k 3 \
-     -prime384 \
+  $ java -jar secretshare.jar combine -k 3 -prime384 \
       -s2 1882356874773438980155973947620693982153929916 \
       -s4 1882357204724127580025723830249209987221192644 \
       -s5 1882357444072759374568880025530775541595539408
@@ -154,7 +153,7 @@ $ PRINT=-printIndiv
   # For this example, we'll print them all together
 $ PRINT=-printOne
 $ java -jar secretshare.jar split -k 3 -n 6 -sS "TheKeyUsedToEncrypt" $PRINT
-Secret Share version 1.4.2
+Secret Share version 1.4.3
 Date                          : 2014-12-29 16:59:00
 UUID                          : 363e3f28-f43f-4c45-9fa7-4360b7e22cba
 n = 6
@@ -187,7 +186,7 @@ $ java -jar secretshare.jar combine -k 3 \
    -s2 1882356874773438980155973947620693982153929916 \
    -s4 1882357204724127580025723830249209987221192644 \
    -s5 1882357444072759374568880025530775541595539408
-Secret Share version 1.4.2
+Secret Share version 1.4.3
 secret.number = '1882356743151517032574974075571664781995241588'
 secret.string = 'TheKeyUsedToEncrypt'
 

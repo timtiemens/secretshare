@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tiemens.secretshare.engine.SecretShare;
+import com.tiemens.secretshare.engine.SecretShare.ParanoidInput;
+import com.tiemens.secretshare.engine.SecretShare.ParanoidOutput;
 import com.tiemens.secretshare.engine.SecretShare.PublicInfo;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.exceptions.SecretShareException;
@@ -85,6 +87,11 @@ public final class MainCombine
         out.println("  -prime192     for modulus, use built-in 192-bit prime");
         out.println("  -primeN <m>   for modulus use m, e.g. '59561' or 'bigintcs:12345-DC0AE1'");
         out.println("  -primeNone    modulus, do NOT use any modulus");
+        out.println("  -paranoid <P> perform multiple combinations of the shares, P is comma-separated of these:");
+        out.println("                 maxCombinationsAllowedToTest=50  the number of combines to perform");
+        out.println("                 stopCombiningWhenAnyCount=3      stop combining once a secret is seen this many times");
+        out.println("                 limitPrint=22                    in the final output, only print this many secrets");
+
 
     }
 
@@ -127,6 +134,9 @@ public final class MainCombine
         // optional: for combine, we don't need n, but you can provide it
         private Integer n           = null;
 
+        // optional:
+        //    paranoidInput: null = do nothing;  non-null means run paranoid tests
+        private ParanoidInput paranoidInput = null;
 
         // not an input.  used to cache the PublicInfo, so that after the first ShareInfo is
         //  created with this PublicInfo, then they are all created with the same PublicInfo
@@ -135,6 +145,21 @@ public final class MainCombine
         // ==================================================
         // constructors
         // ==================================================
+        public CombineInput(Integer inK, Integer inN, PublicInfo inPublicInfo, ParanoidInput inParanoidInput) {
+            this.k = inK;
+            this.n = inN;
+            this.paranoidInput = inParanoidInput;
+            this.publicInfo = inPublicInfo;
+            if (publicInfo != null) {
+                if (publicInfo.getPrimeModulus() != null) {
+                    modulus = publicInfo.getPrimeModulus();
+                }
+            }
+        }
+
+        private CombineInput() {
+
+        }
         public static CombineInput parse(String[] args,
                                          InputStream in,
                                          PrintStream out)
@@ -202,6 +227,12 @@ public final class MainCombine
                     SecretShare.ShareInfo share = ret.parseEqualShare("-s", line);
 
                     ret.addIfNotDuplicate(share);
+                }
+                else if ("-paranoid".equals(args[i]))
+                {
+                    i++;
+                    MainSplit.checkIndex("-paranoid", args, i);
+                    ret.paranoidInput = ParanoidInput.parseForCombine("-paranoid", args[i]);
                 }
                 else if (args[i].startsWith("-"))
                 {
@@ -281,7 +312,7 @@ public final class MainCombine
             }
         }
 
-        private void addIfNotDuplicate(ShareInfo add)
+        public void addIfNotDuplicate(ShareInfo add)
         {
             boolean shouldadd = true;
             for (ShareInfo share : this.shares)
@@ -408,6 +439,13 @@ public final class MainCombine
 
             ret.secret = combine.getSecret();
 
+            if (paranoidInput != null) {
+                System.out.println("Performing paranoid=" + paranoidInput);
+                ret.paranoidOutput = secretShare.performParanoidCombines(shares, paranoidInput);
+                // getAgreedAnswer returns <null> if there is not 100% agreement
+                ret.secret = ret.paranoidOutput.getAgreedAnswer();
+            }
+
             return ret;
         }
 
@@ -420,10 +458,17 @@ public final class MainCombine
     {
         private BigInteger secret;
 
+        private ParanoidOutput paranoidOutput = null; // can be null
+
         @SuppressWarnings("unused")
         private SecretShare.CombineOutput combineOutput;
         @SuppressWarnings("unused")
         private CombineInput combineInput;
+
+        public CombineOutput()
+        {
+
+        }
 
         public void print(PrintStream out)
         {
@@ -434,10 +479,33 @@ public final class MainCombine
             //field(out, "UUID", publicInfo.getUuid());
             //field(out, "Description", publicInfo.getDescription());
 
-            out.println("secret.number = '" + secret + "'");
-            String s = BigIntUtilities.Human.createHumanString(secret);
-            out.println("secret.string = '" + s + "'");
+            String secretNumber = (getRecoveredSecret() == null) ? "null" : "'" + getRecoveredSecret() + "'";
+            String secretAsString = (getRecoveredSecret() == null) ? "null" : "'" + getRecoveredSecretAsString() + "'";
+            out.println("secret.number = " + secretNumber);
+            out.println("secret.string = " + secretAsString);
+            printParanoidOutput(out);
+        }
 
+        private void printParanoidOutput(PrintStream out) {
+            ParanoidOutput paranoidOutput = getParanoidOutput();
+            if (paranoidOutput != null) {
+                paranoidOutput.printParanoidOutput(out);
+            }
+        }
+
+        public BigInteger getRecoveredSecret()
+        {
+            return secret;
+        }
+
+        public String getRecoveredSecretAsString()
+        {
+            return BigIntUtilities.Human.createHumanString(secret);
+        }
+
+        public ParanoidOutput getParanoidOutput()
+        {
+            return paranoidOutput;
         }
 
         // ==================================================
@@ -455,5 +523,7 @@ public final class MainCombine
         // ==================================================
         // non public methods
         // ==================================================
+
+
     }
 }

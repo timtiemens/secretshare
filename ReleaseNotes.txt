@@ -2,6 +2,11 @@ Shamir's Secret Sharing in Java
 
 Release Notes  --
 
+v1.4.3
+======
+ o add "-paranoid" option to combine operation
+ o clean up Readme.md generation code
+
 v1.4.2
 ======
  o upgrade to gradle 2.x; upgrade jacoco plugin to standard plugin
