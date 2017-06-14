@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 Tim Tiemens.
+ * Copyright (c) 2009, 2014, 2017 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -297,15 +297,17 @@ public class MainReadmeTest {
 
     public void testCombineThreeExplicitShareShowingArguments(TestCollector collect)
     {
-        // Note that "-s3" has been destroyed and is now 12345678912...
-        // There are 4 possible subsets of the shares - only ONE share has the correct reconstructed secret
-        String[] args = {"combine", "-k", "3", "-paranoid", "110,limitPrint=4",
-                "-s1", "5446929", "-s5", "98112100",  "-s2", "8221875", "-s3", "12809805", NEWLINE,
-                "-s4", "19210719", "-s6", "134607460", "-s7", "177021524", NEWLINE,
-                "-s8", "225354292", "-s9", "279605764",  "-s10", "339775940"};
+        String[] args = {"combine", "-k", "3", "-m", smallPrime, NEWLINE,
+                "-paranoid", "110,limitPrint=4,stopCombiningWhenAnyCount=30", NEWLINE,
+                "-s1", "123456", "-s5", "48382",  "-s2", "32223", "-s3", "392933", NEWLINE,
+                "-s4", "923334", "-s6", "123122", "-s7", "939444", "-s8", "838333", NEWLINE,
+                "-s9", "453322",  "-s10", "499222"};
         collect.firstCommand(args);
         collect.comments(new String [] {
-            "Combine shares from two different splits, showing options to -paranoid on combine."});
+            "Combine shares, showing examples for the -paranoid argument.  ",
+            " Control how many extra combines to run (110), how many to print (4), and stop when an answer ",
+            " has been seen at least this many times (30).  ",
+            "Use the -paranoid option if you (1) have extra shares and (2) some of your shares are corrupt."});
         collect.finishItem();
 
 
@@ -313,7 +315,7 @@ public class MainReadmeTest {
         TestOutput output = new TestOutput();
         Main.main(filterOutNewlines(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
-        assertContains("combine.1 = x10 = 4415860 - (validUTF8=true) = 'Cat'", output);
+        assertContains("paranoid.summary = Disagreement (110 different answers)", output);
         for (String s : output.getLines()) {
             System.out.println(s);
         }

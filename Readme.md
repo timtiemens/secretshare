@@ -92,7 +92,7 @@ Examples of command line invocations
       -prime4096
   ```
 
-  f. Create the same share as above, but output in a manner better suited for splitting up the shares in order to give them out individually with all required information.
+  f. Create the same share as above, but output in a manner better suited for physically splitting up the shares in order to give them out individually with all required information.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
       -prime4096 -printIndiv
@@ -104,6 +104,30 @@ Examples of command line invocations
       -s2 1882356874773438980155973947620693982153929916 \
       -s4 1882357204724127580025723830249209987221192644 \
       -s5 1882357444072759374568880025530775541595539408
+  ```
+
+  h. Combine 4 shares, 3 good and 1 bad, using paranoid combination option.
+  ```
+  $ java -jar secretshare.jar combine -k 3 -prime384 \
+      -paranoid 4 \
+      -s2 1882356874773438980155973947620693982153929916 \
+      -s3 12345678912345678912345678912345678 \
+      -s4 1882357204724127580025723830249209987221192644 \
+      -s5 1882357444072759374568880025530775541595539408
+  ```
+
+  i. Combine shares, showing examples for the -paranoid argument.   Control how many extra combines to run (110), how many to print (4), and stop when an answer  has been seen at least this many times (30).  Use the -paranoid option if you (1) have extra shares and (2) some of your shares are corrupt.
+  ```
+  $ java -jar secretshare.jar combine -k 3 -m 16639793 \
+      -paranoid 110,limitPrint=4,stopCombiningWhenAnyCount=30 \
+      -s1 123456 -s5 48382 -s2 32223 -s3 392933 \
+      -s4 923334 -s6 123122 -s7 939444 -s8 838333 \
+      -s9 453322 -s10 499222
+  ```
+
+  j. Print information about Secret Share, including version, 192 bit, 384 bit and 4096 bit primes.
+  ```
+  $ java -jar secretshare.jar info
   ```
 
 Important Notes about Shares of the Secret
