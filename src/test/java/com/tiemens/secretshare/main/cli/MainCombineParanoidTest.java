@@ -44,7 +44,8 @@ import com.tiemens.secretshare.main.cli.MainSplit.SplitOutput;
  * @author tiemens
  *
  */
-public class MainCombineParanoidTest {
+public class MainCombineParanoidTest
+{
 
     @BeforeClass
     public static void setUpBeforeClass()
@@ -86,12 +87,14 @@ public class MainCombineParanoidTest {
         System.out.println(wrongCombine.getParanoidOutput().getParanoidCompleteOutput());
     }
 
-    private Pair<PublicInfo, List<ShareInfo>> getStaticCatSplitAddRandom(int extra) {
+    private Pair<PublicInfo, List<ShareInfo>> getStaticCatSplitAddRandom(int extra)
+    {
         Pair<PublicInfo, List<ShareInfo>> ret = getStaticCatSplit();
         final PublicInfo publicInfo = ret.getKey();
         List<ShareInfo> shares = ret.getValue();
         int x = shares.size() + 1;
-        for (int i = 0; i < extra; i++) {
+        for (int i = 0; i < extra; i++)
+        {
             shares.add(new ShareInfo(x, BigInteger.valueOf(x * 50), publicInfo));
             x++;
         }
@@ -114,10 +117,12 @@ public class MainCombineParanoidTest {
         int i = 0;
         // put 4 dogs with 6 cats - combines to get 20x cats  and 4x dogs, and 96x of junk
         // it is required that k is the same value (k=3) for both cats and dogs
-        for ( ; i < 4; i++) {
+        for ( ; i < 4; i++)
+        {
             mixedShares.add(dogShares.get(i));
         }
-        for (int n = catShares.size(); i < n; i++) {
+        for (int n = catShares.size(); i < n; i++)
+        {
             mixedShares.add(catShares.get(i));
         }
 
@@ -170,7 +175,8 @@ public class MainCombineParanoidTest {
         System.out.println(wrongCombine.getParanoidOutput().getParanoidCompleteOutput());
 /*
         Map<BigInteger, Integer> map = wrongCombine.getParanoidOutput().getReconstructedMap();
-        for (BigInteger secret : map.keySet()) {
+        for (BigInteger secret : map.keySet())
+        {
             Integer count = map.get(secret);
             System.out.println("count=" + count + "  times came up with " + secret + " string=" + BigIntUtilities.Human.createHumanString(secret));
         }
@@ -249,7 +255,8 @@ public class MainCombineParanoidTest {
         {
             input.addIfNotDuplicate(shares.get(i));
         }*/
-        for (ShareInfo share : shares) {
+        for (ShareInfo share : shares)
+        {
             input.addIfNotDuplicate(share);
         }
 

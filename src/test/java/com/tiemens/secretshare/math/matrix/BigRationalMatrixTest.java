@@ -28,26 +28,32 @@ import org.junit.Test;
 
 import com.tiemens.secretshare.math.BigRational;
 
-public class BigRationalMatrixTest {
+public class BigRationalMatrixTest
+{
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() throws Exception
+    {
     }
 
     @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() throws Exception
+    {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
     }
 
     @Test
-    public void test() {
+    public void test()
+    {
         final int i = 2;
         final int j = 3;
         BigRationalMatrix matrix = new BigRationalMatrix(i, j);

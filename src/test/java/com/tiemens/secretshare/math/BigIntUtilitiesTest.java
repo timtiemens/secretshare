@@ -355,7 +355,8 @@ public class BigIntUtilitiesTest
         bits2prime.put(3, new BigInteger("23"));
         bits2prime.put(4, new BigInteger("37"));
 
-        for (Integer bits : bits2prime.keySet()) {
+        for (Integer bits : bits2prime.keySet())
+        {
             Random random = new Random(100);
             int intvalue = 1 << bits;
             BigInteger value = new BigInteger("" + intvalue);

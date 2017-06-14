@@ -1090,7 +1090,8 @@ public class SecretShare
         private Integer limitPrint = null;
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return "ParanoidInput [" +
                     "maximumCombinationsAllowedToTest=" + maximumCombinationsAllowedToTest +
                     ", percentEvery=" + percentEvery +
@@ -1120,7 +1121,8 @@ public class SecretShare
         {
             ParanoidInput ret = new ParanoidInput();
             String[] pieces = arg.split(",");
-            for (String piece : pieces) {
+            for (String piece : pieces)
+            {
                 Integer v;
                 v = parse(piece, "limitPrint=");
                 if (v != null)
@@ -1156,7 +1158,8 @@ public class SecretShare
             return ret;
         }
 
-        private static Integer parse(String arg, String lookfor) {
+        private static Integer parse(String arg, String lookfor)
+        {
             arg = arg.toLowerCase();
             lookfor = lookfor.toLowerCase();
 
@@ -1295,7 +1298,8 @@ public class SecretShare
             return ret;
         }
 
-        private boolean anyCountIsEquals(Integer lookfor) {
+        private boolean anyCountIsEquals(Integer lookfor)
+        {
             if (mapReconstructedToCount.containsValue(lookfor))
             {
                 return true;

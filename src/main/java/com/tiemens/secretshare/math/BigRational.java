@@ -63,7 +63,8 @@ public class BigRational extends Number implements Comparable<BigRational>
     // constructors
     // ==================================================
 
-    public BigRational(BigInteger value) {
+    public BigRational(BigInteger value)
+    {
         this(value, BigInteger.ONE);
     }
 
@@ -128,11 +129,13 @@ public class BigRational extends Number implements Comparable<BigRational>
     // public methods
     // ==================================================
 
-    public BigInteger getNumerator() {
+    public BigInteger getNumerator()
+    {
         return numerator;
     }
 
-    public BigInteger getDenominator() {
+    public BigInteger getDenominator()
+    {
         return denominator;
     }
 
@@ -173,7 +176,8 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj)
             return true;
         if (obj == null)
@@ -181,21 +185,27 @@ public class BigRational extends Number implements Comparable<BigRational>
         if (getClass() != obj.getClass())
             return false;
         BigRational other = (BigRational) obj;
-        if (denominator == null) {
+        if (denominator == null)
+        {
             if (other.denominator != null)
                 return false;
-        } else if (!denominator.equals(other.denominator))
+        }
+        else if (!denominator.equals(other.denominator))
             return false;
-        if (numerator == null) {
+
+        if (numerator == null)
+        {
             if (other.numerator != null)
                 return false;
-        } else if (!numerator.equals(other.numerator))
+        }
+        else if (!numerator.equals(other.numerator))
             return false;
         return true;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result
@@ -298,7 +308,9 @@ public class BigRational extends Number implements Comparable<BigRational>
         if (isBigInteger())
         {
             return numerator;
-        } else {
+        }
+        else
+        {
             throw new ArithmeticException("denominator is not 1, it is " + denominator);
         }
     }

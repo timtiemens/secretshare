@@ -24,7 +24,8 @@ import org.junit.Test;
 
 import com.tiemens.secretshare.main.cli.MainBigIntCs.Type;
 
-public class MainBigIntCsTest {
+public class MainBigIntCsTest
+{
 
     @Test
     public void testConvert()

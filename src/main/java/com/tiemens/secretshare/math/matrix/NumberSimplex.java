@@ -453,15 +453,20 @@ public class NumberSimplex <E extends Number>
             if (getClass() != obj.getClass())
                 return false;
             NumberOrVariable other = (NumberOrVariable) obj;
-            if (number == null) {
+            if (number == null)
+            {
                 if (other.number != null)
                     return false;
-            } else if (!number.equals(other.number))
+            }
+            else if (!number.equals(other.number))
                 return false;
-            if (variable == null) {
+
+            if (variable == null)
+            {
                 if (other.variable != null)
                     return false;
-            } else if (!variable.equals(other.variable))
+            }
+            else if (!variable.equals(other.variable))
                 return false;
             return true;
         }

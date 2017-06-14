@@ -82,7 +82,8 @@ public final class BigIntUtilities
          */
         public static String createHumanString(final BigInteger in)
         {
-            if (in != null) {
+            if (in != null)
+            {
                 try
                 {
                     byte[] b = in.toByteArray();

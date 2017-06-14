@@ -304,14 +304,18 @@ public class EasyLinearEquationTest
                 //sb.append(": ");
                 sb.append(message);
                 sb.append("\n");
-                if (record.getThrown() != null) {
-                    try {
+                if (record.getThrown() != null)
+                {
+                    try
+                    {
                         StringWriter sw = new StringWriter();
                         PrintWriter pw = new PrintWriter(sw);
                         record.getThrown().printStackTrace(pw);
                         pw.close();
-                    sb.append(sw.toString());
-                    } catch (Exception ex) {
+                        sb.append(sw.toString());
+                    }
+                    catch (Exception ex)
+                    {
                     }
                 }
                 return sb.toString();

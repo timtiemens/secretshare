@@ -145,21 +145,26 @@ public final class MainCombine
         // ==================================================
         // constructors
         // ==================================================
-        public CombineInput(Integer inK, Integer inN, PublicInfo inPublicInfo, ParanoidInput inParanoidInput) {
+        public CombineInput(Integer inK, Integer inN, PublicInfo inPublicInfo, ParanoidInput inParanoidInput)
+        {
             this.k = inK;
             this.n = inN;
             this.paranoidInput = inParanoidInput;
             this.publicInfo = inPublicInfo;
-            if (publicInfo != null) {
-                if (publicInfo.getPrimeModulus() != null) {
+            if (publicInfo != null)
+            {
+                if (publicInfo.getPrimeModulus() != null)
+                {
                     modulus = publicInfo.getPrimeModulus();
                 }
             }
         }
 
-        private CombineInput() {
+        private CombineInput()
+        {
 
         }
+
         public static CombineInput parse(String[] args,
                                          InputStream in,
                                          PrintStream out)
@@ -439,7 +444,8 @@ public final class MainCombine
 
             ret.secret = combine.getSecret();
 
-            if (paranoidInput != null) {
+            if (paranoidInput != null)
+            {
                 System.out.println("Performing paranoid=" + paranoidInput);
                 ret.paranoidOutput = secretShare.performParanoidCombines(shares, paranoidInput);
                 // getAgreedAnswer returns <null> if there is not 100% agreement
@@ -486,9 +492,11 @@ public final class MainCombine
             printParanoidOutput(out);
         }
 
-        private void printParanoidOutput(PrintStream out) {
+        private void printParanoidOutput(PrintStream out)
+        {
             ParanoidOutput paranoidOutput = getParanoidOutput();
-            if (paranoidOutput != null) {
+            if (paranoidOutput != null)
+            {
                 paranoidOutput.printParanoidOutput(out);
             }
         }

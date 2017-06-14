@@ -41,7 +41,8 @@ import com.tiemens.secretshare.BuildVersion;
  * @author tiemens
  *
  */
-public class MainReadmeTest {
+public class MainReadmeTest
+{
 
     @BeforeClass
     public static void setUpBeforeClass()
@@ -227,7 +228,8 @@ public class MainReadmeTest {
         assertContains("modulus = " + "167102221" /*...*/, output);
     }
 
-    public void testPrintIndiv(TestCollector collect) {
+    public void testPrintIndiv(TestCollector collect)
+    {
         // $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits"  -prime4096 -printIndiv
         String[] args = {"split", "-k", "3", "-n", "6", "-sS", "The Cat In The Hat 4096bits", NEWLINE, "-prime4096", "-printIndiv"};
         collect.firstCommand(args);
@@ -290,7 +292,8 @@ public class MainReadmeTest {
         Main.main(filterOutNewlines(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("combine.4 = x1 = 1882356743151517032574974075571664781995241588 - (validUTF8=true) = 'TheKeyUsedToEncrypt'", output);
-        for (String s : output.getLines()) {
+        for (String s : output.getLines())
+        {
             System.out.println(s);
         }
     }
@@ -316,7 +319,8 @@ public class MainReadmeTest {
         Main.main(filterOutNewlines(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("paranoid.summary = Disagreement (110 different answers)", output);
-        for (String s : output.getLines()) {
+        for (String s : output.getLines())
+        {
             System.out.println(s);
         }
 
@@ -339,7 +343,8 @@ public class MainReadmeTest {
         Main.main(filterOutNewlines(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("Modulus 192 bits = 14976407493557531125525728362448106789840013430353915016137", output);
-        for (String s : output.getLines()) {
+        for (String s : output.getLines())
+        {
             System.out.println(s);
         }
     }
@@ -407,7 +412,8 @@ public class MainReadmeTest {
     {
         private final InputStream is;
 
-        public static TestInput create(List<String> lines) {
+        public static TestInput create(List<String> lines)
+        {
             String inputAsString = "";
             String sep = "";
             for (String line : lines)
@@ -428,7 +434,8 @@ public class MainReadmeTest {
             is = new ByteArrayInputStream(string.getBytes());
         }
 
-        public InputStream in() {
+        public InputStream in()
+        {
             return is;
         }
 
@@ -439,11 +446,13 @@ public class MainReadmeTest {
         private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         private final PrintStream ps = new PrintStream(baos);
 
-        public PrintStream out() {
+        public PrintStream out()
+        {
             return ps;
         }
 
-        public TestInput asTestInput() {
+        public TestInput asTestInput()
+        {
             return TestInput.create(getLines());
         }
 
@@ -485,12 +494,14 @@ public class MainReadmeTest {
             current.nextCommand(args);
         }
 
-        public void comments(String[] strings) {
+        public void comments(String[] strings)
+        {
             assignCurrent();
             current.comments(strings);
         }
 
-        public void firstCommand(String[] args) {
+        public void firstCommand(String[] args)
+        {
             assignCurrent();
             current.firstCommand(args);
         }
@@ -552,7 +563,9 @@ public class MainReadmeTest {
                 if ((i + 1) != n)
                 {
                     backslash = " \\";
-                } else {
+                }
+                else
+                {
                     backslash = "";
                 }
 
@@ -560,12 +573,16 @@ public class MainReadmeTest {
 
                 String s = commands.get(i);
                 String[] lines = s.split(NEWLINE);
-                if (lines.length > 1) {
+                if (lines.length > 1)
+                {
                     backslash = " \\";
                 }
-                for (int j = 0, jn = lines.length; j < jn; j++) {
-                    if ((j + 1) == jn) {
-                        if ((i + 1) == n) {
+                for (int j = 0, jn = lines.length; j < jn; j++)
+                {
+                    if ((j + 1) == jn)
+                    {
+                        if ((i + 1) == n)
+                        {
                             backslash = "";
                         }
                     }
@@ -606,11 +623,13 @@ public class MainReadmeTest {
             addCommand("java -jar secretshare.jar" + args2string(args));
 
         }
-        private void addCommand(String string) {
+        private void addCommand(String string)
+        {
             commands.add(string);
         }
 
-        private String args2string(String[] args) {
+        private String args2string(String[] args)
+        {
             String ret = "";
             String sep = " ";
             for (int i = 0, n = args.length; i < n; i++)
