@@ -38,9 +38,9 @@ Officially Released Artifact
 ```
       group:   com.tiemens
        name:   secretshare
-    version:   1.4.2
+    version:   1.4.3
 ```
-Central Repository - [SecretShare1.4.2] - to see dependency information
+Central Repository - [SecretShare1.4.3] - to see dependency information
 formatted for Maven, Ivy, Grape, Gradle, Buildr, etc.
 
 
@@ -310,3 +310,4 @@ Documentation
 [Resources]:extrastuff/resources.md
 [SecretShare1.4.1]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.1
 [SecretShare1.4.2]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.2
+[SecretShare1.4.3]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.3
