@@ -1,15 +1,16 @@
 
-o gradle uploadArchives
+o ./gradlew uploadArchives
 
 o https://oss.sonatype.org
      DO THIS IN IE - firefox does not display the needed menu
- + On left side, below "Views/Repositories", there is "Build Promotion"
+ + On left side, below "Build Promotion"
      ++ select "Staging Respositories"
    Then, enter "comtiemens" into the search in upper right
     comtiemens-NNNN should appear
       WITH A SELECT BOX to the left side (That is important)
-   select it, then the under panel displays
-        Summary Activity COntent
+   select it, 
+   Then, the lower panel displays
+        Summary Activity Content
 
   Then at the top row of buttons  Refresh Close Promote Release Drop
      push Close
