@@ -88,17 +88,17 @@ Examples of command line invocations
 
   e. Create the same share as above, but use a pre-defined 4096 bit prime modulus.  The 4096 bit prime allows 512 characters of secret string.
   ```
-  $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
-      -prime4096
+  $ java -jar secretshare.jar split -k 3 -n 6 -prime4096 \
+      -sS "The Cat In The Hat 4096bits"
   ```
 
   f. Create the same share as above, but output in a manner better suited for physically splitting up the shares in order to give them out individually with all required information.
   ```
-  $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
-      -prime4096 -printIndiv
+  $ java -jar secretshare.jar split -k 3 -n 6 -prime4096 \
+      -sS "The Cat In The Hat 4096bits" -printIndiv
   ```
 
-  g. Combine 3 shares to recreate the original secret.
+  g. Combine 3 shares to recreate the original secret.  Note: it is important that the -prime argument is specified before -s arguments.
   ```
   $ java -jar secretshare.jar combine -k 3 -prime384 \
       -s2 1882356874773438980155973947620693982153929916 \

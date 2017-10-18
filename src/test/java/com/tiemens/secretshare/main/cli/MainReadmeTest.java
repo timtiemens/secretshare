@@ -211,7 +211,7 @@ public class MainReadmeTest
     public void testSimpleCat4096(TestCollector collect)
     {
         // $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits"  -prime4096
-        String[] args = {"split", "-k", "3", "-n", "6", "-sS", "The Cat In The Hat 4096bits", NEWLINE, "-prime4096"};
+        String[] args = {"split", "-k", "3", "-n", "6", "-prime4096", NEWLINE, "-sS", "The Cat In The Hat 4096bits"};
         collect.firstCommand(args);
         collect.comments(new String [] {
             "Create the same share as above, but use a pre-defined 4096 bit prime modulus.",
@@ -231,7 +231,7 @@ public class MainReadmeTest
     public void testPrintIndiv(TestCollector collect)
     {
         // $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits"  -prime4096 -printIndiv
-        String[] args = {"split", "-k", "3", "-n", "6", "-sS", "The Cat In The Hat 4096bits", NEWLINE, "-prime4096", "-printIndiv"};
+        String[] args = {"split", "-k", "3", "-n", "6", "-prime4096", NEWLINE, "-sS", "The Cat In The Hat 4096bits", "-printIndiv"};
         collect.firstCommand(args);
         collect.comments(new String [] {
             "Create the same share as above, but output in a manner better suited for physically splitting up the shares",
@@ -260,7 +260,8 @@ public class MainReadmeTest
                 "-s5", "1882357444072759374568880025530775541595539408"};
         collect.firstCommand(args);
         collect.comments(new String [] {
-            "Combine 3 shares to recreate the original secret."});
+            "Combine 3 shares to recreate the original secret.",
+            "  Note: it is important that the -prime argument is specified before -s arguments."});
         collect.finishItem();
 
 
