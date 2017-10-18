@@ -19,7 +19,7 @@ apply plugin: 'maven'
     
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
-version = '1.4.3'
+version = '1.4.4-SNAPSHOT'
 project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 sourceCompatibility = 1.6
 
