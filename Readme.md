@@ -133,14 +133,10 @@ Examples of command line invocations
 Important Notes about Shares of the Secret
 -----
 Note that each share of the secret requires at least these pieces:
- 1. the "k" value [same for all shares],
- 2. the "x" value     [unique for this share],
- 3. the "share" value [unique for this share]
-
-Optional -  the "modulus" value [same for all shares]
-  It is still unclear under what circumstances the modulus is required.
-  If no calculation in the split was larger than the modulus, then it is never required.
-  TODO: create an explicit test where modulus was triggered, confirm split-combine still work.
+ 1. the "prime" modulus value [same for all shares],
+ 2. the "k" value [same for all shares],
+ 3. the "x" value     [unique for this share],
+ 4. the "share" value [unique for this share]
 
 Optional - the UUID of the split [same for all shares]
   If you have split multiple secrets into shares,
@@ -150,6 +146,11 @@ Due to the nature of the algorithm, shares from different splits
 will 'combine' and will produce a ''secret'' (string or number),
 but it will not be the original secret.
 
+Note on the Prime Modulus
+-----
+  By default, the 384-bit prime is used for the split/combine operations.
+  Place the "-prime" option before all -s* arguments.
+  If no calculation in the split was larger than the modulus, then it turns out the prime argument is not required.  Determining when this is or is not true is a bit tricky, however.
 
 Note on the Secret
 -----
