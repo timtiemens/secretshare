@@ -276,7 +276,8 @@ SIMPLEX SOLVER (versions 1.4.2 and later)
 |k = 1000| 346276986880 seconds | - |           11,000 years
 
 The formula is roughly "4 times longer for each +50 in k".
-From k=280 and higher, all times are calculated.  k=280 is the last "measured".
+For k greater than 280, all times are calculated.  
+k=280 is the last "measured".
 So, k=280 is a pretty good practical limit, or k=95 for "immediate" results.
 
 N.B.: Earlier versions of secretshare (1.4.1 and earlier) used a very
@@ -302,7 +303,8 @@ k = 29  |            |            |          | 30   days|
 k = 30  |            |            |          |120   days|
 
 The formula is roughly 10 * 4^(k - 20) seconds.
-From k=25 on down, all times are calculated.  k=24 is the last "measured".
+For k greather than 25, all times are calculated. 
+k=24 is the last "measured".
 For k = 90, that works out to be  = 10 * 4^(90 - 20) = 1E42 seconds.
 Since a year has ~3E7 seconds, that will never happen.
 So, k=25 is a pretty good practical limit, or k=20 for "immediate" results.
