@@ -254,15 +254,15 @@ N.B.: 'split' is perfectly capable of generating k=100, k=200, even k=1000
 
 SIMPLEX SOLVER (versions 1.4.2 and later)
 | k      |  seconds    | minutes | years |
-|--------+-------------+---------+-------|
-|k = 22  |   0 seconds
-|k = 23  |   0 seconds
-|k = 24  |   0 seconds
-|k = 2   | -
-|k = 2   | -
-|k = 2   | -
-|k = 28  | -
-|k = 29  | -
+| ---    | ---         | ---     | ---   |
+|k = 22  |   0 seconds | | |
+|k = 23  |   0 seconds | | |
+|k = 24  |   0 seconds | | |
+|k = 2   |           - | | |
+|k = 2   |           - | | |
+|k = 2   |           - | | |
+|k = 28  |           - | | |
+|k = 29  |           - | | |
 |k = 30  |   0.44 seconds
 |k = 50  |   2 seconds
 |k = 75  |   5 seconds
