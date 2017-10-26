@@ -253,27 +253,29 @@ N.B.: 'split' is perfectly capable of generating k=100, k=200, even k=1000
         could solve the matrix and recreate the original secret.  Maybe.
 
 SIMPLEX SOLVER (versions 1.4.2 and later)
-k = 22      0 seconds
-k = 23      0 seconds
-k = 24      0 seconds
-k = 25
-k = 26
-k = 27
-k = 28
-k = 29
-k = 30      0.44 seconds
-k = 50      2 seconds
-k = 75      5 seconds
-k = 95     12 seconds
-k = 130    47 seconds
-k = 180   180 seconds
-k = 230   623 seconds
-k = 280  1662 seconds  28 minutes
-k = 650                                                        1 year
-k = 1000  346276986880 seconds ....                       11,000 years
+| k      |  seconds    | minutes | years |
+|--------+-------------+---------+-------|
+|k = 22  |   0 seconds
+|k = 23  |   0 seconds
+|k = 24  |   0 seconds
+|k = 2   | -
+|k = 2   | -
+|k = 2   | -
+|k = 28  | -
+|k = 29  | -
+|k = 30  |   0.44 seconds
+|k = 50  |   2 seconds
+|k = 75  |   5 seconds
+|k = 95  |  12 seconds
+|k = 130 |  47 seconds
+|k = 180 | 180 seconds
+|k = 230 | 623 seconds
+|k = 280 |1662 seconds | 28 minutes |
+|k = 650 |     -                                        |       1 year
+|k = 1000| 346276986880 seconds | - |                   |  11,000 years
 The formula is roughly "4 times longer for each +50 in k".
-From k=280 on down, all times are calculated.  k=280 is the last "measured".
-So, k=280 is a pretty good practical limit, or k=95 for "immediate" results
+From k=280 and higher, all times are calculated.  k=280 is the last "measured".
+So, k=280 is a pretty good practical limit, or k=95 for "immediate" results.
 
 N.B.: Earlier versions of secretshare (1.4.1 and earlier) used a very
         inefficient solving algorithm.  For these versions, your "k" is
@@ -281,18 +283,20 @@ N.B.: Earlier versions of secretshare (1.4.1 and earlier) used a very
 
 ORIGINAL SOLVER (versions 1.4.1 and earlier)
 Value 'k' versus recorded runtimes to complete the "combine" operation:
-k = 19      3 seconds
-k = 20     10 seconds
-k = 21     39 seconds
-k = 22    156 seconds
-k = 23    646 seconds
-k = 24   2460 seconds  41 minutes
-k = 25                164 minutes
-k = 26                656 minutes   11 hours
-k = 27                              44 hours
-k = 28                             176 hours   7.3 days
-k = 29                                        30   days
-k = 30                                       120   days
+| k     |  seconds   | minutes    | hours    | days     |
+|-------+------------+------------+----------+----------|
+k = 19  |   3 seconds|
+k = 20  |  10 seconds|
+k = 21  |  39 seconds|
+k = 22  | 156 seconds|
+k = 23  | 646 seconds|
+k = 24  |2460 seconds| 41 minutes |
+k = 25  |            |164 minutes |
+k = 26  |            |656 minutes | 11 hours |
+k = 27  |            |            | 44 hours |
+k = 28  |            |            |176 hours |  7.3 days|
+k = 29  |            |            |          | 30   days|
+k = 30  |            |            |          |120   days|
 The formula is roughly 10 * 4^(k - 20) seconds.
 From k=25 on down, all times are calculated.  k=24 is the last "measured".
 For k = 90, that works out to be  = 10 * 4^(90 - 20) = 1E42 seconds.
