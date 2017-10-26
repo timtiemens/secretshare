@@ -253,6 +253,7 @@ N.B.: 'split' is perfectly capable of generating k=100, k=200, even k=1000
         could solve the matrix and recreate the original secret.  Maybe.
 
 SIMPLEX SOLVER (versions 1.4.2 and later)
+
 | k      |  seconds    | minutes | years |
 | ---    | ---         | ---     | ---   |
 |k = 22  |   0 seconds | | |
@@ -283,8 +284,9 @@ N.B.: Earlier versions of secretshare (1.4.1 and earlier) used a very
 
 ORIGINAL SOLVER (versions 1.4.1 and earlier)
 Value 'k' versus recorded runtimes to complete the "combine" operation:
+
 | k     |  seconds   | minutes    | hours    | days     |
-|-------+------------+------------+----------+----------|
+|-------|------------|------------|----------|----------|
 k = 19  |   3 seconds|
 k = 20  |  10 seconds|
 k = 21  |  39 seconds|
