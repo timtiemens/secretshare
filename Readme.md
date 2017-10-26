@@ -272,8 +272,9 @@ SIMPLEX SOLVER (versions 1.4.2 and later)
 |k = 180 | 180 seconds
 |k = 230 | 623 seconds
 |k = 280 |1662 seconds | 28 minutes |
-|k = 650 |     -                                        |       1 year
-|k = 1000| 346276986880 seconds | - |                   |  11,000 years
+|k = 650 |     -       |  -         |                1 year
+|k = 1000| 346276986880 seconds | - |           11,000 years
+
 The formula is roughly "4 times longer for each +50 in k".
 From k=280 and higher, all times are calculated.  k=280 is the last "measured".
 So, k=280 is a pretty good practical limit, or k=95 for "immediate" results.
@@ -299,6 +300,7 @@ k = 27  |            |            | 44 hours |
 k = 28  |            |            |176 hours |  7.3 days|
 k = 29  |            |            |          | 30   days|
 k = 30  |            |            |          |120   days|
+
 The formula is roughly 10 * 4^(k - 20) seconds.
 From k=25 on down, all times are calculated.  k=24 is the last "measured".
 For k = 90, that works out to be  = 10 * 4^(90 - 20) = 1E42 seconds.
