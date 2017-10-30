@@ -684,16 +684,7 @@ public class SecretShare
     {
         for (int i = 1, n = coeffs.length; i < n; i++)
         {
-            BigInteger big = null;
-            //big = BigInteger.valueOf((random.nextInt() % 20) + 1);
-
-            big = BigInteger.valueOf(random.nextLong());
-            // ENHANCEMENT: provide better control?  make it even bigger?
-            // for now, we'll just do long^2:
-            big = big.multiply(BigInteger.valueOf(random.nextLong()));
-
-            // FIX? TODO:? FIX?
-            big = big.abs(); // make it positive
+            BigInteger big = new BigInteger(secret.bitLength(), random);
 
             coeffs[i] = big;
 
