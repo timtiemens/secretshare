@@ -684,13 +684,12 @@ public class SecretShare
     {
         for (int i = 1, n = coeffs.length; i < n; i++)
         {
-            BigInteger big = null;
-            //big = BigInteger.valueOf((random.nextInt() % 20) + 1);
-
-            big = BigInteger.valueOf(random.nextLong());
-            // ENHANCEMENT: provide better control?  make it even bigger?
-            // for now, we'll just do long^2:
-            big = big.multiply(BigInteger.valueOf(random.nextLong()));
+            BigInteger big;
+            if (modulus != null) {
+                big = new BigInteger(modulus.bitLength(), random);
+            } else {
+                big = new BigInteger(4096, random);
+            }
 
             // FIX? TODO:? FIX?
             big = big.abs(); // make it positive
@@ -702,9 +701,6 @@ public class SecretShare
             {
                 coeffs[i] = coeffs[i].mod(modulus);
             }
-
-            // FIX? TODO: FIX? experiment says "all coefficients are smaller than the secret"
-            coeffs[i] = coeffs[i].mod(secret);
         }
     }
 
