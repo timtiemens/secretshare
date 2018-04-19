@@ -1,50 +1,17 @@
-import java.io.FileInputStream
-import java.io.FileOutputStream
 
 
+task copyBuildVersionDotJava(type: Copy) {
+   // Note! $rootDir changes!
+   // RootDir is /home/tim/github/secretshare/buildSrc
+   //  print("RootDir is $rootDir\n")
 
-//
-// Wow gradle just stinks.
-// All that is required is that this "copy" runs before buildSrc:compileJava
-//
+   // So, adjust from and into accordingly:
+   from("$rootDir/../src/main/java/com/tiemens/secretshare") {
+       include '**/BuildVersion.java'
+   }
+   into "$rootDir/src/main/java/com/tiemens/secretshare"
 
-// this does not work:
-task copyBuildVersionDotJavaFails(type: Copy) {
-     from 'src/main/java/com/tiemens/secretshare/BuildVersion.java'
-     into 'buildSrc/src/main/java/com/tiemens/secretshare/BuildVersion.java'
 }
 
-task copyBuildVersionDotJava {
-     // This does not work - just a joke
-     //  the copyBuildVersionDotJava task runs first, but fails with
-     //   NoClassDefFoundError BuildVersions$BuildInfo$Builder because
-     //   the .java file was not actually copied...
-//     doFirst {
-//         copy {
-//              from 'src/main/java/com/tiemens/secretshare'
-//              into 'buildSrc/src/main/java/com/tiemens/secretshare'
-//              include 'BuildVersion.java'
-//         }
-//     }
 
-       // So - make it work
-     doFirst {
-       def to
-       def from
-       try {
-         from = new FileInputStream("src/main/java/com/tiemens/secretshare/BuildVersion.java")
-         to   = new FileOutputStream("buildSrc/src/main/java/com/tiemens/secretshare/BuildVersion.java")
-         def byte[] buf = new byte[1024]
-         def bytesRead
-         while ((bytesRead = from.read(buf)) > 0) {
-           to.write(buf, 0, bytesRead)
-         }
-         to.close()
-       } finally {
-
-       }
-     }
-}
-
-// This works - copyBuildVersionDotJava runs before compileJava
 compileJava.dependsOn copyBuildVersionDotJava
