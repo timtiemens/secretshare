@@ -113,6 +113,15 @@ public class BigRationalTest
         Assert.assertEquals(new BigRational(7, 27), actual);
     }
 
+    @Test
+    public void testn13compareto79()
+    {
+        BigRational oneThree = new BigRational(1, 3);
+        BigRational sevenNine = new BigRational(7, 9);
+        Assert.assertEquals(-1, oneThree.compareTo(sevenNine));
+        Assert.assertEquals(1,  sevenNine.compareTo(oneThree));
+    }
+
 
     @Test
     public void testZero()

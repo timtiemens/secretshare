@@ -967,7 +967,7 @@ public class SecretShare
      * @param shares - all shares available to make unique subsets from
      * @param paranoidInput control over the process
      * @return ParanoidOutput
-     * @throws Exception if there is not 100% agreement on the reconstructed secret
+     * @throws SecretShareException if there is not 100% agreement on the reconstructed secret
      */
     public ParanoidOutput combineParanoid(List<ShareInfo> shares,
                                           ParanoidInput paranoidInput)
@@ -988,7 +988,7 @@ public class SecretShare
     /**
      * This version just collects all of the reconstructed secrets.
      *
-     * @param shares
+     * @param shares to use
      * @param paranoidInput - control over process
      *  if greater than 0        use that number
      *  if less than 0  OR null  no limit
@@ -1009,7 +1009,7 @@ public class SecretShare
 
     /**
      *
-     * @param shares ALL of the available shares, size() >= k
+     * @param shares ALL of the available shares, size() &gt;= k
      * @param paranoidInput non-null input control of the "paranoid" process
      * @return paranoid output
      */
@@ -1074,9 +1074,10 @@ public class SecretShare
 
     /**
      * Holds the input of the combineParanoid operation.
-     * Controls the operation:
+     * Controls the operation:<ul>
      * <li>How many combinations to test
      * <li>What to do when a conflict is found
+     * </ul>
      */
     public static class ParanoidInput
     {
