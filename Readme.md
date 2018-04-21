@@ -259,11 +259,8 @@ SIMPLEX SOLVER (versions 1.4.2 and later)
 |k = 22  |   0 seconds | | |
 |k = 23  |   0 seconds | | |
 |k = 24  |   0 seconds | | |
-|k = 2   |           - | | |
-|k = 2   |           - | | |
-|k = 2   |           - | | |
-|k = 28  |           - | | |
-|k = 29  |           - | | |
+|k = 28  |   0 seconds | | |
+|k = 29  |   0 seconds | | |
 |k = 30  |   0.44 seconds
 |k = 50  |   2 seconds
 |k = 75  |   5 seconds
