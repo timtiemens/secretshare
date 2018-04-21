@@ -685,12 +685,9 @@ public class SecretShare
         for (int i = 1, n = coeffs.length; i < n; i++)
         {
             BigInteger big = null;
-            //big = BigInteger.valueOf((random.nextInt() % 20) + 1);
 
-            big = BigInteger.valueOf(random.nextLong());
-            // ENHANCEMENT: provide better control?  make it even bigger?
-            // for now, we'll just do long^2:
-            big = big.multiply(BigInteger.valueOf(random.nextLong()));
+            //big = coeffGenOriginal(random); // see Issue#8
+            big = coeffGenImproved(random, modulus);
 
             // FIX? TODO:? FIX?
             big = big.abs(); // make it positive
@@ -708,6 +705,37 @@ public class SecretShare
         }
     }
 
+    // Issue#8 fixed coefficient generation
+    private BigInteger coeffGenImproved(Random random, BigInteger modulus) {
+        BigInteger big;
+        int bitLength;
+        if (modulus != null)
+        {
+            bitLength = modulus.bitLength();
+        }
+        else
+        {
+            bitLength = 4096;
+        }
+        // TODO: safety bit?
+        bitLength = bitLength - 1;
+        big = new BigInteger(bitLength, random);
+        return big;
+
+    }
+
+    // Original implementation for coefficient generation - only 128 bits "covered"
+    private BigInteger coeffGenOriginal(Random random)
+    {
+        BigInteger big;
+        big = BigInteger.valueOf(random.nextLong());
+        // ENHANCEMENT: provide better control?  make it even bigger?
+        // for now, we'll just do long^2:
+        big = big.multiply(BigInteger.valueOf(random.nextLong()));
+
+        return big;
+
+    }
 
     // ==================================================
     // public
@@ -967,7 +995,7 @@ public class SecretShare
      * @param shares - all shares available to make unique subsets from
      * @param paranoidInput control over the process
      * @return ParanoidOutput
-     * @throws Exception if there is not 100% agreement on the reconstructed secret
+     * @throws SecretShareException if there is not 100% agreement on the reconstructed secret
      */
     public ParanoidOutput combineParanoid(List<ShareInfo> shares,
                                           ParanoidInput paranoidInput)
@@ -988,7 +1016,7 @@ public class SecretShare
     /**
      * This version just collects all of the reconstructed secrets.
      *
-     * @param shares
+     * @param shares to use
      * @param paranoidInput - control over process
      *  if greater than 0        use that number
      *  if less than 0  OR null  no limit
@@ -1009,7 +1037,7 @@ public class SecretShare
 
     /**
      *
-     * @param shares ALL of the available shares, size() >= k
+     * @param shares ALL of the available shares, size() &gt;= k
      * @param paranoidInput non-null input control of the "paranoid" process
      * @return paranoid output
      */
@@ -1074,9 +1102,10 @@ public class SecretShare
 
     /**
      * Holds the input of the combineParanoid operation.
-     * Controls the operation:
+     * Controls the operation:<ul>
      * <li>How many combinations to test
      * <li>What to do when a conflict is found
+     * </ul>
      */
     public static class ParanoidInput
     {

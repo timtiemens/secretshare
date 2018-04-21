@@ -29,7 +29,7 @@ import java.math.RoundingMode;
  *  Invariants
  *  ----------
  *   o  GCD(numerator, denominator) = 1, i.e., rational number is in reduced form
- *   o  denominator >= 1, i.e., the denominator is always a positive integer
+ *   o  denominator &gt;= 1, i.e., the denominator is always a positive integer
  *   o  BigRational(0,1) is the unique representation of zero
  *
  *
@@ -216,6 +216,7 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     /**
+     * @param b to multiply
      * @return this * b
      */
     public BigRational multiply(BigRational b)
@@ -225,6 +226,7 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     /**
+     * @param b to add
      * @return this + b
      */
     public BigRational add(BigRational b)
@@ -244,6 +246,7 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     /**
+     * @param b to subtract
      * @return this - b
      */
     public BigRational subtract(BigRational b)
@@ -261,7 +264,8 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     /**
-     *  @return this / b
+     * @param b to divide by
+     * @return this / b
      */
     public BigRational divide(BigRational b)
     {
