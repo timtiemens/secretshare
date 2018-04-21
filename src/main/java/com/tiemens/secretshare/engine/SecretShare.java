@@ -685,12 +685,9 @@ public class SecretShare
         for (int i = 1, n = coeffs.length; i < n; i++)
         {
             BigInteger big = null;
-            //big = BigInteger.valueOf((random.nextInt() % 20) + 1);
 
-            big = BigInteger.valueOf(random.nextLong());
-            // ENHANCEMENT: provide better control?  make it even bigger?
-            // for now, we'll just do long^2:
-            big = big.multiply(BigInteger.valueOf(random.nextLong()));
+            //big = coeffGenOriginal(random); // see Issue#8
+            big = coeffGenImproved(random, modulus);
 
             // FIX? TODO:? FIX?
             big = big.abs(); // make it positive
@@ -708,6 +705,37 @@ public class SecretShare
         }
     }
 
+    // Issue#8 fixed coefficient generation
+    private BigInteger coeffGenImproved(Random random, BigInteger modulus) {
+        BigInteger big;
+        int bitLength;
+        if (modulus != null)
+        {
+            bitLength = modulus.bitLength();
+        }
+        else
+        {
+            bitLength = 4096;
+        }
+        // TODO: safety bit?
+        bitLength = bitLength - 1;
+        big = new BigInteger(bitLength, random);
+        return big;
+
+    }
+
+    // Original implementation for coefficient generation - only 128 bits "covered"
+    private BigInteger coeffGenOriginal(Random random)
+    {
+        BigInteger big;
+        big = BigInteger.valueOf(random.nextLong());
+        // ENHANCEMENT: provide better control?  make it even bigger?
+        // for now, we'll just do long^2:
+        big = big.multiply(BigInteger.valueOf(random.nextLong()));
+
+        return big;
+
+    }
 
     // ==================================================
     // public

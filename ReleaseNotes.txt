@@ -5,6 +5,7 @@ Release Notes  --
 v1.4.4 (pending)
 ======
  o address issue #6 by changing documentation to say "put -prime argument first"
+ o address issue #8 by using more bits for coefficient generation
 
 v1.4.3
 ======
