@@ -1,6 +1,5 @@
 /*******************************************************************************
- * $Id: $
- * Copyright (c) 2009-2017 Tim Tiemens.
+ * Copyright (c) 2017 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,12 +13,18 @@
  *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
- ******************************************************************************/
-package com.tiemens.secretshare.math;
+ *******************************************************************************/
+package com.tiemens.secretshare.engine;
 
-public final class HexByteUtilities
+import java.math.BigInteger;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.tiemens.secretshare.engine.SecretShare.ParanoidInput;
+
+public class SecretShareParanoidInputTest
 {
-
 
     // ==================================================
     // class static data
@@ -28,37 +33,6 @@ public final class HexByteUtilities
     // ==================================================
     // class static methods
     // ==================================================
-
-
-    public static byte[] hexToBytes(char[] hex)
-    {
-        int length = hex.length / 2;
-        byte[] raw = new byte[length];
-        for (int i = 0; i < length; i++)
-        {
-            int high = Character.digit(hex[i * 2], 16);
-            int low = Character.digit(hex[i * 2 + 1], 16);
-            int value = (high << 4) | low;
-            if (value > 127)
-            {
-                value -= 256;
-            }
-            raw[i] = (byte) value;
-        }
-        return raw;
-    }
-
-    public static byte[] hexToBytes(String hex)
-    {
-      return hexToBytes(hex.toCharArray());
-    }
-
-    public static String printAsHex(byte[] bytes)
-    {
-        String s2 = BigIntStringChecksum.bytesToHexString(bytes);
-        return s2;
-    }
-
 
     // ==================================================
     // instance data
@@ -72,16 +46,42 @@ public final class HexByteUtilities
     // constructors
     // ==================================================
 
-    private HexByteUtilities()
-    {
-        // no instances
-    }
+    // @Before
+
 
     // ==================================================
     // public methods
     // ==================================================
 
+
+    @Test
+    public void testJustMax()
+    {
+        validate("5", 5, null, null);
+        validate("50,stopCombiningWhenAnyCount=4,limitPrint=22", 50, 4, 22);
+        validate("50,limitPrint=22", 50, null, 22);
+        validate("limitPrint=22,50", 50, null, 22);
+        validate("maxCombinationsAllowedToTest=50,limitPrint=22", 50, null, 22);
+        validate("maxCombinationsAllowedToTest=50,stopCombiningWhenAnyCount=3,limitPrint=22", 50, 3, 22);
+    }
+
     // ==================================================
     // non public methods
     // ==================================================
+
+
+    private void validate(String arg,
+                          Integer expectMaxInt,
+                          Integer expectStopWhenCount,
+                          Integer expectLimitPrint)
+    {
+        ParanoidInput actual = ParanoidInput.parseForCombine("paranoid", arg);
+        BigInteger expectMax = (expectMaxInt == null) ? null : BigInteger.valueOf(expectMaxInt);
+
+        Assert.assertEquals(expectMax, actual.getMaximumCombinationsToTest());
+        Assert.assertEquals(expectStopWhenCount, actual.getStopCombiningWhenAnyCount());
+        Assert.assertEquals(expectLimitPrint, actual.getLimitPrint());
+    }
+
+
 }

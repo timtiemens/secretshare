@@ -10,3 +10,4 @@
 /secretshare.jar
 /gradle.properties
 *~
+buildSrc/src/main/java/com/tiemens/secretshare/BuildVersion.java

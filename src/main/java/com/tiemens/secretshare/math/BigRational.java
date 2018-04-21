@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * $Id: $
+ * Copyright (c) 2009-2017 Tim Tiemens.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ *
+ * Contributors:
+ *     Tim Tiemens - initial API and implementation
+ ******************************************************************************/
 package com.tiemens.secretshare.math;
 
 
@@ -12,7 +29,7 @@ import java.math.RoundingMode;
  *  Invariants
  *  ----------
  *   o  GCD(numerator, denominator) = 1, i.e., rational number is in reduced form
- *   o  denominator >= 1, i.e., the denominator is always a positive integer
+ *   o  denominator &gt;= 1, i.e., the denominator is always a positive integer
  *   o  BigRational(0,1) is the unique representation of zero
  *
  *
@@ -46,7 +63,8 @@ public class BigRational extends Number implements Comparable<BigRational>
     // constructors
     // ==================================================
 
-    public BigRational(BigInteger value) {
+    public BigRational(BigInteger value)
+    {
         this(value, BigInteger.ONE);
     }
 
@@ -111,11 +129,13 @@ public class BigRational extends Number implements Comparable<BigRational>
     // public methods
     // ==================================================
 
-    public BigInteger getNumerator() {
+    public BigInteger getNumerator()
+    {
         return numerator;
     }
 
-    public BigInteger getDenominator() {
+    public BigInteger getDenominator()
+    {
         return denominator;
     }
 
@@ -156,7 +176,8 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj)
             return true;
         if (obj == null)
@@ -164,21 +185,27 @@ public class BigRational extends Number implements Comparable<BigRational>
         if (getClass() != obj.getClass())
             return false;
         BigRational other = (BigRational) obj;
-        if (denominator == null) {
+        if (denominator == null)
+        {
             if (other.denominator != null)
                 return false;
-        } else if (!denominator.equals(other.denominator))
+        }
+        else if (!denominator.equals(other.denominator))
             return false;
-        if (numerator == null) {
+
+        if (numerator == null)
+        {
             if (other.numerator != null)
                 return false;
-        } else if (!numerator.equals(other.numerator))
+        }
+        else if (!numerator.equals(other.numerator))
             return false;
         return true;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result
@@ -189,6 +216,7 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     /**
+     * @param b to multiply
      * @return this * b
      */
     public BigRational multiply(BigRational b)
@@ -198,6 +226,7 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     /**
+     * @param b to add
      * @return this + b
      */
     public BigRational add(BigRational b)
@@ -217,6 +246,7 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     /**
+     * @param b to subtract
      * @return this - b
      */
     public BigRational subtract(BigRational b)
@@ -234,7 +264,8 @@ public class BigRational extends Number implements Comparable<BigRational>
     }
 
     /**
-     *  @return this / b
+     * @param b to divide by
+     * @return this / b
      */
     public BigRational divide(BigRational b)
     {
@@ -281,7 +312,9 @@ public class BigRational extends Number implements Comparable<BigRational>
         if (isBigInteger())
         {
             return numerator;
-        } else {
+        }
+        else
+        {
             throw new ArithmeticException("denominator is not 1, it is " + denominator);
         }
     }

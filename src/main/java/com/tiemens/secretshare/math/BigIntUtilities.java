@@ -19,6 +19,10 @@ package com.tiemens.secretshare.math;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.security.SecureRandom;
 import java.util.Random;
 
@@ -78,16 +82,50 @@ public final class BigIntUtilities
          */
         public static String createHumanString(final BigInteger in)
         {
+            if (in != null)
+            {
+                try
+                {
+                    byte[] b = in.toByteArray();
+                    String s = new String(b, UTF8);
+                    return s;
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    // just can't happen, but if it does...
+                    throw new SecretShareException("UTF8 not found", e);
+                }
+            }
+            else
+            {
+                return "null";
+            }
+        }
+        public static boolean isValidUTF8(final BigInteger in)
+        {
+            if (in != null)
+            {
+                return isValidUTF8(in.toByteArray());
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        public static boolean isValidUTF8( byte[] input )
+        {
+
+            CharsetDecoder cs = Charset.forName(UTF8).newDecoder();
+
             try
             {
-                byte[] b = in.toByteArray();
-                String s = new String(b, UTF8);
-                return s;
+                cs.decode(ByteBuffer.wrap(input));
+                return true;
             }
-            catch (UnsupportedEncodingException e)
+            catch (CharacterCodingException e)
             {
-                // just can't happen, but if it does...
-                throw new SecretShareException("UTF8 not found", e);
+                return false;
             }
         }
     }

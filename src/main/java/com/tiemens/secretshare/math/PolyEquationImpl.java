@@ -151,7 +151,8 @@ public class PolyEquationImpl
         return ret;
     }
 
-    public void debugPrintEquationCoefficients(PrintStream out) {
+    public void debugPrintEquationCoefficients(PrintStream out)
+    {
         // print the coefficients:
         for (int i = 0, n = coefficients.length; i < n; i++ )
         {

@@ -1,1 +1,0 @@
-../../../../../../../src/main/java/com/tiemens/secretshare/BuildVersion.java

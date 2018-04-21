@@ -1,7 +1,21 @@
+/*******************************************************************************
+ * $Id: $
+ * Copyright (c) 2009-2017 Tim Tiemens.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ *
+ * Contributors:
+ *     Tim Tiemens - initial API and implementation
+ ******************************************************************************/
 package com.tiemens.secretshare.math.matrix;
-
-
-
 
 
 
@@ -14,22 +28,27 @@ import org.junit.Test;
 
 import com.tiemens.secretshare.math.BigRational;
 
-public class NumberSimplexTest {
+public class NumberSimplexTest
+{
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() throws Exception
+    {
     }
 
     @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() throws Exception
+    {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
     }
 
     // 2 -1 1 = 2
@@ -37,7 +56,8 @@ public class NumberSimplexTest {
     // 3 1 2 = -1
     // answer x=2 y=-1 z=-3
     @Test
-    public void test211() {
+    public void test211()
+    {
         final int i = 3; // n
         final int j = 4; // m
         BigRationalMatrix matrix = new BigRationalMatrix(i, j);
@@ -61,7 +81,8 @@ public class NumberSimplexTest {
     // 1  2  2 = 2
     //   ANSWER: x=2 y=1 c=-1
     @Test
-    public void test131() {
+    public void test131()
+    {
         final int i = 3; // n
         final int j = 4; // m
         BigRationalMatrix matrix = new BigRationalMatrix(i, j);
@@ -85,7 +106,8 @@ public class NumberSimplexTest {
     // 1 1 1 = 8
     //   ANSWER: x=-2 y=3 c=7
     @Test
-    public void test111() {
+    public void test111()
+    {
         final int i = 3; // n
         final int j = 4; // m
         BigRationalMatrix matrix = new BigRationalMatrix(i, j);
@@ -108,7 +130,8 @@ public class NumberSimplexTest {
     // -2 5 -2 = -1
     //   ANSWER: x=5 y=1 c=-2
     @Test
-    public void test361() {
+    public void test361()
+    {
         final int i = 3; // n
         final int j = 4; // m
         BigRationalMatrix matrix = new BigRationalMatrix(i, j);

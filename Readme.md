@@ -26,8 +26,8 @@ Build
 1. Compile locally - build the project with gradlew (gradle wrapper)
 ```
     $ ./gradlew build
-  [creates build/libs/secretshare-1.4.2.jar]
-    $ cp build/libs/secretshare-1.4.2.jar ./secretshare.jar
+  [creates build/libs/secretshare-1.4.3.jar]
+    $ cp build/libs/secretshare-1.4.3.jar ./secretshare.jar
   [copies the .jar into the current directory]
 ```
 
@@ -38,9 +38,9 @@ Officially Released Artifact
 ```
       group:   com.tiemens
        name:   secretshare
-    version:   1.4.2
+    version:   1.4.3
 ```
-Central Repository - [SecretShare1.4.2] - to see dependency information
+Central Repository - [SecretShare1.4.3] - to see dependency information
 formatted for Maven, Ivy, Grape, Gradle, Buildr, etc.
 
 
@@ -79,45 +79,64 @@ Examples of command line invocations
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat"
   ```
-  
-  d.  Create the same share as above, then pipes the output of "split" into the input of "combine", which prints out the secret string.
+
+  d. Create the same share as above, then pipes the output of "split" into the input of "combine", which prints out the secret string.
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat" \
    | java -jar secretshare.jar combine -stdin
   ```
 
-  e.  Create the same share as above, but use a pre-defined 4096-bit prime modulus.  The 4096 bit prime allows 512 characters of secret string.
+  e. Create the same share as above, but use a pre-defined 4096 bit prime modulus.  The 4096 bit prime allows 512 characters of secret string.
   ```
-  $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
-  -prime4096
-  ```
-
-  f.  Create the same share as above, but output in a manner better suited for splitting up the shares in order to give them out individually with all required information.
-  ```
-  $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat 4096bits" \
-  -prime4096 -printIndiv
+  $ java -jar secretshare.jar split -k 3 -n 6 -prime4096 \
+      -sS "The Cat In The Hat 4096bits"
   ```
 
-  g.  Combine 3 shares to recreate the original secret.
+  f. Create the same share as above, but output in a manner better suited for physically splitting up the shares in order to give them out individually with all required information.
   ```
-  $ java -jar secretshare.jar combine -k 3 \
-     -prime384 \
+  $ java -jar secretshare.jar split -k 3 -n 6 -prime4096 \
+      -sS "The Cat In The Hat 4096bits" -printIndiv
+  ```
+
+  g. Combine 3 shares to recreate the original secret.  Note: it is important that the -prime argument is specified before -s arguments.
+  ```
+  $ java -jar secretshare.jar combine -k 3 -prime384 \
       -s2 1882356874773438980155973947620693982153929916 \
       -s4 1882357204724127580025723830249209987221192644 \
       -s5 1882357444072759374568880025530775541595539408
   ```
 
+  h. Combine 4 shares, 3 good and 1 bad, using paranoid combination option.
+  ```
+  $ java -jar secretshare.jar combine -k 3 -prime384 \
+      -paranoid 4 \
+      -s2 1882356874773438980155973947620693982153929916 \
+      -s3 12345678912345678912345678912345678 \
+      -s4 1882357204724127580025723830249209987221192644 \
+      -s5 1882357444072759374568880025530775541595539408
+  ```
+
+  i. Combine shares, showing examples for the -paranoid argument.   Control how many extra combines to run (110), how many to print (4), and stop when an answer  has been seen at least this many times (30).  Use the -paranoid option if you (1) have extra shares and (2) some of your shares are corrupt.
+  ```
+  $ java -jar secretshare.jar combine -k 3 -m 16639793 \
+      -paranoid 110,limitPrint=4,stopCombiningWhenAnyCount=30 \
+      -s1 123456 -s5 48382 -s2 32223 -s3 392933 \
+      -s4 923334 -s6 123122 -s7 939444 -s8 838333 \
+      -s9 453322 -s10 499222
+  ```
+
+  j. Print information about Secret Share, including version, 192 bit, 384 bit and 4096 bit primes.
+  ```
+  $ java -jar secretshare.jar info
+  ```
+
 Important Notes about Shares of the Secret
 -----
 Note that each share of the secret requires at least these pieces:
- 1. the "k" value [same for all shares],
- 2. the "x" value     [unique for this share],
- 3. the "share" value [unique for this share]
-
-Optional -  the "modulus" value [same for all shares]
-  It is still unclear under what circumstances the modulus is required.
-  If no calculation in the split was larger than the modulus, then it is never required.
-  TODO: create an explicit test where modulus was triggered, confirm split-combine still work.
+ 1. the "prime" modulus value [same for all shares],
+ 2. the "k" value [same for all shares],
+ 3. the "x" value     [unique for this share],
+ 4. the "share" value [unique for this share]
 
 Optional - the UUID of the split [same for all shares]
   If you have split multiple secrets into shares,
@@ -127,6 +146,11 @@ Due to the nature of the algorithm, shares from different splits
 will 'combine' and will produce a ''secret'' (string or number),
 but it will not be the original secret.
 
+Note on the Prime Modulus
+-----
+  By default, the 384-bit prime is used for the split/combine operations.
+  Place the "-prime" option before all -s* arguments.
+  If no calculation in the split was larger than the modulus, then it turns out the prime argument is not required.  Determining when this is or is not true is a bit tricky, however.
 
 Note on the Secret
 -----
@@ -154,7 +178,7 @@ $ PRINT=-printIndiv
   # For this example, we'll print them all together
 $ PRINT=-printOne
 $ java -jar secretshare.jar split -k 3 -n 6 -sS "TheKeyUsedToEncrypt" $PRINT
-Secret Share version 1.4.2
+Secret Share version 1.4.3
 Date                          : 2014-12-29 16:59:00
 UUID                          : 363e3f28-f43f-4c45-9fa7-4360b7e22cba
 n = 6
@@ -187,7 +211,7 @@ $ java -jar secretshare.jar combine -k 3 \
    -s2 1882356874773438980155973947620693982153929916 \
    -s4 1882357204724127580025723830249209987221192644 \
    -s5 1882357444072759374568880025530775541595539408
-Secret Share version 1.4.2
+Secret Share version 1.4.3
 secret.number = '1882356743151517032574974075571664781995241588'
 secret.string = 'TheKeyUsedToEncrypt'
 
@@ -229,27 +253,29 @@ N.B.: 'split' is perfectly capable of generating k=100, k=200, even k=1000
         could solve the matrix and recreate the original secret.  Maybe.
 
 SIMPLEX SOLVER (versions 1.4.2 and later)
-k = 22      0 seconds
-k = 23      0 seconds
-k = 24      0 seconds
-k = 25
-k = 26
-k = 27
-k = 28
-k = 29
-k = 30      0.44 seconds
-k = 50      2 seconds
-k = 75      5 seconds
-k = 95     12 seconds
-k = 130    47 seconds
-k = 180   180 seconds
-k = 230   623 seconds
-k = 280  1662 seconds  28 minutes
-k = 650                                                        1 year
-k = 1000  346276986880 seconds ....                       11,000 years
+
+| k      |  seconds    | minutes | years |
+| ---    | ---         | ---     | ---   |
+|k = 22  |   0 seconds | | |
+|k = 23  |   0 seconds | | |
+|k = 24  |   0 seconds | | |
+|k = 28  |   0 seconds | | |
+|k = 29  |   0 seconds | | |
+|k = 30  |   0.44 seconds
+|k = 50  |   2 seconds
+|k = 75  |   5 seconds
+|k = 95  |  12 seconds
+|k = 130 |  47 seconds
+|k = 180 | 180 seconds
+|k = 230 | 623 seconds
+|k = 280 |1662 seconds | 28 minutes |
+|k = 650 |     -       |  -         |                1 year
+|k = 1000| 346276986880 seconds | - |           11,000 years
+
 The formula is roughly "4 times longer for each +50 in k".
-From k=280 on down, all times are calculated.  k=280 is the last "measured".
-So, k=280 is a pretty good practical limit, or k=95 for "immediate" results
+For k greater than 280, all times are calculated.  
+k=280 is the last "measured".
+So, k=280 is a pretty good practical limit, or k=95 for "immediate" results.
 
 N.B.: Earlier versions of secretshare (1.4.1 and earlier) used a very
         inefficient solving algorithm.  For these versions, your "k" is
@@ -257,20 +283,25 @@ N.B.: Earlier versions of secretshare (1.4.1 and earlier) used a very
 
 ORIGINAL SOLVER (versions 1.4.1 and earlier)
 Value 'k' versus recorded runtimes to complete the "combine" operation:
-k = 19      3 seconds
-k = 20     10 seconds
-k = 21     39 seconds
-k = 22    156 seconds
-k = 23    646 seconds
-k = 24   2460 seconds  41 minutes
-k = 25                164 minutes
-k = 26                656 minutes   11 hours
-k = 27                              44 hours
-k = 28                             176 hours   7.3 days
-k = 29                                        30   days
-k = 30                                       120   days
+
+| k     |  seconds   | minutes    | hours    | days     |
+|-------|------------|------------|----------|----------|
+k = 19  |   3 seconds|
+k = 20  |  10 seconds|
+k = 21  |  39 seconds|
+k = 22  | 156 seconds|
+k = 23  | 646 seconds|
+k = 24  |2460 seconds| 41 minutes |
+k = 25  |            |164 minutes |
+k = 26  |            |656 minutes | 11 hours |
+k = 27  |            |            | 44 hours |
+k = 28  |            |            |176 hours |  7.3 days|
+k = 29  |            |            |          | 30   days|
+k = 30  |            |            |          |120   days|
+
 The formula is roughly 10 * 4^(k - 20) seconds.
-From k=25 on down, all times are calculated.  k=24 is the last "measured".
+For k greather than 25, all times are calculated. 
+k=24 is the last "measured".
 For k = 90, that works out to be  = 10 * 4^(90 - 20) = 1E42 seconds.
 Since a year has ~3E7 seconds, that will never happen.
 So, k=25 is a pretty good practical limit, or k=20 for "immediate" results.
@@ -287,3 +318,4 @@ Documentation
 [Resources]:extrastuff/resources.md
 [SecretShare1.4.1]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.1
 [SecretShare1.4.2]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.2
+[SecretShare1.4.3]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.3

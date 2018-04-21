@@ -1,0 +1,17 @@
+
+
+task copyBuildVersionDotJava(type: Copy) {
+   // Note! $rootDir changes!
+   // RootDir is /home/tim/github/secretshare/buildSrc
+   //  print("RootDir is $rootDir\n")
+
+   // So, adjust from and into accordingly:
+   from("$rootDir/../src/main/java/com/tiemens/secretshare") {
+       include '**/BuildVersion.java'
+   }
+   into "$rootDir/src/main/java/com/tiemens/secretshare"
+
+}
+
+
+compileJava.dependsOn copyBuildVersionDotJava

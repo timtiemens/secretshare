@@ -232,8 +232,10 @@ public final class EasyLinearEquation
 
         final int height = ret.length;
         final int width = ret[0].length;
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
                 ret[i][j] = rows.get(i).getColumn(j);
             }
         }

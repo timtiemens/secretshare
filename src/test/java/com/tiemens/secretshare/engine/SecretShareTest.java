@@ -208,7 +208,8 @@ public class SecretShareTest
 
 
     @Test
-    public void testCreateRandomModulusForSecret() {
+    public void testCreateRandomModulusForSecret()
+    {
         Random random = new Random(1234L);
 
         String[] secret4expected = new String [] {

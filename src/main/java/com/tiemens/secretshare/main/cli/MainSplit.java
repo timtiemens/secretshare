@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Random;
 
 import com.tiemens.secretshare.engine.SecretShare;
+import com.tiemens.secretshare.engine.SecretShare.ParanoidInput;
 import com.tiemens.secretshare.engine.SecretShare.ParanoidOutput;
+import com.tiemens.secretshare.engine.SecretShare.PublicInfo;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.engine.SecretShare.SplitSecretOutput;
 import com.tiemens.secretshare.exceptions.SecretShareException;
@@ -207,8 +209,8 @@ public final class MainSplit
         private BigInteger modulus = SecretShare.getPrimeUsedFor384bitSecretPayload();
 
         // optional:
-        //    paranoid: null = do nothing, paranoid < 0 = do all, otherwise paranoid = # of tests
-        private Integer paranoid;
+        //    paranoidInput: null = do no "paranoid" processing", otherwise perform "paranoid"thing, paranoid < 0 = do all, otherwise paranoid = # of tests
+        private ParanoidInput paranoidInput;
 
         // optional description
         private String description = null;
@@ -317,14 +319,8 @@ public final class MainSplit
                 else if ("-paranoid".equals(args[i]))
                 {
                     i++;
-                    if ("all".equals(args[i]))
-                    {
-                        ret.paranoid = -1;
-                    }
-                    else
-                    {
-                        ret.paranoid = parseInt("paranoid", args, i);
-                    }
+                    checkIndex("-paranoid", args, i);
+                    ret.paranoidInput = ParanoidInput.parseForSplit("-paranoid", args[i]);
                 }
                 else if ("-printOne".equals(args[i]))
                 {
@@ -434,17 +430,11 @@ public final class MainSplit
 
             ret.splitSecretOutput = generate;
 
-            if (paranoid != null)
+            if (paranoidInput != null)
             {
-                Integer parg = paranoid;
-                if (parg < 0)
-                {
-                    parg = null;
-                }
-
                 ret.paranoidOutput =
                         secretShare.combineParanoid(generate.getShareInfos(),
-                                                    parg);
+                                                    paranoidInput);
             }
             else
             {
@@ -478,6 +468,15 @@ public final class MainSplit
         {
             printAllSharesAtOnce = inPrintAllSharesAtOnce;
             splitInput = inSplitInput;
+        }
+
+        public final List<ShareInfo> getShareInfos()
+        {
+            return splitSecretOutput.getShareInfos();
+        }
+        public final PublicInfo getPublicInfo()
+        {
+            return splitSecretOutput.getPublicInfo();
         }
 
         public void setPrintAllSharesAtOnce(boolean val)

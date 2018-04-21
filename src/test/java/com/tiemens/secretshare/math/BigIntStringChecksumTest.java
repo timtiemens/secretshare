@@ -192,7 +192,8 @@ public class BigIntStringChecksumTest
     }
 
     @Test
-    public void testfromStringOrNull() {
+    public void testfromStringOrNull()
+    {
         assertNull(BigIntStringChecksum.fromStringOrNull(null));
         assertNull(BigIntStringChecksum.fromStringOrNull("invalid"));
 

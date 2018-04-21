@@ -52,7 +52,7 @@ public class BuildVersionTest
     @Before
     public void disableFailureInLoad()
     {
-    	BuildVersion.ignoreFailureUnitTest = true;
+        BuildVersion.disableFailureInLoad();
     }
 
 
