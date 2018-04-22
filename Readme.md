@@ -26,8 +26,8 @@ Build
 1. Compile locally - build the project with gradlew (gradle wrapper)
 ```
     $ ./gradlew build
-  [creates build/libs/secretshare-1.4.3.jar]
-    $ cp build/libs/secretshare-1.4.3.jar ./secretshare.jar
+  [creates build/libs/secretshare-1.4.4.jar]
+    $ cp build/libs/secretshare-1.4.4.jar ./secretshare.jar
   [copies the .jar into the current directory]
 ```
 
@@ -38,9 +38,9 @@ Officially Released Artifact
 ```
       group:   com.tiemens
        name:   secretshare
-    version:   1.4.3
+    version:   1.4.4
 ```
-Central Repository - [SecretShare1.4.3] - to see dependency information
+Central Repository - [SecretShare1.4.4] - to see dependency information
 formatted for Maven, Ivy, Grape, Gradle, Buildr, etc.
 
 
@@ -178,7 +178,7 @@ $ PRINT=-printIndiv
   # For this example, we'll print them all together
 $ PRINT=-printOne
 $ java -jar secretshare.jar split -k 3 -n 6 -sS "TheKeyUsedToEncrypt" $PRINT
-Secret Share version 1.4.3
+Secret Share version 1.4.4
 Date                          : 2014-12-29 16:59:00
 UUID                          : 363e3f28-f43f-4c45-9fa7-4360b7e22cba
 n = 6
@@ -211,7 +211,7 @@ $ java -jar secretshare.jar combine -k 3 \
    -s2 1882356874773438980155973947620693982153929916 \
    -s4 1882357204724127580025723830249209987221192644 \
    -s5 1882357444072759374568880025530775541595539408
-Secret Share version 1.4.3
+Secret Share version 1.4.4
 secret.number = '1882356743151517032574974075571664781995241588'
 secret.string = 'TheKeyUsedToEncrypt'
 
@@ -319,3 +319,4 @@ Documentation
 [SecretShare1.4.1]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.1
 [SecretShare1.4.2]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.2
 [SecretShare1.4.3]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.3
+[SecretShare1.4.4]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4

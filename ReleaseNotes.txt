@@ -2,7 +2,10 @@ Shamir's Secret Sharing in Java
 
 Release Notes  --
 
-v1.4.4 (pending)
+v1.4.5 (pending)
+======
+
+v1.4.4
 ======
  o address issue #6 by changing documentation to say "put -prime argument first"
  o address issue (emailed) where symbolic link in buildSrc fails on Windows
