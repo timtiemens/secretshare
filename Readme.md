@@ -318,5 +318,5 @@ Documentation
 [SecretShare1.4.1]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.1
 [SecretShare1.4.2]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.2
 [SecretShare1.4.3]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.3
-[SecretShare1.4.4.orig]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4
-[SecretShare1.4.4]:https://search.maven.org/#artifactdetails%7Ccom.tiemens%7Csecretshare%7C1.4.4%7Cjar
+[SecretShare1.4.4]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4
+[SecretShare1.4.4.alt]:https://search.maven.org/#artifactdetails%7Ccom.tiemens%7Csecretshare%7C1.4.4%7Cjar
