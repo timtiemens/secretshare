@@ -94,7 +94,7 @@ public class Issue8Test
             //System.out.println("Share as string: " + s);
 
             // Arbitrarily set the maximum acceptable "leak" at 4 bytes:
-            //   (The current implementation actually "leaks" at most 1 bit)
+            //   (The current implementation usually "leaks" at most 1 bit - but coefficients are randomly picked)
             Assert.assertFalse("Too Many Leaked Bytes", s.startsWith("ABCD"));
         }
 

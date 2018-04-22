@@ -30,6 +30,15 @@ import com.tiemens.secretshare.math.EasyLinearEquationTest;
 
 public class SecretShareIntegTest
 {
+    /**
+     * Machine info
+     * corei7 - core-i7-920@2.67GHz  - 1.6 to 1.8 - original 2005-2018
+     * xeone5 - xeon-e5-2640@2.50GHz - jdk1.8     -          2018-
+     *
+     * Complete test (command line):
+     *  xeone5 at 11m44s
+     */
+
     // ==================================================
     // class static data
     // ==================================================
@@ -59,6 +68,7 @@ public class SecretShareIntegTest
      * This test takes 65 to 80 seconds to run 1000 trials.
      * corei7 down to 20 seconds.
      * corei7 simplex 24 seconds.
+     * xeone5 at 22 second.
      */
     @Test
     public void testMassiveLoop384()
@@ -70,6 +80,7 @@ public class SecretShareIntegTest
      * This test takes 65 to 80 seconds to run 1000 trials.
      * corei7 down to 20 seconds.
      * corei7 simplex 74 seconds.
+     * xeone5 at 50 seconds
      */
     @Test
     public void testMassiveLoop4096()
@@ -118,6 +129,7 @@ public class SecretShareIntegTest
      * corei7 27 seconds.
      * corei7 simplex 670 seconds, with "lots of printing".
      * corei7 simplex 52 seconds with "no printing".
+     * xeone5 at 53 seconds.
      */
     @Test
     public void testBig192()
@@ -134,6 +146,7 @@ public class SecretShareIntegTest
     /**
      * corei7 15 seconds.
      * corei7 simplex 26 seconds.
+     * xeone5 at 27 seconds.
      */
     @Test
     public void testBig384()
@@ -231,6 +244,7 @@ public class SecretShareIntegTest
     /**
      * corei7 112 seconds.
      * corei7 simplex 103 seconds
+     * xeone5 at 73 seconds.
      */
     @Test
     public void testUntilItFails()
@@ -292,6 +306,7 @@ public class SecretShareIntegTest
     /**
      * corei7 37 seconds.
      * corei7 simplex 33 seconds
+     * xeone5 at 24 seconds.
      */
     @Test
     public void testCreateRandomModulus()
@@ -315,7 +330,109 @@ public class SecretShareIntegTest
         System.out.println("");
     }
 
+    /**
+     * issue#8 stress test using easy-to-identify string key ABCDEFG...
+     * xeone5 n=k    11 seconds
+     *        n=k+1 284 seconds
+     *
+     */
+    @Test
+    public void testStressSecretNearModulusLoopK()
+    {
+        subtestStress(192, SecretShare.getPrimeUsedFor192bitSecretPayload());
+        subtestStress(384, SecretShare.getPrimeUsedFor384bitSecretPayload());
+        subtestStress(4096, SecretShare.getPrimeUsedFor4096bigSecretPayload());
+    }
 
+    private void subtestStress(int bits, final BigInteger prime)
+    {
+        BigInteger secret = getAbcdSecret(bits);
+        final Random random = new Random(1234L);
+        for (int k = 30; k <= 50; k += 5) {
+            int n = k; // do this and there are only enough shares for 1 reconstruction == fast
+            n = k + 1; // do this to allow "paranoid" to test extra combinations in reconstruction == slower
+            Assert.assertTrue("failed at k=" + k + " bits=" + bits, subsubtestStress(n, k, prime, random, secret));
+        }
+    }
+
+
+    /**
+     * Timings:
+     *    xeone5 k=50 n=51 bits=383   39 seconds
+     *           k=50 n=51 bits=4095  46 seconds
+     *           k=50 n=50 bits=383    1 second
+     *           k=50 n=50 bits=4095   1 second
+     */
+    private boolean subsubtestStress(final int n, final int k, final BigInteger prime, final Random random, final BigInteger secret)
+    {
+        final long start = new java.util.Date().getTime();
+
+
+        SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, prime, "run until fail test");
+        SecretShare secretShare = new SecretShare(publicInfo);
+
+        SecretShare.SplitSecretOutput generate = secretShare.split(secret, random);
+        subassertNoAbcd(generate);
+
+        BigInteger reconstructed = subtestReconstruction(generate.getShareInfos());
+        String s = BigIntUtilities.Human.createHumanString(reconstructed);
+        System.out.println("  aka secret=" + s);
+
+        final long stop = new java.util.Date().getTime();
+        final long elapsedSeconds = (stop - start) / 1000;
+        System.out.println("Stress  k=" + k + " n=" + n + " bits=" + secret.bitLength() + " elapsedSeconds=" + elapsedSeconds);
+
+        return secret.equals(reconstructed);
+    }
+
+    // make sure "ABCD.." does not appear in any of the shares
+    private void subassertNoAbcd(SecretShare.SplitSecretOutput generate)
+    {
+        for (SecretShare.ShareInfo shareInfo : generate.getShareInfos())
+        {
+            BigInteger share = shareInfo.getShare();
+            String s = BigIntUtilities.Human.createHumanString(share);
+
+            // Arbitrarily set the maximum acceptable "leak" at 2 bytes:
+            //   (The current implementation usually "leaks" at most 1 bit - but, coefficients are randomly picked)
+            Assert.assertFalse("Too Many Leaked Bytes", s.startsWith("AB"));
+        }
+    }
+
+    @Test
+    public void testGetAbcdSecret()
+    {
+        assertGreaterThan("length", getAbcdSecret(192).bitLength(), 190);
+        //assertGreaterThan("count", getAbcdSecret(192).bitCount(),  190);
+        assertGreaterThan("length", getAbcdSecret(384).bitLength(), 382);
+        //assertGreaterThan("count", getAbcdSecret(394).bitCount(), 190);
+        assertGreaterThan("length", getAbcdSecret(4096).bitLength(), 4094);
+        //assertGreaterThan("count", getAbcdSecret(394).bitCount(), 190);
+    }
+    private void assertGreaterThan(String where, int big, int small)
+    {
+        Assert.assertTrue(where + " big=" + big + " small=" + small + " failed", big > small);
+    }
+
+    private BigInteger getAbcdSecret(int bits)
+    {
+        BigInteger ret = null;
+        int bytes = bits / 8;
+        Assert.assertEquals(bytes * 8, bits);
+        String secretString = getAbcdSecretAsString(bytes);
+        ret = BigIntUtilities.Human.createBigInteger(secretString);
+        return ret;
+    }
+
+    public static String getAbcdSecretAsString(int maxBytes)
+    {
+        StringBuilder secret = new StringBuilder();
+        for (int i = 0; i < maxBytes; i++)
+        {
+            secret.append((char) (65 + (i % 26)));
+        }
+        return secret.toString();
+    }
     // ==================================================
     // non public methods
     // ==================================================
