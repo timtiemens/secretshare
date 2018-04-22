@@ -120,9 +120,8 @@ Examples of command line invocations
   ```
   $ java -jar secretshare.jar combine -k 3 -m 16639793 \
       -paranoid 110,limitPrint=4,stopCombiningWhenAnyCount=30 \
-      -s1 123456 -s5 48382 -s2 32223 -s3 392933 \
-      -s4 923334 -s6 123122 -s7 939444 -s8 838333 \
-      -s9 453322 -s10 499222
+      -s1 7210616 -s2 11715382 -s3 4444444 -s4 9215151 -s5 2210154 \
+      -s6 13554960 -s7 9969983 -s8 8095016 -s9 7654321 -s10 1234567
   ```
 
   j. Print information about Secret Share, including version, 192 bit, 384 bit and 4096 bit primes.

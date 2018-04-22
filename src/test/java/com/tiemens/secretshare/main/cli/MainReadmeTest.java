@@ -301,11 +301,13 @@ public class MainReadmeTest
 
     public void testCombineThreeExplicitShareShowingArguments(TestCollector collect)
     {
+
+
         String[] args = {"combine", "-k", "3", "-m", smallPrime, NEWLINE,
                 "-paranoid", "110,limitPrint=4,stopCombiningWhenAnyCount=30", NEWLINE,
-                "-s1", "123456", "-s5", "48382",  "-s2", "32223", "-s3", "392933", NEWLINE,
-                "-s4", "923334", "-s6", "123122", "-s7", "939444", "-s8", "838333", NEWLINE,
-                "-s9", "453322",  "-s10", "499222"};
+                "-s1", "7210616", "-s2", "11715382", "-s3", "4444444",  "-s4", "9215151", "-s5", "2210154", NEWLINE,
+                "-s6", "13554960", "-s7", "9969983", "-s8", "8095016", "-s9", "7654321", "-s10", "1234567"
+        };
         collect.firstCommand(args);
         collect.comments(new String [] {
             "Combine shares, showing examples for the -paranoid argument.  ",
@@ -319,7 +321,7 @@ public class MainReadmeTest
         TestOutput output = new TestOutput();
         Main.main(filterOutNewlines(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
-        assertContains("paranoid.summary = Disagreement (110 different answers)", output);
+        assertContains("paranoid.summary = Disagreement (60 different answers)", output);
         for (String s : output.getLines())
         {
             System.out.println(s);
