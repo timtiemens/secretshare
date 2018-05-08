@@ -95,16 +95,16 @@ public class HexByteUtiltiesTest
                                      String asBigInteger)
         throws Exception
     {
-        final String UTF8 = "UTF8";
+        final String utf8 = "UTF8";
         byte[] hexbytes = HexByteUtilities.hexToBytes(asHex);
-        String fromHex = new String(hexbytes, UTF8);
+        String fromHex = new String(hexbytes, utf8);
         BigInteger biginteger = new BigInteger(asBigInteger);
         String fromBigInteger = BigIntUtilities.Human.createHumanString(biginteger);
         System.out.println("fromHex(" + asHex + "):  hex='" +
-                           HexByteUtilities.printAsHex(fromHex.getBytes(UTF8)) +
+                           HexByteUtilities.printAsHex(fromHex.getBytes(utf8)) +
                            "' orighex='" + HexByteUtilities.printAsHex(hexbytes) + "'");
         System.out.println("fromBin:  hex='" +
-                           HexByteUtilities.printAsHex(fromBigInteger.getBytes(UTF8)) +
+                           HexByteUtilities.printAsHex(fromBigInteger.getBytes(utf8)) +
                            "' biginteger=" + biginteger);
         Assert.assertEquals(description, fromHex, fromBigInteger);
     }

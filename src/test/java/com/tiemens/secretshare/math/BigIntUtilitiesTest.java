@@ -93,7 +93,7 @@ public class BigIntUtilitiesTest
     @Test
     public void testBasic()
     {
-        subtest("T", BigInteger.valueOf(                                     84L));
+        subtest("T", BigInteger.valueOf(84L));
         subtest("Tim", BigInteger.valueOf((84L * 256 * 256) + (105L * 256) + (109)));
 
     }
@@ -305,17 +305,17 @@ public class BigIntUtilitiesTest
                                     boolean shouldsucceed)
         throws Exception
     {
-        final String UTF8 = "UTF8";
+        final String utf8 = "UTF8";
         byte[] hexbytes = HexByteUtilities.hexToBytes(asHex);
-        String fromHex = new String(hexbytes, UTF8);
+        String fromHex = new String(hexbytes, utf8);
         BigInteger biginteger = new BigInteger(asBigInteger);
         String fromBigInteger = BigIntUtilities.Human.createHumanString(biginteger);
         System.out.println("fromHex(" + asHex + "):  hex=" +
-                           HexByteUtilities.printAsHex(fromHex.getBytes(UTF8)) +
+                           HexByteUtilities.printAsHex(fromHex.getBytes(utf8)) +
                            " orighex='" + HexByteUtilities.printAsHex(hexbytes) + "'");
         System.out.println("  (messed up) String='" + fromHex + "'");
         System.out.println("fromBin(" + asBigInteger + "):  hex=" +
-                           HexByteUtilities.printAsHex(fromBigInteger.getBytes(UTF8)) +
+                           HexByteUtilities.printAsHex(fromBigInteger.getBytes(utf8)) +
                            " biginteger=" + biginteger);
         System.out.println("  (messed up) String='" + fromBigInteger + "'");
         if (shouldsucceed)
@@ -355,7 +355,8 @@ public class BigIntUtilitiesTest
         bits2prime.put(3, new BigInteger("23"));
         bits2prime.put(4, new BigInteger("37"));
 
-        for (Integer bits : bits2prime.keySet()) {
+        for (Integer bits : bits2prime.keySet())
+        {
             Random random = new Random(100);
             int intvalue = 1 << bits;
             BigInteger value = new BigInteger("" + intvalue);
@@ -379,12 +380,14 @@ public class BigIntUtilitiesTest
         subTestCaseSensitivity(origPart1, origPart2.toUpperCase(), origPart3, origPart4);
         subTestCaseSensitivity(origPart1, origPart2, origPart3.toUpperCase(), origPart4);
         subTestCaseSensitivity(origPart1, origPart2, origPart3, origPart4.toUpperCase());
-        subTestCaseSensitivity(origPart1.toUpperCase(), origPart2.toUpperCase(), origPart3.toUpperCase(), origPart4.toUpperCase());
+        subTestCaseSensitivity(origPart1.toUpperCase(), origPart2.toUpperCase(),
+                               origPart3.toUpperCase(), origPart4.toUpperCase());
 
         subTestCaseSensitivity(origPart1.toLowerCase(), origPart2, origPart3, origPart4);
         subTestCaseSensitivity(origPart1, origPart2.toLowerCase(), origPart3, origPart4);
         subTestCaseSensitivity(origPart1, origPart2, origPart3.toLowerCase(), origPart4);
-        subTestCaseSensitivity(origPart1.toLowerCase(), origPart2.toLowerCase(), origPart3.toLowerCase(), origPart4.toLowerCase());
+        subTestCaseSensitivity(origPart1.toLowerCase(), origPart2.toLowerCase(),
+                               origPart3.toLowerCase(), origPart4.toLowerCase());
 
     }
     // ==================================================
@@ -423,10 +426,10 @@ public class BigIntUtilitiesTest
                                             int iterations,
                                             Random rnd)
     {
-        final BigInteger ONE = BigInteger.ONE;
-        final BigInteger TWO = BigInteger.valueOf(2);
+        final BigInteger one = BigInteger.ONE;
+        final BigInteger two = BigInteger.valueOf(2);
         // Find a and m such that m is odd and this == 1 + 2**a * m
-        BigInteger thisMinusOne = us.subtract(ONE);
+        BigInteger thisMinusOne = us.subtract(one);
         BigInteger m = thisMinusOne;
         int a = m.getLowestSetBit();
         m = m.shiftRight(a);
@@ -436,22 +439,24 @@ public class BigIntUtilitiesTest
         {
             rnd = new SecureRandom();
         }
-        for (int i=0; i<iterations; i++)
+        for (int i = 0; i < iterations; i++)
         {
             // Generate a uniform random on (1, this)
             BigInteger b;
             do
             {
                 b = new BigInteger(us.bitLength(), rnd);
-            } while (b.compareTo(ONE) <= 0 || b.compareTo(us) >= 0);
+            } while (b.compareTo(one) <= 0 || b.compareTo(us) >= 0);
 
             int j = 0;
             BigInteger z = b.modPow(m, us);
-            while(!((j==0 && z.equals(ONE)) || z.equals(thisMinusOne)))
+            while (!((j == 0 && z.equals(one)) || z.equals(thisMinusOne)))
             {
-                if (j>0 && z.equals(ONE) || ++j==a)
+                if (j > 0 && z.equals(one) || ++j == a)
+                {
                     return false;
-                z = z.modPow(TWO, us);
+                }
+                z = z.modPow(two, us);
             }
         }
         return true;

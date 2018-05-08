@@ -39,7 +39,8 @@ import org.junit.Test;
  * @author tiemens
  *
  */
-public class MainReadmeTest {
+public class MainReadmeTest
+{
 
     @BeforeClass
     public static void setUpBeforeClass()
@@ -261,7 +262,8 @@ public class MainReadmeTest {
     {
         private final InputStream is;
 
-        public static TestInput create(List<String> lines) {
+        public static TestInput create(List<String> lines)
+        {
             String inputAsString = "";
             String sep = "";
             for (String line : lines)
@@ -282,7 +284,8 @@ public class MainReadmeTest {
             is = new ByteArrayInputStream(string.getBytes());
         }
 
-        public InputStream in() {
+        public InputStream in()
+        {
             return is;
         }
 
@@ -293,11 +296,13 @@ public class MainReadmeTest {
         private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         private final PrintStream ps = new PrintStream(baos);
 
-        public PrintStream out() {
+        public PrintStream out()
+        {
             return ps;
         }
 
-        public TestInput asTestInput() {
+        public TestInput asTestInput()
+        {
             return TestInput.create(getLines());
         }
 
@@ -338,12 +343,14 @@ public class MainReadmeTest {
             current.nextCommand(args);
         }
 
-        public void comments(String[] strings) {
+        public void comments(String[] strings)
+        {
             assignCurrent();
             current.comments(strings);
         }
 
-        public void firstCommand(String[] args) {
+        public void firstCommand(String[] args)
+        {
             assignCurrent();
             current.firstCommand(args);
         }
@@ -412,11 +419,13 @@ public class MainReadmeTest {
         {
             addCommand("java -jar secretshare.jar" + args2string(args));
         }
-        private void addCommand(String string) {
+        private void addCommand(String string)
+        {
             commands.add(string);
         }
 
-        private Object args2string(String[] args) {
+        private Object args2string(String[] args)
+        {
             String ret = "";
             String sep = " ";
             for (int i = 0, n = args.length; i < n; i++)

@@ -46,7 +46,7 @@ public class CombinationGenerator<E>
         CombinationGenerator<String> combos = new CombinationGenerator<String>(list, 3);
         int count = 1;
         System.out.println("Total number=" + combos.getTotalNumberOfCombinations());
-        for(List<String> combination : combos)
+        for (List<String> combination : combos)
         {
             System.out.println(count + ": " + combination + " {" + combos.indexesAsString + "}");
             count++;
@@ -204,7 +204,7 @@ public class CombinationGenerator<E>
                 currentIndexes[i]++;
                 for (int k = i + 1; k < currentIndexes.length; k++)
                 {
-                    currentIndexes[k] = currentIndexes[k-1] + 1;
+                    currentIndexes[k] = currentIndexes[k - 1] + 1;
                 }
                 return;
             }
@@ -223,7 +223,7 @@ public class CombinationGenerator<E>
 //        a[j] = a[i] + j - i;
 //    }
 
-    private static BigInteger factorial (int n)
+    private static BigInteger factorial(int n)
     {
         BigInteger ret = BigInteger.ONE;
         for (int i = n; i > 1; i--)

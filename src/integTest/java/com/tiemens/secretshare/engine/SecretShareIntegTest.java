@@ -237,7 +237,7 @@ public class SecretShareIntegTest
     {
         int startNumBits = modulus.bitLength() - 15;
         boolean ok = false;
-        for (int bits = startNumBits; bits <= maxbits ; bits++)
+        for (int bits = startNumBits; bits <= maxbits; bits++)
         {
             for (int round = 0; round < 300; round++)
             {

@@ -225,6 +225,8 @@ public final class MainSplit
         // ==================================================
         // constructors
         // ==================================================
+
+
         public static SplitInput parse(String[] args)
         {
             SplitInput ret = new SplitInput();
@@ -382,7 +384,8 @@ public final class MainSplit
 
                     final String sInfo;
                     String sAsString = "" + ret.secret;
-                    if (sAsString.length() < 25)
+                    final int cutoffForSecretInfo = 25;
+                    if (sAsString.length() < cutoffForSecretInfo)
                     {
                         sInfo = sAsString;
                     }
@@ -644,6 +647,7 @@ public final class MainSplit
                            String label,
                            String value)
         {
+            final int fieldWidth = 30;
             if (value != null)
             {
                 String sep;
@@ -652,7 +656,7 @@ public final class MainSplit
                     (! label.trim().equals("")))
                 {
                     pad = label + SPACES;
-                    pad = pad.substring(0, 30);
+                    pad = pad.substring(0, fieldWidth);
                     if (value.equals(""))
                     {
                         pad = label;

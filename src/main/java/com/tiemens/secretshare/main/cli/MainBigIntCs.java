@@ -173,8 +173,8 @@ public final class MainBigIntCs
 
     public static class BigIntCsInput
     {
-    	private static final String systemLineSeparator =
-    			System.getProperty("line.separator"); // jdk1.7: System.lineSeparator();
+        private static final String SYSTEMLINESEPARATOR =
+            System.getProperty("line.separator"); // jdk1.7: System.lineSeparator();
 
         // ==================================================
         // instance data
@@ -187,7 +187,7 @@ public final class MainBigIntCs
 
         // optional
         private final boolean printHeader = false;
-        private String separator = systemLineSeparator;
+        private String separator = SYSTEMLINESEPARATOR;
 
         // ==================================================
         // constructors
@@ -232,7 +232,7 @@ public final class MainBigIntCs
                 }
                 else if ("-sepNewLine".equals(args[i]))
                 {
-                    ret.separator = systemLineSeparator;
+                    ret.separator = SYSTEMLINESEPARATOR;
                 }
                 else if (args[i].startsWith("-"))
                 {

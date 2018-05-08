@@ -16,6 +16,7 @@ apply plugin: 'jacoco'
 apply plugin: 'sonar-runner'
 apply plugin: 'signing'
 apply plugin: 'maven'
+apply plugin: 'checkstyle'
     
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
@@ -284,6 +285,15 @@ sonarRunner {
         property 'sonar.sourceEncoding', 'UTF-8'
         properties['sonar.tests'] += sourceSets.integTest.allSource.srcDirs
     }
+}
+
+checkstyle {
+    def dir = "config/checkstyle"
+
+    configProperties = [
+        "checkstyle.header.file" : "${dir}/java.header",
+        "checkstyle.suppressions.file" : "${dir}/suppressions.xml"
+    ]
 }
 
 task wrapper(type: Wrapper) {

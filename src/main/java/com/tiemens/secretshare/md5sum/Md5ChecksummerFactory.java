@@ -1,6 +1,5 @@
 /*******************************************************************************
- * $Id: $
- * Copyright (c) 2009-2010 Tim Tiemens.
+ * Copyright (c) 2009, 2014 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,7 +13,7 @@
  *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
- ******************************************************************************/
+ *******************************************************************************/
 package com.tiemens.secretshare.md5sum;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
@@ -73,7 +72,7 @@ public final class Md5ChecksummerFactory
         final String msg = "create md5, name='" + cname + "' ";
         try
         {
-            Class< ? > c = Class.forName(cname);
+            Class<?> c = Class.forName(cname);
             if (Md5Checksummer.class.isAssignableFrom(c))
             {
                 return (Md5Checksummer) c.newInstance();

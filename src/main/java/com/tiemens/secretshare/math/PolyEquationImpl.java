@@ -1,6 +1,5 @@
 /*******************************************************************************
- * $Id: $
- * Copyright (c) 2009-2010 Tim Tiemens.
+ * Copyright (c) 2009, 2014 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,7 +13,7 @@
  *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
- ******************************************************************************/
+ *******************************************************************************/
 package com.tiemens.secretshare.math;
 
 import java.io.PrintStream;
@@ -94,7 +93,7 @@ public class PolyEquationImpl
         }
         coefficients = new BigInteger[inCoeffs.length];
 
-        for (int i = 0, n = inCoeffs.length; i < n ; i++)
+        for (int i = 0, n = inCoeffs.length; i < n; i++)
         {
             if (inCoeffs[i] == null)
             {
@@ -151,9 +150,10 @@ public class PolyEquationImpl
         return ret;
     }
 
-    public void debugPrintEquationCoefficients(PrintStream out) {
+    public void debugPrintEquationCoefficients(PrintStream out)
+    {
         // print the coefficients:
-        for (int i = 0, n = coefficients.length; i < n; i++ )
+        for (int i = 0, n = coefficients.length; i < n; i++)
         {
             out.println("DEBUG: C" + i + " = " + coefficients[i]);
         }

@@ -138,7 +138,8 @@ public class SecretShare
         final BigInteger ret;
         final int originalBitLength = secret.bitLength();
 
-        final int numberOfBitsBigger = originalBitLength / 5;
+        final int ratioBigger = 5;  // 5 = 20% bigger
+        final int numberOfBitsBigger = originalBitLength / ratioBigger;
 
         final int numbits = originalBitLength + numberOfBitsBigger;
         //System.out.println("Secret.bits=" + originalBitLength + " modulus.bits=" + numbits);
@@ -190,8 +191,10 @@ public class SecretShare
         // It took 28 seconds to generate [Run on Core i7 920 2.67Ghz]
 
         // CHECKING APPLET:
-        // It took 25 minutes to check using alpertron.com.ar/ECM.HTM applet. [Run on Core2Duo E8500 3.16GHz CPU]
-        // It took 18 minutes to check using alpertron.com.ar/ECM.HTM applet. [Run on Corei7-2600k 3.4GHz CPU, only 1 core working]
+        // It took 25 minutes to check using alpertron.com.ar/ECM.HTM applet.
+        //    [Run on Core2Duo E8500 3.16GHz CPU]
+        // It took 18 minutes to check using alpertron.com.ar/ECM.HTM applet.
+        //    [Run on Corei7-2600k 3.4GHz CPU, only 1 core working]
         // The applet is labeled "Factorization using the Elliptic Curve Method"
         //     and says "Rabin probabilistic prime check routine" and "Base used" hits 17000+
         // Output:
@@ -201,7 +204,8 @@ public class SecretShare
         //      Timings:   Primality test of 1 number: 0d 0h 17m 34.2s
         //
         // CHECKING COMMAND LINE: ("threads" set to 8)
-        // It took 5 minutes [Run on Corei7-2600K 3.4GHz CPU, 4 cores working - config to x8 more, running x4 more, result x3 faster]
+        // It took 5 minutes [Run on Corei7-2600K 3.4GHz CPU, 4 cores working
+        //    - config to x8 more, running x4 more, result x3 faster]
         //
         // OTHER INFO:
         // This number is 1,234 digits long
@@ -563,21 +567,21 @@ public class SecretShare
         String indexInfo = index == null ? "" : "[" + index + " ] ";
         if (outer.k != share.getPublicInfo().k)
         {
-            throw new SecretShareException("Public Info " + indexInfo + "mismatch on k, should be = "+
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on k, should be = " +
                                            outer.k + " but was = " + share.getPublicInfo().k);
         }
 
         // N is allowed to be null in 'outer' - make sure it matches
         if (! matches(outer.n, share.getPublicInfo().n))
         {
-            throw new SecretShareException("Public Info " + indexInfo + "mismatch on n, should be = "+
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on n, should be = " +
                     outer.n + " but was = " + share.getPublicInfo().n);
         }
 
         // primeModulus is allowed to be null in 'outer' - make sure it matches
         if (! matches(outer.primeModulus, share.getPublicInfo().primeModulus))
         {
-            throw new SecretShareException("Public Info " + indexInfo + "mismatch on modulus, should be = "+
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on modulus, should be = " +
                     outer.primeModulus + " but was = " + share.getPublicInfo().primeModulus);
         }
     }
@@ -887,7 +891,8 @@ public class SecretShare
         {
             return publicInfo;
         }
-        public void debugPrintEquationCoefficients(PrintStream out) {
+        public void debugPrintEquationCoefficients(PrintStream out)
+        {
             polynomial.debugPrintEquationCoefficients(out);
         }
     }
@@ -918,12 +923,12 @@ public class SecretShare
                     .compareTo(combo.getTotalNumberOfCombinations()) > 0)
             {
                 maximumCombinationsToTest = combo.getTotalNumberOfCombinations().intValue();
-                outputEvery = (maximumCombinationsToTest * percentEvery ) / 100 + 1;
+                outputEvery = (maximumCombinationsToTest * percentEvery) / 100 + 1;
             }
         }
         else
         {
-            outputEvery = (combo.getTotalNumberOfCombinations().intValue() * percentEvery ) / 100  + 1;
+            outputEvery = (combo.getTotalNumberOfCombinations().intValue() * percentEvery) / 100  + 1;
         }
 
 

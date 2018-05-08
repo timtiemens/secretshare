@@ -130,9 +130,9 @@ public class EasyLinearEquationTest
         ele = EasyLinearEquation
             .create(new int[][]
                {
-                { 45662,1,1,1},
-                { 45684,1,2,4},
-                { 45720,1,3,9}
+                { 45662, 1, 1, 1},
+                { 45684, 1, 2, 4},
+                { 45720, 1, 3, 9}
                });
         EasySolve solve = ele.solve();
         System.out.println("Output testReal test case.");
@@ -167,9 +167,9 @@ public class EasyLinearEquationTest
         ele = EasyLinearEquation
             .create(new int[][]
                               {
-                    { 24689,1,1,1},
-                    { 34394,1,2,4},
-                    { 15208,1,3,9}
+                    { 24689, 1, 1, 1},
+                    { 34394, 1, 2, 4},
+                    { 15208, 1, 3, 9}
                               });
         ele = ele.createWithPrimeModulus(modulus);
         EasySolve solve = ele.solve();
@@ -304,14 +304,18 @@ public class EasyLinearEquationTest
                 //sb.append(": ");
                 sb.append(message);
                 sb.append("\n");
-                if (record.getThrown() != null) {
-                    try {
+                if (record.getThrown() != null)
+                {
+                    try
+                    {
                         StringWriter sw = new StringWriter();
                         PrintWriter pw = new PrintWriter(sw);
                         record.getThrown().printStackTrace(pw);
                         pw.close();
                     sb.append(sw.toString());
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                     }
                 }
                 return sb.toString();

@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2014 Tim Tiemens.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ *
+ * Contributors:
+ *     Tim Tiemens - initial API and implementation
+ *******************************************************************************/
 package com.tiemens.secretshare;
 
 import java.io.File;
@@ -38,11 +54,20 @@ public final class BuildVersion
     public static final String PROPERTY_NAME_FAILURE_ACTION = "com.tiemens.secretshare.BuildVersionFailure";
     // Values:    "ignore"   "warn"   "throw" [default is throw a runtime exception]
     //     OR: unit tests can set this to true:
-    /*default*/ static boolean ignoreFailureUnitTest = false;
+    private static boolean ignoreFailureUnitTest = false;
 
     // ==================================================
     // class static methods
     // ==================================================
+    public static boolean getIgnoreFailureUnitTest()
+    {
+        return ignoreFailureUnitTest;
+    }
+
+    public static void setIgnoreFailureUnitTest(boolean v)
+    {
+        ignoreFailureUnitTest = v;
+    }
 
     // ==================================================
     // instance data
@@ -56,6 +81,10 @@ public final class BuildVersion
     // constructors
     // ==================================================
 
+    private BuildVersion()
+    {
+    }
+
     // ==================================================
     // public methods
     // ==================================================
@@ -65,7 +94,8 @@ public final class BuildVersion
      * @return The version of the project from the build.gradle file.
      *    e.g. "1.3.2-SNAPSHOT"
      */
-    public static String getVersion() {
+    public static String getVersion()
+    {
         return instance().getVersion();
     }
 
@@ -73,7 +103,8 @@ public final class BuildVersion
      * @return The group of the project from the build.gradle file.
      *    e.g. "com.tiemens"
      */
-    public static String getGroup() {
+    public static String getGroup()
+    {
         return instance().getArtifactGroup();
     }
 
@@ -82,7 +113,8 @@ public final class BuildVersion
      * @return The date this file was generated, usually the last date that the project was modified.
      *    e.g. "Tue Jun 10 20:42:34 CDT 2014"
      */
-    public static String getDate() {
+    public static String getDate()
+    {
         return instance().getDate();
     }
 
@@ -90,7 +122,8 @@ public final class BuildVersion
      * @return "" or build number if available - build systems like Jenkins will set the BUILD_NUMBER
      *    e.g. "41"
      */
-    public static String getBuildNumber() {
+    public static String getBuildNumber()
+    {
         return instance().getBuildNumber();
     }
 
@@ -99,19 +132,22 @@ public final class BuildVersion
      *     This is a combination of VERSION and BUILD_NUMBER.
      *     e.g. "1.3.2-SNAPSHOT" or "1.3.2-SNAPSHOT-b41"
      */
-    public static String getUiVersion() {
+    public static String getUiVersion()
+    {
         return instance().getUiVersion();
     }
 
     /**
      * @return The full details of the version, including the build date.
      */
-    public static String getDetailedVersion() {
+    public static String getDetailedVersion()
+    {
         return instance().getDetailedVersion();
     }
 
     private static BuildInfo singleton;
-    public static BuildInfo instance() {
+    public static BuildInfo instance()
+    {
         if (singleton == null)
         {
              singleton = createInstance();
@@ -219,12 +255,17 @@ public final class BuildVersion
         public static BuildInfo createFromPropertiesFile(File propertiesFile)
         {
             Properties props = new Properties();
-            try {
+            try
+            {
                 props.load(new FileReader(propertiesFile));
                 return createFromProperties(props);
-            } catch (FileNotFoundException e) {
+            }
+            catch (FileNotFoundException e)
+             {
                 throw new RuntimeException("BuildInfo properties file not found: " + propertiesFile, e);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 throw new RuntimeException("BuildInfo properties io error: " + propertiesFile, e);
             }
         }
@@ -269,7 +310,8 @@ public final class BuildVersion
          * @return The full version of the project, but not including the build number,
          *    e.g. "1.3.2-SNAPSHOT"
          */
-        public String getVersion() {
+        public String getVersion()
+        {
             return version;
         }
 
@@ -277,7 +319,8 @@ public final class BuildVersion
          * @return The group of the release artifact,
          *    e.g. "com.tiemens"
          */
-        public String getArtifactGroup() {
+        public String getArtifactGroup()
+        {
             return artifactGroup;
         }
 
@@ -285,7 +328,8 @@ public final class BuildVersion
          * @return The name of the release artifact,
          *    e.g. "secretshare"
          */
-        public String getArtifactName() {
+        public String getArtifactName()
+        {
             return artifactName;
         }
 
@@ -294,7 +338,8 @@ public final class BuildVersion
          * @return The date this artifact was built,
          *    e.g. "Tue Jun 10 20:42:34 CDT 2014"
          */
-        public String getDate() {
+        public String getDate()
+        {
             return date;
         }
 
@@ -302,7 +347,8 @@ public final class BuildVersion
          * @return "" or build number if available - build systems like Jenkins will set the BUILD_NUMBER
          *    e.g. "41"
          */
-        public String getBuildNumber() {
+        public String getBuildNumber()
+        {
             return buildNumber;
         }
 
@@ -311,13 +357,20 @@ public final class BuildVersion
          *     This is a combination of VERSION and BUILD_NUMBER.
          *     e.g. "1.3.2-SNAPSHOT" or "1.3.2-SNAPSHOT-b41"
          */
-        public final String getUiVersion() {
-            if (uiVersion != null) {
+        public final String getUiVersion()
+        {
+            if (uiVersion != null)
+                {
                 return uiVersion;
-            } else {
-                if ((getBuildNumber() == null) || getBuildNumber().trim().isEmpty()) {
+            }
+            else
+            {
+                if ((getBuildNumber() == null) || getBuildNumber().trim().isEmpty())
+                {
                     return getVersion();
-                } else {
+                }
+                else
+                {
                     return getVersion() + "-build-" + getBuildNumber();
                 }
             }
@@ -341,7 +394,8 @@ public final class BuildVersion
                 String comments = "Generated by build system, BuildVersion.BuildInfo";
                 this.convertToProperties().store(new FileWriter(propertiesFile), comments);
             }
-            catch (IOException e) {
+            catch (IOException e)
+            {
                 throw new RuntimeException("BuildInfo write to file io error: " + propertiesFile, e);
             }
         }
@@ -448,14 +502,15 @@ public final class BuildVersion
                 }
                 catch (Exception e)
                 {
-                    throw new RuntimeException("Failed to reflection set property '" + property + "' to value '" + value + "'", e);
+                    throw new RuntimeException("Failed to reflection set property '" +
+                                               property + "' to value '" + value + "'", e);
                 }
             }
         }
 
         public static class Builder
         {
-            public BuildInfo build;
+            private BuildInfo build;
 
             public Builder()
             {

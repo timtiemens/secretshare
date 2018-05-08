@@ -1,6 +1,5 @@
 /*******************************************************************************
- * $Id: $
- * Copyright (c) 2009-2010 Tim Tiemens.
+ * Copyright (c) 2009, 2014 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,7 +13,7 @@
  *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
- ******************************************************************************/
+ *******************************************************************************/
 package com.tiemens.secretshare.exceptions;
 
 
@@ -31,7 +30,7 @@ public class SecretShareException
     // class static data
     // ==================================================
 
-	private static final long serialVersionUID = 2193317873773384997L;
+    private static final long serialVersionUID = 2193317873773384997L;
 
     // ==================================================
     // class static methods
@@ -52,7 +51,7 @@ public class SecretShareException
     // ==================================================
 
 
-	/** Constructs a new runtime exception with the specified detail message.
+    /** Constructs a new runtime exception with the specified detail message.
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      *
