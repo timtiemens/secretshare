@@ -1,6 +1,5 @@
 /*******************************************************************************
- * $Id: $
- * Copyright (c) 2009-2017 Tim Tiemens.
+ * Copyright (c) 2009, 2014 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,7 +13,7 @@
  *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
- ******************************************************************************/
+ *******************************************************************************/
 package com.tiemens.secretshare;
 
 import java.io.File;
@@ -55,14 +54,25 @@ public final class BuildVersion
     public static final String PROPERTY_NAME_FAILURE_ACTION = "com.tiemens.secretshare.BuildVersionFailure";
     // Values:    "ignore"   "warn"   "throw" [default is throw a runtime exception]
     //     OR: unit tests can set this to true:
-    /*default*/ static boolean ignoreFailureUnitTest = false;
+    private static boolean ignoreFailureUnitTest = false;
 
     // ==================================================
     // class static methods
     // ==================================================
+
     public static void disableFailureInLoad()
     {
-        BuildVersion.ignoreFailureUnitTest = true;
+        setIgnoreFailureUnitTest(true);
+    }
+
+    public static boolean getIgnoreFailureUnitTest()
+    {
+        return ignoreFailureUnitTest;
+    }
+
+    public static void setIgnoreFailureUnitTest(boolean v)
+    {
+        ignoreFailureUnitTest = v;
     }
 
     // ==================================================
@@ -76,6 +86,10 @@ public final class BuildVersion
     // ==================================================
     // constructors
     // ==================================================
+
+    private BuildVersion()
+    {
+    }
 
     // ==================================================
     // public methods
@@ -494,14 +508,15 @@ public final class BuildVersion
                 }
                 catch (Exception e)
                 {
-                    throw new RuntimeException("Failed to reflection set property '" + property + "' to value '" + value + "'", e);
+                    throw new RuntimeException("Failed to reflection set property '" +
+                                               property + "' to value '" + value + "'", e);
                 }
             }
         }
 
         public static class Builder
         {
-            public BuildInfo build;
+            private final BuildInfo build;
 
             public Builder()
             {

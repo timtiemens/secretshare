@@ -130,9 +130,9 @@ public class EasyLinearEquationTest
         ele = EasyLinearEquation
             .create(new int[][]
                {
-                { 45662,1,1,1},
-                { 45684,1,2,4},
-                { 45720,1,3,9}
+                { 45662, 1, 1, 1},
+                { 45684, 1, 2, 4},
+                { 45720, 1, 3, 9}
                });
         EasySolve solve = ele.solve();
         System.out.println("Output testReal test case.");
@@ -167,9 +167,9 @@ public class EasyLinearEquationTest
         ele = EasyLinearEquation
             .create(new int[][]
                               {
-                    { 24689,1,1,1},
-                    { 34394,1,2,4},
-                    { 15208,1,3,9}
+                    { 24689, 1, 1, 1},
+                    { 34394, 1, 2, 4},
+                    { 15208, 1, 3, 9}
                               });
         ele = ele.createWithPrimeModulus(modulus);
         EasySolve solve = ele.solve();

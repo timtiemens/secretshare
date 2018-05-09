@@ -176,13 +176,15 @@ public class BigIntStringChecksumTest
         final String sameChecksum = "-BBC6EC";
 
         // insert a leading "-", parse is OK:
-        BigInteger okNeg100 = BigIntStringChecksum.fromString("bigintcs:" + "-" + sameValue + sameChecksum).asBigInteger();
+        BigInteger okNeg100 = BigIntStringChecksum.fromString("bigintcs:" +
+                       "-" + sameValue + sameChecksum).asBigInteger();
         Assert.assertEquals("-100 failed", new BigInteger("-100"), okNeg100);
 
         // without a leading "-", parse FAILS:
         try
         {
-            BigInteger failNeg100 = BigIntStringChecksum.fromString("bigintcs:" + "" + sameValue + sameChecksum).asBigInteger();
+            BigInteger failNeg100 = BigIntStringChecksum.fromString("bigintcs:" + "" +
+                       sameValue + sameChecksum).asBigInteger();
             Assert.fail("100 has checksum error, but did not throw exception: " + failNeg100);
         }
         catch (SecretShareException e)

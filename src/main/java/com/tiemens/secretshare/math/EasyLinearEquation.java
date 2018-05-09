@@ -308,12 +308,12 @@ public final class EasyLinearEquation
     }
     private void debugRows(String where,
                            List<Row> solverows,
-                           BigInteger modulus)
+                           BigInteger useModulus)
     {
         // want to turn on debug?  See EasyLinearEquationUT.enableLogging()
         if (logger.isLoggable(Level.FINE))
         {
-            logger.fine(where + " (modulus=" + modulus + ")");
+            logger.fine(where + " (modulus=" + useModulus + ")");
             for (Row row : solverows)
             {
                 logger.fine(row.debugRow());
@@ -683,7 +683,8 @@ public final class EasyLinearEquation
         }
         private boolean isColumnZero(int index)
         {
-            if (this.getColumn(index).compareTo(BigInteger.ZERO) == 0)
+            //        if (this.getColumn(index).compareTo(BigInteger.ZERO) == 0)
+            if (0 == this.getColumn(index).compareTo(BigInteger.ZERO))
             {
                 return true;
             }
@@ -840,7 +841,7 @@ public final class EasyLinearEquation
 
         // the other coefficients are x, x^2, x^3, x^4 etc:
         BigInteger current = BigInteger.ONE;
-        for (int i = 2, n = array.length; i < n ; i++)
+        for (int i = 2, n = array.length; i < n; i++)
         {
             current = current.multiply(x);
             array[i] = current;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014, 2017 Tim Tiemens.
+ * Copyright (c) 2009, 2014 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -98,7 +98,7 @@ public class MainReadmeTest
 
     }
 
-    private final static String NEWLINE = "-n-";
+    private static final String NEWLINE = "-n-";
     private final String smallPrime = "16639793";
 
     public void testSimpleCat(TestCollector collect)
@@ -528,7 +528,7 @@ public class MainReadmeTest
         private void outputDescription(int index, PrintStream out)
         {
             String indent = "  ";
-            String prefix  = "" + (char)(index  + 'a') + ". ";
+            String prefix  = "" + (char) (index  + 'a') + ". ";
             for (String s : comments)
             {
                 out.print(indent + prefix + s);

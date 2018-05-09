@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+"-//Puppy Crawl//DTD Suppressions 1.1//EN"
+"http://checkstyle.sourceforge.net/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+  <suppress checks="MethodLength"
+            files="MainSplit.java"
+            lines="229-411"/>
+  <suppress checks="ParameterNumber"
+            files="BuildVersionTest.java"
+            lines="138-142"/>
+  <suppress checks="WhitespaceAround"
+            files="PolyEquationImplTest.java"
+            lines="56-61"/>
+  <suppress checks="VisibilityModifierCheck"
+            files="NumberMatrix.java"
+            lines="23"/>
+  <suppress checks="VisibilityModifierCheck"
+            files="NumberSimplex"
+            lines="275-276"/>
+
+  <!-- Tone down the checking for test code -->
+  <suppress checks="NoWhitespaceAfter|ExecutableStatementCount|JavaNCSS|BooleanExpressionComplexity|NestedIfDepth|MethodLength|LineLength" 
+            files="[\\/]*Test\.java"/>
+</suppressions>

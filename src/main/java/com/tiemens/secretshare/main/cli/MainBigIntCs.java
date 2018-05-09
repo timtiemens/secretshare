@@ -73,7 +73,8 @@ public final class MainBigIntCs
         out.println("  -in <m>       set input mode");
         out.println("     s          String, converted to array of bytes, constructing a Big Integer [default]");
         out.println("     bi         String, parsed to Big Integer, used as a Big Integer");
-        out.println("     bics       String, parsed and checksummed to Big Integer Checksum, then used as a Big Integer");
+        out.println("     bics       String, parsed and checksummed to Big Integer Checksum, " +
+                                     "then used as a Big Integer");
         out.println("  -out <m>      set output mode");
         out.println("     s          Output Big Integer as array of bytes to construct a String");
         out.println("     bi         Output Big Integer .toString()");
@@ -199,8 +200,8 @@ public final class MainBigIntCs
 
     public static class BigIntCsInput
     {
-    	private static final String systemLineSeparator =
-    			System.getProperty("line.separator"); // jdk1.7: System.lineSeparator();
+        private static final String SYSTEMLINESEPARATOR =
+            System.getProperty("line.separator"); // jdk1.7: System.lineSeparator();
 
         // ==================================================
         // instance data
@@ -213,7 +214,7 @@ public final class MainBigIntCs
 
         // optional
         private boolean printHeader = false;
-        private String separator = systemLineSeparator;
+        private String separator = SYSTEMLINESEPARATOR;
 
         // ==================================================
         // constructors
@@ -258,7 +259,7 @@ public final class MainBigIntCs
                 }
                 else if ("-sepNewLine".equals(args[i]))
                 {
-                    ret.separator = systemLineSeparator;
+                    ret.separator = SYSTEMLINESEPARATOR;
                 }
                 else if ("-v".equals(args[i]))
                 {

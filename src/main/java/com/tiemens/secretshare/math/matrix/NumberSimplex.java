@@ -1,6 +1,5 @@
 /*******************************************************************************
- * $Id: $
- * Copyright (c) 2009-2017 Tim Tiemens.
+ * Copyright (c) 2009, 2014 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,7 +13,7 @@
  *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
- ******************************************************************************/
+ *******************************************************************************/
 package com.tiemens.secretshare.math.matrix;
 
 import java.io.PrintStream;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class NumberSimplex <E extends Number>
+public class NumberSimplex<E extends Number>
 {
 
     // ==================================================
@@ -63,7 +62,8 @@ public class NumberSimplex <E extends Number>
     {
         matrix = inMatrix;
         constantsInThisColumnIndex = inConstantsIndex;
-        //System.out.println("SIMPLEX cons matrix.h=" + matrix.getHeight() + " matrix.w=" + matrix.getWidth() + " m.array.length=" +
+        //System.out.println("SIMPLEX cons matrix.h=" + matrix.getHeight() + " matrix.w=" + matrix.getWidth() +
+        //                   " m.array.length=" +
         //                   matrix.getArray().length + " m.array[0].length=" + matrix.getArray()[0].length);
 
     }
@@ -82,7 +82,8 @@ public class NumberSimplex <E extends Number>
 
         mTop = fillInTopVariables(width - 1);
         mSide = fillInConstants(height);
-        //System.out.println("INIT-SOLVE matrix.h=" + matrix.getHeight() + " matrix.w=" + matrix.getWidth() + " m.array.length=" +
+        //System.out.println("INIT-SOLVE matrix.h=" + matrix.getHeight() +
+        //        " matrix.w=" + matrix.getWidth() + " m.array.length=" +
         //        matrix.getArray().length + " m.array[0].length=" + matrix.getArray()[0].length);
         mArrayhide = fillInArray(matrix.getArray(), constantsInThisColumnIndex);
 
@@ -352,7 +353,8 @@ public class NumberSimplex <E extends Number>
                 }
             }
         }
-        //System.out.println("Started at (w=" + width + " h=" + height + ") ended at (w=" + ret[0].length + " h=" + ret.length + ")");
+        //System.out.println("Started at (w=" + width + " h=" + height + ") ended at
+        //    (w=" + ret[0].length + " h=" + ret.length + ")");
         return ret;
     }
 
@@ -437,37 +439,52 @@ public class NumberSimplex <E extends Number>
         {
             final int prime = 31;
             int result = 1;
-            result = prime * result
-                    + ((number == null) ? 0 : number.hashCode());
-            result = prime * result
-                    + ((variable == null) ? 0 : variable.hashCode());
+            result = prime * result +
+                    ((number == null) ? 0 : number.hashCode());
+            result = prime * result +
+                    ((variable == null) ? 0 : variable.hashCode());
             return result;
         }
         @Override
         public boolean equals(Object obj)
         {
             if (this == obj)
+            {
                 return true;
+            }
             if (obj == null)
+            {
                 return false;
+            }
             if (getClass() != obj.getClass())
+            {
                 return false;
+            }
             NumberOrVariable other = (NumberOrVariable) obj;
             if (number == null)
             {
                 if (other.number != null)
+                {
                     return false;
+                }
             }
             else if (!number.equals(other.number))
+            {
                 return false;
+            }
 
             if (variable == null)
             {
                 if (other.variable != null)
+                {
                     return false;
+                }
             }
             else if (!variable.equals(other.variable))
+            {
                 return false;
+            }
+
             return true;
         }
     }
@@ -544,7 +561,8 @@ public class NumberSimplex <E extends Number>
                 {
                     throw new ArithmeticException("Programmer error");
                 }
-                //System.out.println("h=" + height + " w=" + width + " r=" + r + " s=" + s + " val=" + ret[r][s]);
+                //System.out.println("h=" + height + " w=" + width +
+                // " r=" + r + " s=" + s + " val=" + ret[r][s]);
             }
         }
 
@@ -557,7 +575,8 @@ public class NumberSimplex <E extends Number>
         int height = array.length;
         int width = array[0].length;
         E[][] ret = create(height, width);
-        //System.out.println("Same size of h=" + height + " w=" + width + " result h=" + ret.length + " w=" + ret[0].length);
+        //System.out.println("Same size of h=" + height + " w=" + width +
+        // " result h=" + ret.length + " w=" + ret[0].length);
         return ret;
     }
 

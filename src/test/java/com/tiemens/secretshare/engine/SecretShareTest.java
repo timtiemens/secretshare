@@ -107,7 +107,7 @@ public class SecretShareTest
         // pick ONE TOO FEW of the shares,
         List<SecretShare.ShareInfo> usetheseshares =
             new ArrayList<SecretShare.ShareInfo>();
-        for (int i = 0, max = publicInfo.getK() - 1 ; i < max; i++)
+        for (int i = 0, max = publicInfo.getK() - 1; i < max; i++)
         {
             usetheseshares.add(shares.get(i));
         }
@@ -227,7 +227,8 @@ public class SecretShareTest
             BigInteger actual = SecretShare.createRandomModulusForSecret(secret, random);
             Assert.assertEquals("secret=" + secret, expected, actual);
             Assert.assertTrue("not bigger than", actual.compareTo(secret) > 0);
-            Assert.assertTrue("isTheModulusAppropriateForSecret", SecretShare.isTheModulusAppropriateForSecret(actual, secret));
+            Assert.assertTrue("isTheModulusAppropriateForSecret",
+                              SecretShare.isTheModulusAppropriateForSecret(actual, secret));
         }
     }
 
@@ -338,7 +339,9 @@ public class SecretShareTest
         assertThrows("share[0] pi modulus wrong", secret, publicInfo, shares);
     }
 
-    private void assertThrows(String where, BigInteger secret, SecretShare.PublicInfo publicInfo, List<SecretShare.ShareInfo>shares)
+    private void assertThrows(String where, BigInteger secret,
+                              SecretShare.PublicInfo publicInfo,
+                              List<SecretShare.ShareInfo> shares)
     {
         SecretShare secretShare = new SecretShare(publicInfo);
         try
@@ -353,7 +356,9 @@ public class SecretShareTest
 
     }
 
-    private void assertOk(String where, BigInteger secret, SecretShare.PublicInfo publicInfo, List<SecretShare.ShareInfo>shares)
+    private void assertOk(String where, BigInteger secret,
+                          SecretShare.PublicInfo publicInfo,
+                          List<SecretShare.ShareInfo> shares)
     {
         SecretShare secretShare = new SecretShare(publicInfo);
         SecretShare.CombineOutput combine = secretShare.combine(shares);

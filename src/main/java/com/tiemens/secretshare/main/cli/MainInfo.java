@@ -223,6 +223,7 @@ public final class MainInfo
                            String label,
                            String value)
         {
+            final int fieldWidth = 30;
             if (value != null)
             {
                 String sep;
@@ -231,7 +232,7 @@ public final class MainInfo
                     (! label.trim().equals("")))
                 {
                     pad = label + SPACES;
-                    pad = pad.substring(0, 30);
+                    pad = pad.substring(0, fieldWidth);
                     if (value.equals(""))
                     {
                         pad = label;

@@ -1,6 +1,5 @@
 /*******************************************************************************
- * $Id: $
- * Copyright (c) 2009-2017 Tim Tiemens.
+ * Copyright (c) 2009, 2014 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,7 +13,7 @@
  *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
- ******************************************************************************/
+ *******************************************************************************/
 package com.tiemens.secretshare.math;
 
 
@@ -41,8 +40,8 @@ public class BigRational extends Number implements Comparable<BigRational>
     // ==================================================
     private static final long serialVersionUID = -1035898074640211021L;
 
-    public final static BigRational ZERO = new BigRational(0, 1);
-    public final static BigRational ONE = new BigRational(1, 1);
+    public static final BigRational ZERO = new BigRational(0, 1);
+    public static final BigRational ONE = new BigRational(1, 1);
 
     // ==================================================
     // class static methods
@@ -179,27 +178,41 @@ public class BigRational extends Number implements Comparable<BigRational>
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (obj == null)
+        {
             return false;
+        }
         if (getClass() != obj.getClass())
+        {
             return false;
+        }
         BigRational other = (BigRational) obj;
         if (denominator == null)
         {
             if (other.denominator != null)
+            {
                 return false;
+            }
         }
         else if (!denominator.equals(other.denominator))
+        {
             return false;
+        }
 
         if (numerator == null)
         {
             if (other.numerator != null)
+            {
                 return false;
+            }
         }
         else if (!numerator.equals(other.numerator))
+        {
             return false;
+        }
         return true;
     }
 
@@ -208,10 +221,10 @@ public class BigRational extends Number implements Comparable<BigRational>
     {
         final int prime = 31;
         int result = 1;
-        result = prime * result
-                + ((denominator == null) ? 0 : denominator.hashCode());
-        result = prime * result
-                + ((numerator == null) ? 0 : numerator.hashCode());
+        result = prime * result +
+                ((denominator == null) ? 0 : denominator.hashCode());
+        result = prime * result +
+                ((numerator == null) ? 0 : numerator.hashCode());
         return result;
     }
 
@@ -295,10 +308,10 @@ public class BigRational extends Number implements Comparable<BigRational>
     @Override
     public double doubleValue()
     {
-        int SCALE = 32;        // number of digits after the decimal place
+        final int scale = 32;        // number of digits after the decimal place
         BigDecimal retnumerator   = new BigDecimal(numerator);
         BigDecimal retdenominator = new BigDecimal(denominator);
-        BigDecimal quotient    = retnumerator.divide(retdenominator, SCALE, RoundingMode.HALF_EVEN);
+        BigDecimal quotient    = retnumerator.divide(retdenominator, scale, RoundingMode.HALF_EVEN);
         return quotient.doubleValue();
     }
 
@@ -348,7 +361,8 @@ public class BigRational extends Number implements Comparable<BigRational>
                     candidateGrow = trialGrow;
                 }
 
-                BigRational trialShrink = new BigRational(candidateShrink.numerator.subtract(prime), candidateShrink.denominator);
+                BigRational trialShrink = new BigRational(candidateShrink.numerator.subtract(prime),
+                                                          candidateShrink.denominator);
                 if (trialShrink.isBigInteger())
                 {
                     return trialShrink.bigIntegerValue();

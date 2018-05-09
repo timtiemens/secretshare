@@ -1,6 +1,5 @@
 /*******************************************************************************
- * $Id: $
- * Copyright (c) 2009-2010 Tim Tiemens.
+ * Copyright (c) 2009, 2014 Tim Tiemens.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -14,7 +13,7 @@
  *
  * Contributors:
  *     Tim Tiemens - initial API and implementation
- ******************************************************************************/
+ *******************************************************************************/
 package com.tiemens.secretshare.main.cli;
 
 import java.io.BufferedReader;
@@ -79,7 +78,8 @@ public final class MainCombine
         out.println(" combine -k <k>  -s<a> <share-A> -s<b> <share-B> [...]" +             // required
                     "  [-prime4096|-prime384|-prime192|-primeN <m>|-primeNone] [-stdin]"); // optional
         out.println("  -k <k>        the threshold");
-        out.println("  -s<a> <A>     share:a as a number or bingintcs, e.g. '-s1 124332' means share x:1 value was 124332");
+        out.println("  -s<a> <A>     share:a as a number or bingintcs, e.g. '-s1 124332' means " +
+                                     "share x:1 value was 124332");
         out.println("     [...]         repeat the [-s<b> <B>] pair a total of <k> times");
         out.println("  -stdin        read share values from standard input, in the format as written by 'split'");
         out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
@@ -89,8 +89,10 @@ public final class MainCombine
         out.println("  -primeNone    modulus, do NOT use any modulus");
         out.println("  -paranoid <P> perform multiple combinations of the shares, P is comma-separated of these:");
         out.println("                 maxCombinationsAllowedToTest=50  the number of combines to perform");
-        out.println("                 stopCombiningWhenAnyCount=3      stop combining once a secret is seen this many times");
-        out.println("                 limitPrint=22                    in the final output, only print this many secrets");
+        out.println("                 stopCombiningWhenAnyCount=3      stop combining once a secret is seen " +
+                                      "this many times");
+        out.println("                 limitPrint=22                    in the final output, only print this " +
+                                      "many secrets");
 
 
     }

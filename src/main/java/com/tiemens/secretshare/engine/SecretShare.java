@@ -148,7 +148,8 @@ public class SecretShare
         final BigInteger ret;
         final int originalBitLength = secret.bitLength();
 
-        final int numberOfBitsBigger = originalBitLength / 5;
+        final int ratioBigger = 5;  // 5 = 20% bigger
+        final int numberOfBitsBigger = originalBitLength / ratioBigger;
 
         final int numbits = originalBitLength + numberOfBitsBigger;
         //System.out.println("Secret.bits=" + originalBitLength + " modulus.bits=" + numbits);
@@ -200,8 +201,10 @@ public class SecretShare
         // It took 28 seconds to generate [Run on Core i7 920 2.67Ghz]
 
         // CHECKING APPLET:
-        // It took 25 minutes to check using alpertron.com.ar/ECM.HTM applet. [Run on Core2Duo E8500 3.16GHz CPU]
-        // It took 18 minutes to check using alpertron.com.ar/ECM.HTM applet. [Run on Corei7-2600k 3.4GHz CPU, only 1 core working]
+        // It took 25 minutes to check using alpertron.com.ar/ECM.HTM applet.
+        //    [Run on Core2Duo E8500 3.16GHz CPU]
+        // It took 18 minutes to check using alpertron.com.ar/ECM.HTM applet.
+        //    [Run on Corei7-2600k 3.4GHz CPU, only 1 core working]
         // The applet is labeled "Factorization using the Elliptic Curve Method"
         //     and says "Rabin probabilistic prime check routine" and "Base used" hits 17000+
         // Output:
@@ -211,7 +214,8 @@ public class SecretShare
         //      Timings:   Primality test of 1 number: 0d 0h 17m 34.2s
         //
         // CHECKING COMMAND LINE: ("threads" set to 8)
-        // It took 5 minutes [Run on Corei7-2600K 3.4GHz CPU, 4 cores working - config to x8 more, running x4 more, result x3 faster]
+        // It took 5 minutes [Run on Corei7-2600K 3.4GHz CPU, 4 cores working
+        //    - config to x8 more, running x4 more, result x3 faster]
         //
         // OTHER INFO:
         // This number is 1,234 digits long
@@ -626,21 +630,21 @@ public class SecretShare
         String indexInfo = index == null ? "" : "[" + index + " ] ";
         if (outer.k != share.getPublicInfo().k)
         {
-            throw new SecretShareException("Public Info " + indexInfo + "mismatch on k, should be = "+
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on k, should be = " +
                                            outer.k + " but was = " + share.getPublicInfo().k);
         }
 
         // N is allowed to be null in 'outer' - make sure it matches
         if (! matches(outer.n, share.getPublicInfo().n))
         {
-            throw new SecretShareException("Public Info " + indexInfo + "mismatch on n, should be = "+
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on n, should be = " +
                     outer.n + " but was = " + share.getPublicInfo().n);
         }
 
         // primeModulus is allowed to be null in 'outer' - make sure it matches
         if (! matches(outer.primeModulus, share.getPublicInfo().primeModulus))
         {
-            throw new SecretShareException("Public Info " + indexInfo + "mismatch on modulus, should be = "+
+            throw new SecretShareException("Public Info " + indexInfo + "mismatch on modulus, should be = " +
                     outer.primeModulus + " but was = " + share.getPublicInfo().primeModulus);
         }
     }
@@ -706,7 +710,8 @@ public class SecretShare
     }
 
     // Issue#8 fixed coefficient generation
-    private BigInteger coeffGenImproved(Random random, BigInteger modulus) {
+    private BigInteger coeffGenImproved(Random random, BigInteger modulus)
+    {
         BigInteger big;
         int bitLength;
         if (modulus != null)
@@ -1050,7 +1055,7 @@ public class SecretShare
             new CombinationGenerator<ShareInfo>(shares,
                                                 publicInfo.getK());
         // setting the total number available indirectly sets the "timeToStopLoop" and "timeToOutput" settings:
-        ret.setTotalNumberOfAvailableCombinations( combo.getTotalNumberOfCombinations() );
+        ret.setTotalNumberOfAvailableCombinations(combo.getTotalNumberOfCombinations());
 
 
         println(" ***  * PARANOID, total combinations=" + ret.totalNumberOfAvailableCombinations);
@@ -1107,7 +1112,7 @@ public class SecretShare
      * <li>What to do when a conflict is found
      * </ul>
      */
-    public static class ParanoidInput
+    public static final class ParanoidInput
     {
         // maximum combine operations to perform - negative means "all", null means "all"
         private BigInteger maximumCombinationsAllowedToTest = null;
@@ -1178,7 +1183,8 @@ public class SecretShare
                         }
                         else
                         {
-                            throw new SecretShareException("Failed to parse piece '" + piece + "' as part of argument '" + arg + "'");
+                            throw new SecretShareException("Failed to parse piece '" + piece +
+                                                           "' as part of argument '" + arg + "'");
                         }
                     }
                 }
@@ -1276,7 +1282,7 @@ public class SecretShare
         private final List<String> recordCombineOutput = new ArrayList<String>();
 
         // map of secret to count of how many times that secret has been seen
-        private Map<BigInteger, Integer> mapReconstructedToCount = new HashMap<BigInteger, Integer>();
+        private final Map<BigInteger, Integer> mapReconstructedToCount = new HashMap<BigInteger, Integer>();
 
 
         public ParanoidOutput(ParanoidInput input)
@@ -1356,7 +1362,8 @@ public class SecretShare
                     upperbound = getMaximumCombinationsAllowedToTest();
                 }
             }
-            outputEvery = upperbound.multiply(BigInteger.valueOf(paranoidInput.percentEvery)).divide(BigInteger.valueOf(100L)).add(BigInteger.ONE);
+            outputEvery = upperbound.multiply(BigInteger.valueOf(paranoidInput.percentEvery))
+                                              .divide(BigInteger.valueOf(100L)).add(BigInteger.ONE);
             //System.out.println("OUTPUT EVERY=" + outputEvery);
             //outputEvery = (maximumCombinationsToTest * percentEvery ) / 100 + 1;
         }
@@ -1426,7 +1433,8 @@ public class SecretShare
         public String getParanoidHeaderOutput()
         {
             String ret = "SecretShare.paranoid(max=" +
-                        ((getMaximumCombinationsAllowedToTest() != null) ? getMaximumCombinationsAllowedToTest() : "all") +
+                        ((getMaximumCombinationsAllowedToTest() != null) ?
+                                getMaximumCombinationsAllowedToTest() : "all") +
                         " combo.total=" +
                         totalNumberOfAvailableCombinations +
                         ")";
@@ -1482,7 +1490,8 @@ public class SecretShare
         {
             out.println("paranoid.totalAvailable = " + getTotalNumberOfCombinations());
             out.println("paranoid.allowedCount = " +
-                        ((getMaximumCombinationsAllowedToTest() == null) ? "all" : getMaximumCombinationsAllowedToTest()));
+                        ((getMaximumCombinationsAllowedToTest() == null) ?
+                                "all" : getMaximumCombinationsAllowedToTest()));
             out.println("paranoid.count = " + getCount());
             String paranoidSummary = "Agreement";
             if (getAgreedAnswer() == null)
@@ -1533,23 +1542,24 @@ public class SecretShare
      * @param map of key-value pairs
      * @return List - sorted by ASCENDING value
      */
-    private  static <K extends Comparable<? super K>, V extends Comparable<? super V>> List<Map.Entry<K, V>> sortByValueAscendingThenKeyAscending( Map<K, V> map )
+    private static <K extends Comparable<? super K>, V extends Comparable<? super V>>
+                   List<Map.Entry<K, V>> sortByValueAscendingThenKeyAscending(Map<K, V> map)
     {
         List<Map.Entry<K, V>> list =
-                new LinkedList<Map.Entry<K, V>>( map.entrySet() );
-        Collections.sort( list, new Comparator<Map.Entry<K, V>>()
+                new LinkedList<Map.Entry<K, V>>(map.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<K, V>>()
         {
             @Override
-            public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2)
             {
-                int c = o1.getValue().compareTo( o2.getValue() );
+                int c = o1.getValue().compareTo(o2.getValue());
                 if (c == 0)
                 {
-                    c = o1.getKey().compareTo( o2.getKey() );
+                    c = o1.getKey().compareTo(o2.getKey());
                 }
                 return c;
             }
-        } );
+        });
 
         return list;
         //

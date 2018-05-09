@@ -259,7 +259,7 @@ public class SecretShareIntegTest
     {
         int startNumBits = modulus.bitLength() - 15;
         boolean ok = false;
-        for (int bits = startNumBits; bits <= maxbits ; bits++)
+        for (int bits = startNumBits; bits <= maxbits; bits++)
         {
             for (int round = 0; round < 300; round++)
             {
@@ -348,7 +348,8 @@ public class SecretShareIntegTest
     {
         BigInteger secret = getAbcdSecret(bits);
         final Random random = new Random(1234L);
-        for (int k = 30; k <= 50; k += 5) {
+        for (int k = 30; k <= 50; k += 5)
+        {
             int n = k; // do this and there are only enough shares for 1 reconstruction == fast
             n = k + 1; // do this to allow "paranoid" to test extra combinations in reconstruction == slower
             Assert.assertTrue("failed at k=" + k + " bits=" + bits, subsubtestStress(n, k, prime, random, secret));
@@ -363,7 +364,8 @@ public class SecretShareIntegTest
      *           k=50 n=50 bits=383    1 second
      *           k=50 n=50 bits=4095   1 second
      */
-    private boolean subsubtestStress(final int n, final int k, final BigInteger prime, final Random random, final BigInteger secret)
+    private boolean subsubtestStress(final int n, final int k,
+                                     final BigInteger prime, final Random random, final BigInteger secret)
     {
         final long start = new java.util.Date().getTime();
 
@@ -380,7 +382,8 @@ public class SecretShareIntegTest
 
         final long stop = new java.util.Date().getTime();
         final long elapsedSeconds = (stop - start) / 1000;
-        System.out.println("Stress  k=" + k + " n=" + n + " bits=" + secret.bitLength() + " elapsedSeconds=" + elapsedSeconds);
+        System.out.println("Stress  k=" + k + " n=" + n + " bits=" + secret.bitLength() +
+                           " elapsedSeconds=" + elapsedSeconds);
 
         return secret.equals(reconstructed);
     }
