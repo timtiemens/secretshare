@@ -22,30 +22,57 @@ public abstract class NumberMatrix<E extends Number>
 {
     protected E[][] matrix;
 
-    /** Abstract method to create a matrix */
+    /** Abstract method to create a matrix.
+     * @param height of matrix
+     * @param width of matrix
+     * @return array-array of element
+     */
     protected abstract E[][] create(int height, int width);
 
-    /** Abstract method for defining zero for the matrix element */
+    /** Abstract method for defining zero for the matrix element.
+     * @return element
+     */
     protected abstract E zero();
 
     protected abstract E one();
 
-    /** Abstract method for creating a cell with equivalent value "v" */
+    /** Abstract method for creating a cell with equivalent value "v".
+     * @param v integer value
+     * @return element
+     */
     protected abstract E createValue(int v);
 
-    /** Abstract method for adding two elements of the matrices */
+    /** Abstract method for adding two elements of the matrices.
+     * @param o1 element
+     * @param o2 element
+     * @return element o1 + o2
+     */
     protected abstract E add(E o1, E o2);
 
-    /** Abstract method for subtracting elements of the matrices */
+    /** Abstract method for subtracting elements of the matrices.
+     * @param o1 element
+     * @param o2 element
+     * @return element o1 - o2
+     */
     protected abstract E subtract(E o1, E o2);
 
-    /** Abstract method for multiplying two elements of the matrices */
+    /** Abstract method for multiplying two elements of the matrices.
+     * @param o1 element
+     * @param o2 element
+     * @return element o1 * o2
+     */
     protected abstract E multiply(E o1, E o2);
 
-    /** Abstract */
+    /** Abstract method for returning 1/E.
+     * @param o1 element
+     * @return element 1 / o1
+     */
     protected abstract E reciprocal(E o1);
 
-    /** Abstract */
+    /** Abstract method for megating element.
+     * @param o1 element
+     * @return element negative o1
+     */
     protected abstract E negate(E o1);
 
 
@@ -106,7 +133,11 @@ public abstract class NumberMatrix<E extends Number>
     }
 
 
-    /** Add two matrices */
+    /** Add two matrices.
+     * @param matrix1 first
+     * @param matrix2 second
+     * @return maxtrix 1 + 1
+     */
     public E[][] addMatrix(E[][] matrix1, E[][] matrix2)
     {
         // Check bounds of the two matrices
@@ -131,7 +162,11 @@ public abstract class NumberMatrix<E extends Number>
         return result;
     }
 
-    /** Multiply two matrices */
+    /** Multiply two matrices.
+     * @param matrix1 array-array
+     * @param matrix2 array-array
+     * @return matrix 1 * 2
+     */
     public E[][] multiplyMatrix(E[][] matrix1, E[][] matrix2)
     {
         // Check bounds
@@ -167,6 +202,15 @@ public abstract class NumberMatrix<E extends Number>
     // det(c11 c12)                        ( a b )
     //    (c21 c22)  = c11*c22 - c21*c12   ( c d )
     //   called as det(0, 0, 1, 1) -- index starts at 0
+    /**
+     * Return the determinant.
+     * @param matrix array
+     * @param r index
+     * @param s index
+     * @param i index
+     * @param j index
+     * @return element determinant
+     */
     public E determinant(E[][] matrix, int r, int s, int i, int j)
     {
         E a, b, c, d;
@@ -181,11 +225,21 @@ public abstract class NumberMatrix<E extends Number>
         return ret;
     }
 
+    /**
+     * Print this matrix.
+     * @param out printstream
+     */
     public void printResult(PrintStream out)
     {
         printResult(getArray(), out);
     }
 
+    /**
+     * Print this array-array.
+     * @param string header
+     * @param matrix2 array-array
+     * @param out printstream
+     */
     public static void print(String string, Number[][] matrix2, PrintStream out)
     {
         if (out == null)
@@ -196,6 +250,11 @@ public abstract class NumberMatrix<E extends Number>
         printResult(matrix2, out);
     }
 
+    /**
+     * Print array-array.
+     * @param m1 array-array
+     * @param out printstream
+     */
     public static void printResult(Number[][] m1, PrintStream out)
     {
         if (out == null)
@@ -212,7 +271,13 @@ public abstract class NumberMatrix<E extends Number>
         }
     }
 
-    /** Print matrices, the operator, and their operation result */
+    /** Print matrices, the operator, and their operation result.
+     * @param m1 array-array
+     * @param m2 array-array
+     * @param m3 array-array
+     * @param op operator
+     * @param out printstream
+     */
     public static void printResult(Number[][] m1, Number[][] m2, Number[][] m3, char op, PrintStream out)
     {
         for (int i = 0; i < m1.length; i++)

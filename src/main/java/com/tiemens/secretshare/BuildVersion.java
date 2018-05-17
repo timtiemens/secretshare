@@ -168,7 +168,7 @@ public final class BuildVersion
         try
         {
             Properties props = new Properties();
-            props.load(BuildVersion.class.getResourceAsStream("build-info.properties"));
+            props.load(BuildVersion.class.getResourceAsStream(PROPERTIES_FILE_NAME));
             ret = BuildInfo.createFromProperties(props);
         }
         catch (Exception e)  // RuntimeException || IOException

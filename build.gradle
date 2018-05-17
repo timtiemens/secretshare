@@ -4,16 +4,25 @@
 // target:  'uploadArchives' - push to maven central (sonatype, as user)
 // target:  'jacocoTestReport'      - code coverage from unit tests
 // target:  'jacocoIntegTestReport' - coverage from integration tests and UTs
-// target:  'sonarRunner'    - publish data to locally running SonarCube
+//\\ target:  'sonarRunner'    - publish data to locally running SonarCube
 // target:  'signArchives'   - test signature operation
 //
+
+buildscript {
+    repositories {
+    }
+}
+
+plugins {
+    id "org.sonarqube" version "2.6.2"
+}
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply from: "$rootDir/gradle/versioning.gradle"
 apply plugin: 'jacoco'
-apply plugin: 'sonar-runner'
+//apply plugin: 'sonar-runner'
 apply plugin: 'signing'
 apply plugin: 'maven'
 apply plugin: 'checkstyle'
@@ -23,7 +32,7 @@ archivesBaseName = 'secretshare'
 version = '1.4.5-SNAPSHOT'
 project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 sourceCompatibility = 1.6
-
+targetCompatibility = 1.6
 
 dependencies {
     testCompile group: 'junit',         name: 'junit',          version: '4.11'
@@ -51,7 +60,7 @@ sourceSets {
 }
 
 jacoco {
-    toolVersion = "0.7.2.201409121644"
+    toolVersion = "0.8.1"
     reportsDir = file("$buildDir/reports/jacoco")
 }
 
@@ -62,7 +71,7 @@ test {
 }
 
 task integTest(type: Test, group: 'Build') {
-    testClassesDir = sourceSets.integTest.output.classesDir
+    testClassesDirs = sourceSets.integTest.output
     classpath = sourceSets.integTest.runtimeClasspath
     include '**/*IntegTest.class'
     reports.html.destination = file ("$reports.html.destination/integTest")
@@ -81,12 +90,12 @@ jacocoTestReport {
     reports {
         xml {
             enabled true
-            destination "$buildDir/reports/jacoco/jacocoTestReport.xml"
+            destination file("$buildDir/reports/jacoco/jacocoTestReport.xml")
         }
         csv.enabled false
         html {
             enabled true
-            destination "$buildDir/reports/jacoco/jacocoTestReport"
+            destination file("$buildDir/reports/jacoco/jacocoTestReport")
         }
     }
 }
@@ -98,12 +107,12 @@ task jacocoIntegTestReport(type: JacocoReport) {
     reports {
         xml {
             enabled true
-            destination "$buildDir/reports/jacoco/jacocoIntegTestReport.xml"
+            destination file("$buildDir/reports/jacoco/jacocoIntegTestReport.xml")
         }
         csv.enabled false
         html {
             enabled true
-            destination "$buildDir/reports/jacoco/jacocoIntegTestReport"
+            destination file("$buildDir/reports/jacoco/jacocoIntegTestReport")
         }
     }
 }
@@ -197,7 +206,7 @@ publishing {
                 def developer = root.appendNode('developers').appendNode('developer')
                 developer.appendNode('id', 'timtiemens')
                 developer.appendNode('name', 'Tim Tiemens')
-                // developer.appendNode('email', 'timremote@gmail.com')
+                // developer.appendNode('email', 'tim@gmail.com')
                 developer.appendNode('url', 'https://github.com/timtiemens')
             }
         }
@@ -273,17 +282,15 @@ uploadArchives {
 
 
 
-buildscript {
-    repositories {
-    }
-}
 
-sonarRunner {
-    sonarProperties {
+sonarqube {
+    properties {
         property 'sonar.projectName', 'secretshare'
         property 'sonar.projectDescription', "Shamir's Secret Share in Java"
         property 'sonar.sourceEncoding', 'UTF-8'
         properties['sonar.tests'] += sourceSets.integTest.allSource.srcDirs
+        property 'sonar.host.url', 'TODO'
+        property 'sonar.login', 'TODO'
     }
 }
 
@@ -297,6 +304,6 @@ checkstyle {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.2.1'
+    gradleVersion = '4.7'
 }
 

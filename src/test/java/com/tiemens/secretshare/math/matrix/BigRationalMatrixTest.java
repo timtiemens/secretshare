@@ -65,4 +65,73 @@ public class BigRationalMatrixTest
         Assert.assertEquals(new BigRational(6 - 12), det1123);
     }
 
+    @Test
+    public void testAdd()
+    {
+        final int h = 2;
+        final int w = 3;
+        BigRationalMatrix matrixA = new BigRationalMatrix(h, w);
+        matrixA.fill(w,  1, 2, 3,
+                         4, 5, 6);
+        BigRationalMatrix matrix1 = new BigRationalMatrix(h, w);
+        matrix1.fill(w,  1, 1, 1,
+                         1, 1, 1);
+
+        BigRational[][] matrixAarray = matrixA.getArray();
+        BigRational[][] matrix1array = matrix1.getArray();
+
+        BigRational[][] actual = matrixA.addMatrix(matrixAarray, matrix1array);
+
+        Assert.assertEquals("i dim", h, actual.length);
+        Assert.assertEquals("j dim", w, actual[0].length);
+        for (int y = 0; y < h; y++) {
+            for (int x = 0;  x < w; x++) {
+                BigRational expected = matrixAarray[y][x].add(matrix1array[y][x]);
+                Assert.assertEquals("y=" + y + " x=" + x, expected, actual[y][x]);
+            }
+        }
+    }
+
+    @Test
+    public void testMultiply()
+    {
+        final int h = 2;
+        final int w = 3;
+        BigRationalMatrix matrixA = new BigRationalMatrix(h, w);
+        matrixA.fill(w,  1, 2, 3,
+                         4, 5, 6);
+        // note: reversed!
+        BigRationalMatrix matrixB = new BigRationalMatrix(w, h);
+        matrixB.fill(h,  7, 8,
+                         9, 10,
+                        11, 12);
+
+        // note: reversed!
+        BigRationalMatrix expected = new BigRationalMatrix(h, h);
+        expected.fill(h,  58, 64,
+                          139, 154);
+
+
+        BigRational[][] actualArray = matrixA.multiplyMatrix(matrixA.getArray(), matrixB.getArray());
+        BigRationalMatrix actual = new BigRationalMatrix(actualArray);
+
+        subtestCompare(expected, actual);
+    }
+
+    private void subtestCompare(BigRationalMatrix expected, BigRationalMatrix actual)
+    {
+        BigRational[][] expectedArray = expected.getArray();
+        BigRational[][] actualArray = actual.getArray();
+
+        Assert.assertEquals("i dim", expectedArray.length, actualArray.length);
+        Assert.assertEquals("j dim", expectedArray[0].length, actualArray[0].length);
+        int h = expectedArray.length;
+        int w = expectedArray[0].length;
+
+        for (int y = 0; y < h; y++) {
+            for (int x = 0;  x < w; x++) {
+                Assert.assertEquals("y=" + y + " x=" + x, expectedArray[y][x], actualArray[y][x]);
+            }
+        }
+    }
 }

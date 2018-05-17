@@ -13,3 +13,9 @@ signing.secretKeyRingFile=<location-of-your>/.gnupg/secring.gpg
 # Maven Central Publishing (sonatype login credentials):
 ossrhUsername=<<your-sonatype-login-name>>
 ossrhPassword=<<your-sonatype-password>>
+
+# SonarQube
+sonarqube.login=461f1db3dfa7ef4236ae2d8016da644e091f784f
+sonarqube.host.url=http://localhost:9000
+# ./gradlew sonarqube   -Dsonar.host.url=http://localhost:9000 \
+#      -Dsonar.login=461f1db3dfa7ef4236ae2d8016da644e091f784f

@@ -352,7 +352,7 @@ public class SecretShare
     // instance data
     // ==================================================
     private final PublicInfo publicInfo;
-    private final PrintStream out = null;
+    private PrintStream out = null;
 
     // ==================================================
     // factories
@@ -729,6 +729,7 @@ public class SecretShare
 
     }
 
+    /*
     // Original implementation for coefficient generation - only 128 bits "covered"
     private BigInteger coeffGenOriginal(Random random)
     {
@@ -741,6 +742,7 @@ public class SecretShare
         return big;
 
     }
+    */
 
     // ==================================================
     // public
