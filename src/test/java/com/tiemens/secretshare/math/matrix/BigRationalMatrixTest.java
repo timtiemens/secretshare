@@ -84,8 +84,10 @@ public class BigRationalMatrixTest
 
         Assert.assertEquals("i dim", h, actual.length);
         Assert.assertEquals("j dim", w, actual[0].length);
-        for (int y = 0; y < h; y++) {
-            for (int x = 0;  x < w; x++) {
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0;  x < w; x++)
+            {
                 BigRational expected = matrixAarray[y][x].add(matrix1array[y][x]);
                 Assert.assertEquals("y=" + y + " x=" + x, expected, actual[y][x]);
             }
@@ -128,8 +130,10 @@ public class BigRationalMatrixTest
         int h = expectedArray.length;
         int w = expectedArray[0].length;
 
-        for (int y = 0; y < h; y++) {
-            for (int x = 0;  x < w; x++) {
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
                 Assert.assertEquals("y=" + y + " x=" + x, expectedArray[y][x], actualArray[y][x]);
             }
         }
