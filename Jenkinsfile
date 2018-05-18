@@ -1,26 +1,23 @@
 node {
-    stage('Clone') {
+    stage('Clone') 
         git url:  'git://reposerver/secretshare.git'
-    }
-    //def server = Artifactory.server 'artifactory'
-    def rtGradle = Artifactory.newGradleBuild()
-    rtGradle.useWrapper = true
 
-    stage('Compile') {
-        rtGradle.run tasks: 'build'
-    }
+    env.JAVA_HOME="${tool 'jdk18'}"
+    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+    sh 'java -version'
 
-    stage('Integration Tests') {
-        rtGradle.run tasks: 'integTest'
-    }
+    stage('Compile') 
+        sh './gradlew clean build'
 
-    stage('Jacoco Report') {
-        rtGradle.run tasks: 'jacocoTestReport'
-    }
+    stage('Integration Tests') 
+        sh './gradlew integTest'
 
-    stage('SonarQube') {
-        withSonarQubeEnv('sonar') {
-            rtGradle.run tasks: 'sonarqube'
-       }
-    }
+    stage('Jacoco Report') 
+        sh './gradlew jacocoTestReport'
+
+//    stage('SonarQube') 
+//        withSonarQubeEnv('sonar') {
+//            sh './gradlew sonarqube'
+//        }
 }
+
