@@ -1,6 +1,6 @@
 node {
     stage('Clone') 
-        git url:  'git://reposerver/secretshare.git'
+    checkout scm
 
     env.JAVA_HOME="${tool 'jdk18'}"
     env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
@@ -15,9 +15,5 @@ node {
     stage('Jacoco Report') 
         sh './gradlew jacocoTestReport'
 
-//    stage('SonarQube') 
-//        withSonarQubeEnv('sonar') {
-//            sh './gradlew sonarqube'
-//        }
 }
 
