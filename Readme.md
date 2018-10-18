@@ -306,6 +306,11 @@ Since a year has ~3E7 seconds, that will never happen.
 So, k=25 is a pretty good practical limit, or k=20 for "immediate" results.
 
 
+Architecture Documentation
+----
+![Package Digraph](docs/images/jdepend-webgraph.png)
+
+
 Documentation
 ----
 [Original Sourceforge Secret Sharing in Java] - original SCM location.  Out-of-date.
