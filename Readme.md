@@ -308,7 +308,7 @@ So, k=25 is a pretty good practical limit, or k=20 for "immediate" results.
 
 Architecture Documentation
 ----
-![Package Digraph](docs/images/jdepend-webgraph.png)
+See docs/Architecture.md
 
 
 Documentation
