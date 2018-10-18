@@ -308,7 +308,7 @@ So, k=25 is a pretty good practical limit, or k=20 for "immediate" results.
 
 Architecture Documentation
 ----
-See docs/Architecture.md
+See [Architecture.md](docs/Architecture.md)
 
 
 Documentation
