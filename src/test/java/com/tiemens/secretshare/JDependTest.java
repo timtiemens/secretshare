@@ -14,57 +14,98 @@ import jdepend.framework.PackageFilter;
 import junit.framework.TestCase;
 
 /**
- * The <code>ExampleTest</code> is an example <code>TestCase</code> 
- * that demonstrates tests for measuring the distance from the 
- * main sequence (D), package dependency constraints, and the 
- * existence of cyclic package dependencies.
- * <p>
- * This test analyzes the JDepend class files.
+ * The <code>JDependTest</code> is an example <code>TestCase</code>
+ * that demonstrates how to call the JDepend library.
+ * Some of the tests are:
+ * <li>package dependency constraints,
+ * <li>existence of cyclic package dependencies,
+ * <li>measuring the distance from the main sequence (D)
+ *
+ * The parts to configure are at the top of the .java file.
  * 
- * @author <b>Mike Clark</b>
- * @author Clarkware Consulting, Inc.
+ * Prints a DOT digraph of the dependency graph.
+ * See http://www.webgraphviz.com/ to create the image of the digraph.
  */
 
 public class JDependTest extends TestCase {
 
-	private static List<String> excludes = Arrays.asList(
-			// 
-			"java.*", "javax.*",
-			//
-	        "org.junit",
-	        "org.junit.*",
-	        "junit.framework",
-	        "junit.textui",
-	        "jdepend.framework",	        
-	        //
-		    "org.jacoco.*",
-	        "com.vladium.emma.rt"
-			);
-	
+    // Note: this example does not analyze test classes:
+    private static String classesDir = "./build/classes/java/main";
+
+    private static List<String> excludes = Arrays.asList(
+            // Standard libraries
+            "java.*", "javax.*"
+            //
+            // Test libraries - if you analyze test classes, then these are useful:
+            //"org.junit", "org.junit.*",
+            //"junit.framework", "junit.textui",
+            //"jdepend.framework"
+            //
+            // any extras go here
+            );
+
+    /*
+     * Builds the di-graph of the package dependencies of interest.
+     */
+    private static DependencyConstraint createDependencyConstraint()
+    {
+        DependencyConstraint constraint = new DependencyConstraint();
+
+        JavaPackage ssTop       = constraint.addPackage("com.tiemens.secretshare");
+        JavaPackage ssEngine    = constraint.addPackage("com.tiemens.secretshare.engine");
+        JavaPackage ssException = constraint.addPackage("com.tiemens.secretshare.exceptions");
+        //JavaPackage ssMain      = constraint.addPackage("com.tiemens.secretshare.main");
+        JavaPackage ssMath      = constraint.addPackage("com.tiemens.secretshare.math");
+        JavaPackage ssMd5       = constraint.addPackage("com.tiemens.secretshare.md5sum");
+        JavaPackage ssMathMatrix= constraint.addPackage("com.tiemens.secretshare.math.matrix");
+        JavaPackage ssMainTest  = constraint.addPackage("com.tiemens.secretshare.main.test");
+        JavaPackage ssMainCli   = constraint.addPackage("com.tiemens.secretshare.main.cli");
+
+        ssEngine.dependsUpon(ssException);
+        ssEngine.dependsUpon(ssMath);
+        ssEngine.dependsUpon(ssMathMatrix);
+
+        ssMainCli.dependsUpon(ssTop);
+        ssMainCli.dependsUpon(ssEngine);
+        ssMainCli.dependsUpon(ssException);
+        ssMainCli.dependsUpon(ssMath);
+
+        ssMainTest.dependsUpon(ssEngine);
+
+        ssMath.dependsUpon(ssException);
+        ssMath.dependsUpon(ssMd5);
+
+        ssMathMatrix.dependsUpon(ssMath);
+
+        ssMd5.dependsUpon(ssException);
+
+        return constraint;
+    }
+
+    // if testDependencyConstraint fails, then set this to true to
+    //    see the mis-match.  Or run the JDepend gui with:
+    // java -cp $(find $HOME/.gradle|grep -i jdep|grep jar) jdepend.swingui.JDepend ./build/classes/
+    private static boolean debugDump = false;
+
+
+    //
+    // ===================================
+    //
     private JDepend jdepend;
 
-    
+
     public JDependTest(String name) {
         super(name);
     }
 
+    @Override
     protected void setUp() throws IOException {
-    	String jdependHomeDirectory;
-
-        jdependHomeDirectory = System.getProperty("jdepend.home");
-        if (jdependHomeDirectory == null) {
-            //fail("Property 'jdepend.home' not defined");
-            jdependHomeDirectory = ".";
-        }
-
         PackageFilter filter = new PackageFilter();
         for (String pkg : excludes) {
-        	filter.addPackage(pkg);
+            filter.addPackage(pkg);
         }
 
         jdepend = new JDepend(filter);
-
-        String classesDir = jdependHomeDirectory + File.separator + "build";
 
         jdepend.addDirectory(classesDir);
     }
@@ -94,7 +135,7 @@ public class JDependTest extends TestCase {
 
         jdepend.analyze();
 
-        JavaPackage p = jdepend.getPackage("com.tiemens.secretshare.engine");
+        JavaPackage p = jdepend.getPackage("com.tiemens.secretshare.main.cli");
 
         assertEquals("Cycles exist: " + p.getName(), 
                      false, p.containsCycle());
@@ -127,12 +168,12 @@ public class JDependTest extends TestCase {
         Collection packages = jdepend.analyze();
 
         if (jdepend.containsCycles()) {
-        	   for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();) {
-                   JavaPackage jPackage = (JavaPackage)i.next();
-                   if (jPackage.containsCycle()) {
-                	   System.out.println("Cycle at " + jPackage.getName());
-                   }
-               }
+            for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();) {
+                JavaPackage jPackage = (JavaPackage)i.next();
+                if (jPackage.containsCycle()) {
+                    System.out.println("Cycle at " + jPackage.getName());
+                }
+            }
 
         }
         assertEquals("Cycles exist", false, jdepend.containsCycles());
@@ -146,113 +187,47 @@ public class JDependTest extends TestCase {
      * in the dependency constraints are detected.
      */
     public void testDependencyConstraint() {
-    	DependencyConstraint constraint = new DependencyConstraint();
-    	
-    	JavaPackage ssTop       = constraint.addPackage("com.tiemens.secretshare");
-    	JavaPackage ssEngine    = constraint.addPackage("com.tiemens.secretshare.engine");
-    	JavaPackage ssException = constraint.addPackage("com.tiemens.secretshare.exceptions");
-    	//JavaPackage ssMain      = constraint.addPackage("com.tiemens.secretshare.main");
-    	JavaPackage ssMath      = constraint.addPackage("com.tiemens.secretshare.math");
-    	JavaPackage ssMd5       = constraint.addPackage("com.tiemens.secretshare.md5sum");
-    	JavaPackage ssMathMatrix= constraint.addPackage("com.tiemens.secretshare.math.matrix");    	
-    	JavaPackage ssMainTest  = constraint.addPackage("com.tiemens.secretshare.main.test");    	
-    	JavaPackage ssMainCli   = constraint.addPackage("com.tiemens.secretshare.main.cli");    	    	
-
-    	ssEngine.dependsUpon(ssException);
-    	ssEngine.dependsUpon(ssMath);
-    	ssEngine.dependsUpon(ssMathMatrix);
-    	
-    	ssMainCli.dependsUpon(ssTop);
-    	ssMainCli.dependsUpon(ssEngine);
-    	ssMainCli.dependsUpon(ssException);
-    	ssMainCli.dependsUpon(ssMath);
-
-    	ssMainTest.dependsUpon(ssEngine);
-    	
-    	ssMath.dependsUpon(ssException);
-    	ssMath.dependsUpon(ssMd5);
-    	
-    	ssMathMatrix.dependsUpon(ssMath);
-    	
-    	//ssTop.dependsUpon(ssEngine);
-    	
-    	ssMd5.dependsUpon(ssException);
-    	
-    	
-    	jdepend.analyze();
-    	
-    	System.out.println(dumpAsDotString(jdepend, constraint));
-    	
-    	boolean debugDump = false;
-    	if (debugDump) {
-    		System.out.println("Packages = " + jdepend.getPackages().size());
-    		for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();) {
-    			JavaPackage jPackage = (JavaPackage)i.next();
-    			System.out.println("J.pkg=" + jPackage.getName());
-    		}
-    		for (Iterator i = constraint.getPackages().iterator(); i.hasNext();) {
-    			JavaPackage jPackage = (JavaPackage)i.next();
-    			System.out.println("C.pkg=" + jPackage.getName());
-    		}
-    	}
-    	
-
-        assertEquals("Constraint mismatch", 
-                     true, jdepend.dependencyMatch(constraint));    	
-    }
-    
-    private String dumpAsDotString(JDepend jdepend, DependencyConstraint constraint) {
-    	StringBuilder sb = new StringBuilder();
-    	final String quote = "\"";
-    	final String nl = "\n";
-    	sb.append("digraph jdepend {" + nl);
-    	for (JavaPackage pkg : new java.util.ArrayList<JavaPackage>(jdepend.getPackages())) {
-    		for (JavaPackage to : new java.util.ArrayList<JavaPackage>(pkg.getEfferents())) {
-    			sb.append(quote + pkg.getName() + quote + " -> " + quote + to.getName() + quote + nl);
-    		}
-    	}
-
-    	sb.append("}" + nl);
-    	return sb.toString();
-		
-	}
-
-	/*
-    public void testDependencyConstrain2t() {
-
-        DependencyConstraint constraint = new DependencyConstraint();
-
-        JavaPackage junitframework = constraint.addPackage("junit.framework");
-        JavaPackage junitui = constraint.addPackage("junit.textui");
-        JavaPackage framework = constraint.addPackage("jdepend.framework");
-        JavaPackage text = constraint.addPackage("jdepend.textui");
-        JavaPackage xml = constraint.addPackage("jdepend.xmlui");
-        JavaPackage swing = constraint.addPackage("jdepend.swingui");
-        JavaPackage orgjunitrunners = constraint.addPackage("orgjunitrunners");
-        JavaPackage jdependframeworkp2 = constraint.addPackage("jdependframeworkp2");
-        JavaPackage jdependframeworkp3 = constraint.addPackage("jdependframeworkp3");
-        JavaPackage jdependframeworkp1 = constraint.addPackage("jdependframeworkp1");
-        JavaPackage orgjunit = constraint.addPackage("orgjunit");
-
-        framework.dependsUpon(junitframework);
-        framework.dependsUpon(junitui);
-        text.dependsUpon(framework);
-        xml.dependsUpon(framework);
-        xml.dependsUpon(text);
-        swing.dependsUpon(framework);
-        framework.dependsUpon(jdependframeworkp2);
-        framework.dependsUpon(jdependframeworkp3);
-        framework.dependsUpon(jdependframeworkp1);
-        framework.dependsUpon(orgjunitrunners);
-        framework.dependsUpon(orgjunit);
+        DependencyConstraint constraint = createDependencyConstraint();
 
         jdepend.analyze();
 
+        System.out.println(dumpAsDotString(jdepend, constraint));
+
+        if (debugDump) {
+            System.out.println("J Packages = " + jdepend.getPackages().size());
+            for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();) {
+                JavaPackage jPackage = (JavaPackage)i.next();
+                System.out.println("J.pkg=" + jPackage.getName());
+            }
+            System.out.println("C Packages = " + constraint.getPackages().size());
+            for (Iterator i = constraint.getPackages().iterator(); i.hasNext();) {
+                JavaPackage jPackage = (JavaPackage)i.next();
+                System.out.println("C.pkg=" + jPackage.getName());
+            }
+        }
+
+
         assertEquals("Constraint mismatch", 
-                     true, jdepend.dependencyMatch(constraint));
+                true, jdepend.dependencyMatch(constraint));
     }
-  */
-    
+
+    private String dumpAsDotString(JDepend jdepend, DependencyConstraint constraint) {
+        StringBuilder sb = new StringBuilder();
+        final String quote = "\"";
+        final String nl = "\n";
+
+        sb.append("## DOT/Graphviz format.  See http://www.webgraphviz.com/" + nl);
+        sb.append("digraph jdepend {" + nl);
+        for (JavaPackage pkg : new java.util.ArrayList<JavaPackage>(jdepend.getPackages())) {
+            for (JavaPackage to : new java.util.ArrayList<JavaPackage>(pkg.getEfferents())) {
+                sb.append(quote + pkg.getName() + quote + " -> " + quote + to.getName() + quote + nl);
+            }
+        }
+
+        sb.append("}" + nl);
+        return sb.toString();
+    }
+
     public static void main(String[] args) {
         junit.textui.TestRunner.run(JDependTest.class);
     }
