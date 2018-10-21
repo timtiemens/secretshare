@@ -12,7 +12,8 @@ Some notes:
 
 Code
 ====
-See [JDependTest.java](src/test/java/com/tiemens/secretshare/JDependTest.java) for a very easy-to-configure test of package dependencies. 
+See [JDependTest.java](../src/test/java/com/tiemens/secretshare/JDependTest.java) for a very easy-to-configure test of package dependencies.
+
 
 Command Line
 ====
