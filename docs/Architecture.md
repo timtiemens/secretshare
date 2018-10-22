@@ -22,13 +22,13 @@ java -cp $(find $HOME/.gradle/caches -name "jdepend-2.9.1.jar") jdepend.swingui.
 
 Architecture Goals
 ==================
- 1 Single "library" exception SecretShareException
+ 1. Single "library" exception SecretShareException
    This allows callers to easily isolate SecretShare errors.
    Especially useful for [N-version programming](https://en.wikipedia.org/wiki/N-version_programming) where SecretShare is one of the implementation choices, and the goal is to ignore SecretShare-specific exceptions (because there are N-1 other implementations), but not use "catch (Exception e)", since that is over-capturing potential system errors.
-2  No compile dependencies on 3rd-party libraries
+2.  No compile dependencies on 3rd-party libraries
    Because 3rd-party libraries hinder use of a library, this library shall have no 3rd-party dependencies in order to run.
    Test dependencies are allowed (JUnit, JDepend)
-3  Logging
+3.  Logging
    Because of "No compile dependencies", there is very little logging implemented in this library.
    Because this library pre-dates java.util.logging.Logger, it does not use this class.
    However, as an architectural goal, it should be refactored to use java.util.logging.Logger
