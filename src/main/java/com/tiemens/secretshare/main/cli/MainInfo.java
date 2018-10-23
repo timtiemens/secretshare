@@ -68,6 +68,7 @@ public final class MainInfo
         out.println("Usage:");
         out.println(" info");
         // so far, no options available for 'info' command
+        // out.println("  -prime8192    for modulus, use built-in 8192-bit prime");
         // out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         // out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
         // out.println("  -prime192     for modulus, use built-in 192-bit prime");
@@ -155,6 +156,8 @@ public final class MainInfo
                                         SecretShare.getPrimeUsedFor384bitSecretPayload());
             description2BigInteger.put("Modulus 4096 bits",
                                         SecretShare.getPrimeUsedFor4096bigSecretPayload());
+            description2BigInteger.put("Modulus 8192 bits",
+                    SecretShare.getPrimeUsedFor8192bigSecretPayload());
         }
 
         public void print(PrintStream out)

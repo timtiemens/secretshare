@@ -76,12 +76,13 @@ public final class MainCombine
     {
         out.println("Usage:");
         out.println(" combine -k <k>  -s<a> <share-A> -s<b> <share-B> [...]" +             // required
-                    "  [-prime4096|-prime384|-prime192|-primeN <m>|-primeNone] [-stdin]"); // optional
+                    "  [-prime8192|-prime4096|-prime384|-prime192|-primeN <m>|-primeNone] [-stdin]"); // optional
         out.println("  -k <k>        the threshold");
         out.println("  -s<a> <A>     share:a as a number or bingintcs, e.g. '-s1 124332' means " +
                                      "share x:1 value was 124332");
         out.println("     [...]         repeat the [-s<b> <B>] pair a total of <k> times");
         out.println("  -stdin        read share values from standard input, in the format as written by 'split'");
+        out.println("  -prime8192    for modulus, use built-in 8192-bit prime");
         out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
         out.println("  -prime192     for modulus, use built-in 192-bit prime");
@@ -202,6 +203,10 @@ public final class MainCombine
                 {
                     i++;
                     ret.modulus = parseBigInteger("m", args, i);
+                }
+                else if ("-prime8192".equals(args[i]))
+                {
+                    ret.modulus = SecretShare.getPrimeUsedFor8192bigSecretPayload();
                 }
                 else if ("-prime4096".equals(args[i]))
                 {

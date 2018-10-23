@@ -337,7 +337,7 @@ public class MainReadmeTest
         String[] args = {"info"};
         collect.firstCommand(args);
         collect.comments(new String [] {
-            "Print information about Secret Share, including version, 192 bit, 384 bit and 4096 bit primes."});
+            "Print information about Secret Share, including version, 192 bit, 384 bit, 4096 bit and 8192 bit primes."});
         collect.finishItem();
 
 

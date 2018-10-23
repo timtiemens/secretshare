@@ -74,16 +74,18 @@ public final class MainSplit
     {
         out.println("Usage:");
         out.println(" split -k <k> -n <n> -sN|-sS <secret> " +               // required
-                    "  [-prime4096|-prime384|-prime192|-primeN] [-d <desc>] [-paranoid <p>] "); // optional
+                    "  [-prime8192|-prime4096|-prime384|-prime192|-primeN] [-d <desc>] [-paranoid <p>] "); // optional
         out.println("  -k <k>        the threshold");
         out.println("  -n <k>        the number of shares to generate");
         out.println("  -sN <secret>  the secret as a number, e.g. '-sN 124332' or '-sN bigintcs:01e5ac-787852'");
         out.println("  -sS <secret>  the secret as a string, e.g. '-sS MySecretString'");
         out.println("  -d <desc>     description of the secret");
+        out.println("  -prime8192    for modulus, use built-in 8192-bit prime");
         out.println("  -prime4096    for modulus, use built-in 4096-bit prime");
         out.println("  -prime384     for modulus, use built-in 384-bit prime [default]");
         out.println("  -prime192     for modulus, use built-in 192-bit prime");
-        out.println("  -primeAuto    for modulus, use 192, 384, 4096 or a random prime (that is bigger than secret)");
+        out.println("  -primeAuto    for modulus, use 192, 384, 4096, 8192 " +
+                       "or a random prime (that is bigger than secret)");
         out.println("  -primeN       same as -primeRandom");
         out.println("  -primeRandom  for modulus, use a random prime (that is bigger than secret)");
         out.println("  -m <modulus>  for modulus, use <modulus>, e.g. '11753999' or 'bigintcs:b35a0f-F89BEC'");
@@ -278,6 +280,10 @@ public final class MainSplit
                     i++;
                     int seed =  parseInt("r", args, i);
                     ret.random = new Random(seed);
+                }
+                else if ("-prime8192".equals(args[i]))
+                {
+                    ret.modulus = SecretShare.getPrimeUsedFor8192bigSecretPayload();
                 }
                 else if ("-prime4096".equals(args[i]))
                 {

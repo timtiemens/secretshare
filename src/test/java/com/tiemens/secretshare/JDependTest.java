@@ -1,6 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2014 Tim Tiemens.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ *
+ * Contributors:
+ *     Tim Tiemens - initial API and implementation
+ *******************************************************************************/
 package com.tiemens.secretshare;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,12 +37,13 @@ import junit.framework.TestCase;
  * <li>measuring the distance from the main sequence (D)
  *
  * The parts to configure are at the top of the .java file.
- * 
+ *
  * Prints a DOT digraph of the dependency graph.
  * See http://www.webgraphviz.com/ to create the image of the digraph.
  */
 
-public class JDependTest extends TestCase {
+public class JDependTest extends TestCase
+{
 
     // Note: this example does not analyze test classes:
     private static String classesDir = "./build/classes/java/main";
@@ -51,15 +67,15 @@ public class JDependTest extends TestCase {
     {
         DependencyConstraint constraint = new DependencyConstraint();
 
-        JavaPackage ssTop       = constraint.addPackage("com.tiemens.secretshare");
-        JavaPackage ssEngine    = constraint.addPackage("com.tiemens.secretshare.engine");
-        JavaPackage ssException = constraint.addPackage("com.tiemens.secretshare.exceptions");
+        JavaPackage ssTop        = constraint.addPackage("com.tiemens.secretshare");
+        JavaPackage ssEngine     = constraint.addPackage("com.tiemens.secretshare.engine");
+        JavaPackage ssException  = constraint.addPackage("com.tiemens.secretshare.exceptions");
         //JavaPackage ssMain      = constraint.addPackage("com.tiemens.secretshare.main");
-        JavaPackage ssMath      = constraint.addPackage("com.tiemens.secretshare.math");
-        JavaPackage ssMd5       = constraint.addPackage("com.tiemens.secretshare.md5sum");
-        JavaPackage ssMathMatrix= constraint.addPackage("com.tiemens.secretshare.math.matrix");
-        JavaPackage ssMainTest  = constraint.addPackage("com.tiemens.secretshare.main.test");
-        JavaPackage ssMainCli   = constraint.addPackage("com.tiemens.secretshare.main.cli");
+        JavaPackage ssMath       = constraint.addPackage("com.tiemens.secretshare.math");
+        JavaPackage ssMd5        = constraint.addPackage("com.tiemens.secretshare.md5sum");
+        JavaPackage ssMathMatrix = constraint.addPackage("com.tiemens.secretshare.math.matrix");
+        JavaPackage ssMainTest   = constraint.addPackage("com.tiemens.secretshare.main.test");
+        JavaPackage ssMainCli    = constraint.addPackage("com.tiemens.secretshare.main.cli");
 
         ssEngine.dependsUpon(ssException);
         ssEngine.dependsUpon(ssMath);
@@ -94,14 +110,17 @@ public class JDependTest extends TestCase {
     private JDepend jdepend;
 
 
-    public JDependTest(String name) {
+    public JDependTest(String name)
+    {
         super(name);
     }
 
     @Override
-    protected void setUp() throws IOException {
+    protected void setUp() throws IOException
+    {
         PackageFilter filter = new PackageFilter();
-        for (String pkg : excludes) {
+        for (String pkg : excludes)
+        {
             filter.addPackage(pkg);
         }
 
@@ -111,10 +130,11 @@ public class JDependTest extends TestCase {
     }
 
     /**
-     * Tests the distance of a single package to a distance 
+     * Tests the distance of a single package to a distance
      * from the main sequence (D) within a tolerance.
      */
-    public void testOnePackageDistance() {
+    public void testOnePackageDistance()
+    {
 
         double ideal = 0.0;
         double tolerance = 0.8;
@@ -123,103 +143,116 @@ public class JDependTest extends TestCase {
 
         JavaPackage p = jdepend.getPackage("com.tiemens.secretshare.engine");
 
-        assertEquals("Distance exceeded: " + p.getName(), 
+        assertEquals("Distance exceeded: " + p.getName(),
                      ideal, p.distance(), tolerance);
     }
 
     /**
-     * Tests that a single package does not contain any 
+     * Tests that a single package does not contain any
      * package dependency cycles.
      */
-    public void testOnePackageHasNoCycles() {
+    public void testOnePackageHasNoCycles()
+    {
 
         jdepend.analyze();
 
         JavaPackage p = jdepend.getPackage("com.tiemens.secretshare.main.cli");
 
-        assertEquals("Cycles exist: " + p.getName(), 
+        assertEquals("Cycles exist: " + p.getName(),
                      false, p.containsCycle());
     }
 
     /**
-     * Tests the conformance of all analyzed packages to a 
+     * Tests the conformance of all analyzed packages to a
      * distance from the main sequence (D) within a tolerance.
      */
-    public void testAllPackagesDistance() {
+    public void testAllPackagesDistance()
+    {
 
         double ideal = 0.0;
         double tolerance = 1.0;
 
         Collection packages = jdepend.analyze();
 
-        for (Iterator iter = packages.iterator(); iter.hasNext();) {
-            JavaPackage p = (JavaPackage)iter.next();
-            assertEquals("Distance exceeded: " + p.getName(), 
+        for (Iterator iter = packages.iterator(); iter.hasNext();)
+        {
+            JavaPackage p = (JavaPackage) iter.next();
+            assertEquals("Distance exceeded: " + p.getName(),
                          ideal, p.distance(), tolerance);
         }
     }
 
     /**
-     * Tests that a package dependency cycle does not exist 
+     * Tests that a package dependency cycle does not exist
      * for any of the analyzed packages.
      */
-    public void testAllPackagesHaveNoCycles() {
+    public void testAllPackagesHaveNoCycles()
+    {
 
         Collection packages = jdepend.analyze();
 
-        if (jdepend.containsCycles()) {
-            for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();) {
-                JavaPackage jPackage = (JavaPackage)i.next();
-                if (jPackage.containsCycle()) {
+        if (jdepend.containsCycles())
+        {
+            for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();)
+            {
+                JavaPackage jPackage = (JavaPackage) i.next();
+                if (jPackage.containsCycle())
+                {
                     System.out.println("Cycle at " + jPackage.getName());
                 }
             }
-
         }
+
         assertEquals("Cycles exist", false, jdepend.containsCycles());
     }
 
     /**
-     * Tests that a package dependency constraint is matched 
+     * Tests that a package dependency constraint is matched
      * for the analyzed packages.
      * <p>
-     * Fails if any package dependency other than those declared 
+     * Fails if any package dependency other than those declared
      * in the dependency constraints are detected.
      */
-    public void testDependencyConstraint() {
+    public void testDependencyConstraint()
+    {
         DependencyConstraint constraint = createDependencyConstraint();
 
         jdepend.analyze();
 
         System.out.println(dumpAsDotString(jdepend, constraint));
 
-        if (debugDump) {
+        if (debugDump)
+        {
             System.out.println("J Packages = " + jdepend.getPackages().size());
-            for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();) {
-                JavaPackage jPackage = (JavaPackage)i.next();
+            for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();)
+            {
+                JavaPackage jPackage = (JavaPackage) i.next();
                 System.out.println("J.pkg=" + jPackage.getName());
             }
             System.out.println("C Packages = " + constraint.getPackages().size());
-            for (Iterator i = constraint.getPackages().iterator(); i.hasNext();) {
-                JavaPackage jPackage = (JavaPackage)i.next();
+            for (Iterator i = constraint.getPackages().iterator(); i.hasNext();)
+            {
+                JavaPackage jPackage = (JavaPackage) i.next();
                 System.out.println("C.pkg=" + jPackage.getName());
             }
         }
 
-
-        assertEquals("Constraint mismatch", 
+        assertEquals("Constraint mismatch",
                 true, jdepend.dependencyMatch(constraint));
     }
 
-    private String dumpAsDotString(JDepend jdepend, DependencyConstraint constraint) {
+    private String dumpAsDotString(JDepend jdepend, DependencyConstraint constraint)
+    {
         StringBuilder sb = new StringBuilder();
         final String quote = "\"";
         final String nl = "\n";
 
         sb.append("## DOT/Graphviz format.  See http://www.webgraphviz.com/" + nl);
         sb.append("digraph jdepend {" + nl);
-        for (JavaPackage pkg : new java.util.ArrayList<JavaPackage>(jdepend.getPackages())) {
-            for (JavaPackage to : new java.util.ArrayList<JavaPackage>(pkg.getEfferents())) {
+        for (JavaPackage pkg : new java.util.ArrayList<JavaPackage>(jdepend.getPackages()))
+        {
+            for (JavaPackage to : new java.util.ArrayList<JavaPackage>(pkg.getEfferents()))
+            {
                 sb.append(quote + pkg.getName() + quote + " -> " + quote + to.getName() + quote + nl);
             }
         }
@@ -228,7 +261,8 @@ public class JDependTest extends TestCase {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         junit.textui.TestRunner.run(JDependTest.class);
     }
 }

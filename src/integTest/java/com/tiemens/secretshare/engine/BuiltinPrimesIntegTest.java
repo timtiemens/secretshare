@@ -59,6 +59,7 @@ public class BuiltinPrimesIntegTest
     // mac-corei7 = macbook pro, corei7, 2.3GHz
     // vm-amd = virtualbox, FX-8350 8 core, 4.0GHz
     // vm-corei7 = vmworkstation, corei7, 2.67GHz (original i7)
+    // vm-xeon = vmworkstation, Xeon E5-2640@2.5GHz
     //
 
     /**
@@ -67,6 +68,9 @@ public class BuiltinPrimesIntegTest
      *    10,000    0.65 seconds
      * On the vm-corei7,
      *    100,000  15.1 seconds
+     * On the vm-xeon,
+     *     10,000   0.4 seconds
+     *    100,000   3.0 seconds
      */
     @Test
     public void testRabinMiller192()
@@ -77,10 +81,13 @@ public class BuiltinPrimesIntegTest
 
     /**
      * On the mac-corei7, this test takes
-     *     1,000
-     *    10,000    2.32 seconds
+     *      1,000
+     *     10,000   2.32 seconds
      * On the vm-corei7,
      *    100,000  74 seconds
+     * On the vm-xeon,
+     *     10,000   1.1 seconds
+     *    100,000  10   seconds
      */
     @Test
     public void testRabinMiller384()
@@ -98,12 +105,31 @@ public class BuiltinPrimesIntegTest
      * On the vm-corei7,
      *     1,000     504 seconds
      *   100,000  50,627 seconds
+     * On the vm-xeon,
+     *       100
+     *     1,000      49 seconds
+     *    10,000     490 seconds
+     *   100,000   4,894 seconds
      */
     @Test
     public void testRabinMiller4096()
     {
         BigInteger prime4096 = SecretShare.getPrimeUsedFor4096bigSecretPayload();
         subtest("4096", prime4096, iterations);
+    }
+
+    /**
+     * On the vm-xeon,
+     *      100       38 seconds
+     *    1,000      369 seconds
+     *   10,000    3,701 seconds
+     *  100,000   36,907 seconds
+     */
+    @Test
+    public void testRabinMiller8192()
+    {
+        BigInteger prime8192 = SecretShare.getPrimeUsedFor8192bigSecretPayload();
+        subtest("8192", prime8192, iterations);
     }
 
     // ==================================================

@@ -14,7 +14,7 @@
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  *******************************************************************************/
-package com.tiemens.secretshare.main.test;
+package com.tiemens.secretshare.main.example;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -26,14 +26,21 @@ import java.util.List;
 import com.tiemens.secretshare.engine.SecretShare;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 
+/**
+ * Example program as part of the response to GitHub Issue#2 - "Java API?".
+ *
+ * This shows how to use SecretShare's Java API, as compared to SecretShare's Command Line Interface.
+ *
+ */
 public final class TicketTwoMain
 {
     public static void main(String... args)
             throws UnsupportedEncodingException
     {
+        final long start = new java.util.Date().getTime();
 
-        // We got a secret to split into n pieces,
-        // but the secret is re-constructable from any k of them
+        // This is the secret to split into n pieces,
+        // The secret is re-constructible from any k pieces.
         final String secret;
 
         boolean useSimpleSecret = false;
@@ -57,23 +64,68 @@ public final class TicketTwoMain
                 "12345678901234567890123456789012345678901234567890" +
                 "12345678901234567890123456789012345678901234567890" +
                 "12345678901234567890123456789012345678901234567890" +
-                "1234567890123456789012345678901234567890123456789Z";
+                "1234567890123456789012345678901234567890123456789Z";  // "Z" not "0"
         }
 
+        System.out.println("Secret as string: " + secret);
         System.out.println("Secret as number: " + stringToBigInteger(secret));
-        final int n = 6, k = 6;
+        final int n = 6, k = 5;
         String[] pieces = splitSecretIntoPieces(secret, n, k);
         System.out.println(n + " pieces: " + Arrays.toString(pieces));
         // Shuffle the 6 pieces
         List<String> list = new ArrayList<String>(Arrays.asList(pieces));
         Collections.shuffle(list);
-        // Reconstruct the secret using any 3 pieces
-        String[] kPieces = list.toArray(new String[0]);
-        System.out.println("Any " + k + " pieces: " + Arrays.toString(kPieces));
-        String reconstructed = mergePiecesIntoSecret(kPieces);
-        System.out.println("Reconstructed secret=" + reconstructed);
+        // Reconstruct the secret using any k pieces
+        String[] kPieces = list.subList(0,  k).toArray(new String[0]);
+        String kPiecesPrint = Arrays.toString(kPieces);
 
-        System.out.println("Finish");
+        if (! useSimpleSecret)
+        {
+            kPiecesPrint = printAsShort(kPieces);
+        }
+        System.out.println("Any " + k + " pieces: " + kPiecesPrint);
+        String reconstructed = mergePiecesIntoSecret(kPieces);
+        System.out.println("Reconstructed secret as String=" + reconstructed);
+        System.out.println("Reconstructed secret as number=" + stringToBigInteger(reconstructed));
+        if (secret.equals(reconstructed))
+        {
+            System.out.println("Confirmed reconstruction success.");
+        }
+        else
+        {
+            System.out.println("*** Error reconstruction failed.");
+        }
+
+        long duration = new java.util.Date().getTime() - start;
+        System.out.println("Finish (" + duration + " milliseconds)");
+        // the creation of the 8192 prime changes duration from 13.3 seconds to 0.1 seconds
+    }
+
+    // array version of only show "n:k:x" from each of the long strings:
+    private static String printAsShort(String[] kPieces)
+    {
+        String ret;
+
+        String sep = "";
+        ret = "";
+        for (String s : kPieces)
+        {
+            ret += sep;
+            sep = ", ";
+            ret = ret + printAsShort(s);
+        }
+        return ret;
+    }
+
+    // only show "n:k:x" from the long string version of a share:
+    private static String printAsShort(String s)
+    {
+        int index = 0;
+        index = s.indexOf(":", index);
+        index = s.indexOf(":", index + 1);
+        index = s.indexOf(":", index + 1);
+
+        return s.substring(0, index);
     }
 
     static BigInteger stringToBigInteger(String in)
@@ -92,13 +144,13 @@ public final class TicketTwoMain
         secretInteger = stringToBigInteger(secret);
         // secretInteger = BigInteger.valueOf(2L).pow(4096);
         final BigInteger modulus;
-        modulus = secretInteger.nextProbablePrime(); // FAILS
+        // modulus = secretInteger.nextProbablePrime(); // OK
         // modulus =
         // secretInteger.multiply(BigInteger.valueOf(32L)).nextProbablePrime(); // FAILS
         // modulus = secretInteger.multiply(secretInteger).nextProbablePrime(); // OK
         // modulus = SecretShare.getPrimeUsedFor384bitSecretPayload(); // OK
         // modulus = SecretShare.getPrimeUsedFor4096bigSecretPayload(); // OK
-        //modulus = SecretShare.createAppropriateModulusForSecret(secretInteger); // OK
+        modulus = SecretShare.createAppropriateModulusForSecret(secretInteger); // OK
         final SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n,
                                                                              k,
                                                                              modulus,

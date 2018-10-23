@@ -205,6 +205,18 @@ public class SecretShareTest
         System.out.println(bics);
     }
 
+    // takes 15.5 seconds pow(8200).nextProbablePrime()
+    @Test
+    public void testPrint8192bigint()
+    {
+        BigInteger b = BigInteger.valueOf(2L).pow(8200).nextProbablePrime();
+        String bs = "" + b;
+        System.out.println("#Digits=" + bs.length());
+        System.out.println("Prime(8200)=");
+        System.out.println(b);
+        String bics = BigIntStringChecksum.create(b).toString();
+        System.out.println(bics);
+    }
 
 
     @Test

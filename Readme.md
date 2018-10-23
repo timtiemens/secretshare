@@ -124,7 +124,7 @@ Examples of command line invocations
       -s6 13554960 -s7 9969983 -s8 8095016 -s9 7654321 -s10 1234567
   ```
 
-  j. Print information about Secret Share, including version, 192 bit, 384 bit and 4096 bit primes.
+  j. Print information about Secret Share, including version, 192 bit, 384 bit, 4096 bit and 8192 bit primes.
   ```
   $ java -jar secretshare.jar info
   ```
@@ -153,7 +153,7 @@ Note on the Prime Modulus
 
 Note on the Secret
 -----
-From above, you can see the largest pre-defined prime modulus is 4096 bits, which only allows 512 characters of secret.
+From above, you can see the 4096 bit modulus in use, which only allows 512 characters of secret.  The largest available pre-defined prime modulus is 8192 bits, which only allows 1024 characters of secret.
 In case it isn't obvious, the best way to use the secret share program is to use it to split the secret key that was used by a symmetric encryption program to encrypt the actual secret --  i.e. split and share the key, not the original secret content.
 See gpg -c (aka gpg --symmetric) for an example of symmetric encryption.  See openssl enc for another example of symmetric encryption.
 
