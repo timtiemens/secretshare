@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tiemens.secretshare.exceptions.SecretShareException;
+
 
 public class NumberSimplex<E extends Number>
 {
@@ -98,7 +100,7 @@ public class NumberSimplex<E extends Number>
         final int width = mArrayhide[0].length;
         if (height != width)
         {
-            throw new ArithmeticException("h=" + height + " w=" + width + " must match");
+            throw new SecretShareException("h=" + height + " w=" + width + " must match");
         }
 
         final int numberOfPivots = width;
@@ -128,7 +130,7 @@ public class NumberSimplex<E extends Number>
         }
         else
         {
-            throw new ArithmeticException("Could not find answer at index " + i + " answers=" + mAnswers);
+            throw new SecretShareException("Could not find answer at index " + i + " answers=" + mAnswers);
         }
     }
 
@@ -181,14 +183,14 @@ public class NumberSimplex<E extends Number>
         {
             if (v.isVariable())
             {
-                throw new ArithmeticException("Not a number: " + v);
+                throw new SecretShareException("Not a number: " + v);
             }
         }
         for (NumberOrVariable<E> v : sides)
         {
             if (v.isNumber())
             {
-                throw new ArithmeticException("Not a variable: " + v);
+                throw new SecretShareException("Not a variable: " + v);
             }
         }
         final int height = array.length;
@@ -394,7 +396,7 @@ public class NumberSimplex<E extends Number>
         {
             if (in == null)
             {
-                throw new IllegalArgumentException("cannot be null");
+                throw new SecretShareException("cannot be null");
             }
             number = in;
         }
@@ -402,7 +404,7 @@ public class NumberSimplex<E extends Number>
         {
             if (name == null)
             {
-                throw new IllegalArgumentException("cannot be null");
+                throw new SecretShareException("cannot be null");
             }
             variable = name;
         }
@@ -559,7 +561,7 @@ public class NumberSimplex<E extends Number>
                 }
                 else
                 {
-                    throw new ArithmeticException("Programmer error");
+                    throw new SecretShareException("Programmer error");
                 }
                 //System.out.println("h=" + height + " w=" + width +
                 // " r=" + r + " s=" + s + " val=" + ret[r][s]);

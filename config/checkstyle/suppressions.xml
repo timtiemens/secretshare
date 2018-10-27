@@ -16,10 +16,10 @@
             lines="56-61"/>
   <suppress checks="VisibilityModifierCheck"
             files="NumberMatrix.java"
-            lines="23"/>
+            lines="25"/>
   <suppress checks="VisibilityModifierCheck"
             files="NumberSimplex"
-            lines="275-276"/>
+            lines="277-278"/>
 
   <!-- Tone down the checking for test code -->
   <suppress checks="NoWhitespaceAfter|ExecutableStatementCount|JavaNCSS|BooleanExpressionComplexity|NestedIfDepth|MethodLength|LineLength" 

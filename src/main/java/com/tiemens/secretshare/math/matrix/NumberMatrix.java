@@ -18,6 +18,8 @@ package com.tiemens.secretshare.math.matrix;
 
 import java.io.PrintStream;
 
+import com.tiemens.secretshare.exceptions.SecretShareException;
+
 public abstract class NumberMatrix<E extends Number>
 {
     protected E[][] matrix;
@@ -111,16 +113,16 @@ public abstract class NumberMatrix<E extends Number>
     {
         if ((rowsandcols.length % j) != 0)
         {
-            throw new ArithmeticException("array size must be evenly divisible by j(" + j + ")");
+            throw new SecretShareException("array size must be evenly divisible by j(" + j + ")");
         }
         int i = rowsandcols.length / j;
         if (i != getHeight())
         {
-            throw new ArithmeticException("refusing to resize height from " + getHeight() + " to " + i);
+            throw new SecretShareException("refusing to resize height from " + getHeight() + " to " + i);
         }
         if (j != getWidth())
         {
-            throw new ArithmeticException("refusing to resize width from " + getWidth() + " to " + j);
+            throw new SecretShareException("refusing to resize width from " + getWidth() + " to " + j);
         }
         for (int r = 0; r < i; r++)
         {
@@ -144,7 +146,7 @@ public abstract class NumberMatrix<E extends Number>
         if ((matrix1.length != matrix2.length) ||
             (matrix1[0].length != matrix2[0].length))
         {
-            throw new RuntimeException("The matrices do not have the same size");
+            throw new SecretShareException("The matrices do not have the same size");
         }
 
         E[][] result = //(E[][])new Number[matrix1.length][matrix1[0].length];
@@ -172,7 +174,7 @@ public abstract class NumberMatrix<E extends Number>
         // Check bounds
         if (matrix1[0].length != matrix2.length)
         {
-            throw new RuntimeException("The matrices do not have compatible size");
+            throw new SecretShareException("The matrices do not have compatible size");
         }
 
         // Create result matrix

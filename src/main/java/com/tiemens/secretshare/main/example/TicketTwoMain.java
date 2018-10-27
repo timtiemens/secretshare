@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.tiemens.secretshare.BuildVersion;
 import com.tiemens.secretshare.engine.SecretShare;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 
@@ -67,6 +68,7 @@ public final class TicketTwoMain
                 "1234567890123456789012345678901234567890123456789Z";  // "Z" not "0"
         }
 
+        System.out.println("TicketTwoMain, version=" + BuildVersion.getUiVersion());
         System.out.println("Secret as string: " + secret);
         System.out.println("Secret as number: " + stringToBigInteger(secret));
         final int n = 6, k = 5;
