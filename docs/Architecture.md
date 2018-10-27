@@ -2,7 +2,7 @@ Architecture Documentation
 ==========================
 
 The package dependencies in secretshare:
-![Package Digraph](images/jdepend-webgraph.png)
+![Package Digraph](images/jdepend-webgraph.svg)
 
 Some notes:
  1. com.tiemens.secretshare - looks odd as a dead-end.  This package only has BuildVersion.java, which seems like a natural place for this class.  It just makes the diagram look a bit strange.
