@@ -12,8 +12,10 @@ Some To Do Items:
  1. Logger - since java.util.Logger exists now, add logging to this library.
 
 
-2018/Oct - fixed -  com.tiemens.secretshare.main.test - contains only "TicketTwoMain.java" (ticket two is a reference to the second GitHub issue).  The name ".main.test" is incorrect - it should be ".main.example" 
-2018/Oct - fixed -  com.tiemens.secretshare.math.matrix - missing link to ".exceptions", reveals an implementation flaw in NumberMatrix.java.  There are "throw new ArithmeticException()" calls that should be "throw new SecretShareException()", as the Architecture Goals state.
+2018/Oct - fixed\
+com.tiemens.secretshare.main.test - contains only "TicketTwoMain.java" (ticket two is a reference to the second GitHub issue).  The name ".main.test" is incorrect - it should be ".main.example"
+2018/Oct - fixed\
+com.tiemens.secretshare.math.matrix - missing link to ".exceptions", reveals an implementation flaw in NumberMatrix.java.  There are "throw new ArithmeticException()" calls that should be "throw new SecretShareException()", as the Architecture Goals state.
 
 Code
 ====
