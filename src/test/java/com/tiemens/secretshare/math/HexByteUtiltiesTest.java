@@ -54,7 +54,7 @@ public class HexByteUtiltiesTest
     }
 
     private void sub(String expected,
-                     int ... list)
+                     int... list)
     {
         byte[] bytes = new byte[list.length];
         for (int i = 0, n = list.length; i < n; i++)

@@ -16,6 +16,7 @@
  *******************************************************************************/
 package com.tiemens.secretshare.math;
 
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -408,12 +409,15 @@ public final class EasyLinearEquation
             }
             if (somethingBroke)
             {
-                System.out.format("ERROR\noriginal %80s\n" +
-                                        "dividedby %80s\n" +
-                                        "modulus   %80s\n",
-                                        original,
-                                        divideby,
-                                        useModulus);
+                getLogger().log(Level.SEVERE,
+                                "limit exceeded.  original {0} divideby {1} useModulus {2}",
+                                new Object[] { original, divideby, useModulus});
+//                System.out.format("ERROR\noriginal %80s\n" +
+//                                        "dividedby %80s\n" +
+//                                        "modulus   %80s\n",
+//                                        original,
+//                                        divideby,
+//                                        useModulus);
             }
 //            c = 0;
 //            while (! trial.correct)
@@ -442,7 +446,8 @@ public final class EasyLinearEquation
             }
             else
             {
-                System.out.println("WARN: trial[0] did not succeed.");
+                getLogger().warning("trial[0] did not succeed.");
+//                System.out.println("WARN: trial[0] did not succeed.");
                 for (Trial ret : list)
                 {
                     if (ret.correct)
@@ -660,7 +665,7 @@ public final class EasyLinearEquation
                         // Debug printing
                         if (! "0".equals(success.which))
                         {
-                        System.out.println("Trial.sucess.which=" + success.which);
+                            System.out.println("Trial.sucess.which=" + success.which);
                         }
                     }
                 }

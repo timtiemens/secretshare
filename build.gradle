@@ -61,7 +61,7 @@ sourceSets {
 }
 
 jacoco {
-    toolVersion = "0.8.1"
+    toolVersion = "0.8.2"
     reportsDir = file("$buildDir/reports/jacoco")
 }
 
@@ -296,7 +296,9 @@ sonarqube {
 }
 
 checkstyle {
-    def dir = "config/checkstyle"
+    toolVersion "7.6.1"
+
+    def dir = "$projectDir/config/checkstyle"
 
     configProperties = [
         "checkstyle.header.file" : "${dir}/java.header",
@@ -305,6 +307,6 @@ checkstyle {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.7'
+    gradleVersion = '4.8'
 }
 

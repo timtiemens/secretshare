@@ -109,7 +109,7 @@ public abstract class NumberMatrix<E extends Number>
         return one().equals(other);
     }
 
-    public void fill(int j, int ... rowsandcols)
+    public void fill(int j, int... rowsandcols)
     {
         if ((rowsandcols.length % j) != 0)
         {

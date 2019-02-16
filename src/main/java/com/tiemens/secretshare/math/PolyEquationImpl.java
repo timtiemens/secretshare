@@ -73,7 +73,7 @@ public class PolyEquationImpl
      * @param args as int values
      * @return instance
      */
-    public static PolyEquationImpl create(final int ...args)
+    public static PolyEquationImpl create(final int... args)
     {
         BigInteger[] bigints = new BigInteger[args.length];
         for (int i = 0, n = args.length; i < n; i++)
