@@ -133,13 +133,13 @@ public final class BigIntStringChecksum
      *               string does not have 0-9a-f digits OR
      *               checksum doesn't match.
      */
-    public static BigIntStringChecksum fromString(String bics)
+    public static BigIntStringChecksum fromString(final String bics)
     {
         boolean returnIsNegative = false;
         BigIntStringChecksum ret = null;
         if (bics == null)
         {
-            createThrow("Input cannot be null", bics);
+            createThrow("Input cannot be null", "<null>");
         }
         if (startsWithPrefix(bics))
         {
@@ -418,6 +418,9 @@ public final class BigIntStringChecksum
     }
 
 
+    /**
+     **   @Throw SecretShareException always
+     */
     private static void createThrow(String string,
                                     String bics)
     {

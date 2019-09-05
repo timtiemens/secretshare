@@ -391,7 +391,7 @@ public final class MainCombine
             int end = i.indexOf(")");
             i = i.substring(0, end);
 
-            return Integer.valueOf(i);
+            return Integer.parseInt(i);
         }
 
         private BigInteger parseEqualBigInt(String fieldname,

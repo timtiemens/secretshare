@@ -306,7 +306,8 @@ checkstyle {
     ]
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.8'
-}
+// gradle 5+ now uses    $ gradle wrapper --gradle-version 5.6.1
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '4.8'
+//}
 

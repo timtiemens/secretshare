@@ -247,7 +247,8 @@ public class MainCombineParanoidTest
 
     public CombineOutput combineSimple(PublicInfo publicInfo, List<ShareInfo> shares, ParanoidInput paranoidInput)
     {
-        String[] args = {/*"combine",*/ "-k", "" + publicInfo.getK(), "-n", "" + publicInfo.getN(), "-m", "" + publicInfo.getPrimeModulus() };
+        //String[] args = {/*"combine",*/ "-k", "" + publicInfo.getK(), "-n", "" + publicInfo.getN(), "-m", "" + publicInfo.getPrimeModulus() };
+        //CombineInput inputargs = CombineInput.parse(args, null, null);
         CombineInput input = new CombineInput(publicInfo.getK(), publicInfo.getN(), publicInfo, paranoidInput);
         //System.out.println("K=" + publicInfo.getK());
         //System.out.println("MOD=" + publicInfo.getPrimeModulus());

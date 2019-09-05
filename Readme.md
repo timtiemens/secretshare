@@ -7,19 +7,19 @@ as described in Applied Cryptography [as LaGrange Interpolating Polynomial Schem
 Dependencies
 -------------
 The following are required to run the application in secretshare.jar:
- 1. jre 1.8+
+ 1. jre 11 (LTS)
  
 
 The following are used to compile the project:
- 1.  jdk 1.8+
- 2.  gradlew (uses gradle 4.7)
+ 1.  jdk 11 (LTS)
+ 2.  gradlew (uses gradle 5.6.1)
 
 
 The following are used to completely build and test the project:
  1.  JUnit 4.x
 This is needed for the (Unit and Integration) Test .java files to compile.
  
-Note: the last version of this library to support jdk 1.6 was 1.4.4. (https://github.com/timtiemens/secretshare/releases/tag/v1.4.4) or (https://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4).  It is sad to let it go, but Java SE 6 was released in 2006, and EOL'd in 2013.
+Note: the last version of this library to support jdk 1.6 and jdk 8 was 1.4.4. (https://github.com/timtiemens/secretshare/releases/tag/v1.4.4) or (https://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4).  It is sad to let 1.6 go, but Java SE 6 was released in 2006, and EOL'd in 2013.  Java SE 8 was released in 2014, and Oracle EOL'd in 2019/Jan.
  
 Build
 ------

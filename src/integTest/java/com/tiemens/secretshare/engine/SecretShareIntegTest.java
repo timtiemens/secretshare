@@ -283,7 +283,7 @@ public class SecretShareIntegTest
                                                      final int round)
     {
         Random random;
-        random = new Random(1234L);
+        //random = new Random(1234L);
         BigInteger base =     BigInteger.valueOf(2L).pow(bits);
         BigInteger addto =    BigInteger.probablePrime(155, new Random());
         BigInteger evenmore = BigInteger.probablePrime(100, new Random()).multiply(BigInteger.valueOf(round));
