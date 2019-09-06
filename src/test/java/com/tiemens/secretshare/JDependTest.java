@@ -162,6 +162,15 @@ public class JDependTest extends TestCase
                      false, p.containsCycle());
     }
 
+    @SuppressWarnings("unchecked")
+    private Collection<JavaPackage> doAnalyze(JDepend jdepend) {
+        return (Collection<JavaPackage>) jdepend.analyze();
+    }
+
+    @SuppressWarnings("unchecked")
+    private Iterator<JavaPackage> doGetPackageIterator(JDepend jdepend) {
+        return jdepend.getPackages().iterator();
+    }
     /**
      * Tests the conformance of all analyzed packages to a
      * distance from the main sequence (D) within a tolerance.
@@ -172,9 +181,10 @@ public class JDependTest extends TestCase
         double ideal = 0.0;
         double tolerance = 1.0;
 
-        Collection packages = jdepend.analyze();
+        Collection<JavaPackage> packages = doAnalyze(jdepend);
+        assertNotNull(packages);
 
-        for (Iterator iter = packages.iterator(); iter.hasNext();)
+        for (Iterator<JavaPackage> iter = packages.iterator(); iter.hasNext();)
         {
             JavaPackage p = (JavaPackage) iter.next();
             assertEquals("Distance exceeded: " + p.getName(),
@@ -189,11 +199,12 @@ public class JDependTest extends TestCase
     public void testAllPackagesHaveNoCycles()
     {
 
-        Collection packages = jdepend.analyze();
+        Collection<JavaPackage> packages = doAnalyze(jdepend);
+        assertNotNull(packages);
 
         if (jdepend.containsCycles())
         {
-            for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();)
+            for (Iterator<JavaPackage> i = doGetPackageIterator(jdepend); i.hasNext();)
             {
                 JavaPackage jPackage = (JavaPackage) i.next();
                 if (jPackage.containsCycle())
@@ -224,15 +235,15 @@ public class JDependTest extends TestCase
         if (debugDump)
         {
             System.out.println("J Packages = " + jdepend.getPackages().size());
-            for (Iterator i = jdepend.getPackages().iterator(); i.hasNext();)
+            for (Iterator<JavaPackage> i = doGetPackageIterator(jdepend); i.hasNext();)
             {
-                JavaPackage jPackage = (JavaPackage) i.next();
+                JavaPackage jPackage = i.next();
                 System.out.println("J.pkg=" + jPackage.getName());
             }
             System.out.println("C Packages = " + constraint.getPackages().size());
-            for (Iterator i = constraint.getPackages().iterator(); i.hasNext();)
+            for (Iterator<JavaPackage> i = constraint.getPackages().iterator(); i.hasNext();)
             {
-                JavaPackage jPackage = (JavaPackage) i.next();
+                JavaPackage jPackage = i.next();
                 System.out.println("C.pkg=" + jPackage.getName());
             }
         }

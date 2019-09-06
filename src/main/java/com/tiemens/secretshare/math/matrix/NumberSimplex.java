@@ -387,7 +387,7 @@ public class NumberSimplex<E extends Number>
         return new NumberOrVariable<E>(Integer.toHexString(i + 10));
     }
 
-    public static class NumberOrVariable<E>
+    public static final class NumberOrVariable<E>
     {
         private E number;
         private String variable;
@@ -462,7 +462,7 @@ public class NumberSimplex<E extends Number>
             {
                 return false;
             }
-            NumberOrVariable other = (NumberOrVariable) obj;
+            NumberOrVariable<?> other = (NumberOrVariable<?>) obj;
             if (number == null)
             {
                 if (other.number != null)
