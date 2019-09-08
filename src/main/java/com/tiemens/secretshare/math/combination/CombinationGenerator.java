@@ -14,7 +14,7 @@
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  *******************************************************************************/
-package com.tiemens.secretshare.math;
+package com.tiemens.secretshare.math.combination;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

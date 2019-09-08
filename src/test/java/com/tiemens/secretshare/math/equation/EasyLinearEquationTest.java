@@ -14,7 +14,7 @@
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  *******************************************************************************/
-package com.tiemens.secretshare.math;
+package com.tiemens.secretshare.math.equation;
 
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ import java.util.logging.SimpleFormatter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.tiemens.secretshare.math.EasyLinearEquation.EasySolve;
+import com.tiemens.secretshare.math.equation.EasyLinearEquation.EasySolve;
 
 public class EasyLinearEquationTest
 {

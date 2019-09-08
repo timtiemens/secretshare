@@ -22,7 +22,7 @@ import java.security.SecureRandom;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.tiemens.secretshare.math.BigIntUtilities;
+import com.tiemens.secretshare.math.type.BigIntUtilities;
 
 public class Issue8Test
 {

@@ -31,7 +31,7 @@ import com.tiemens.secretshare.engine.SecretShare.ParanoidOutput;
 import com.tiemens.secretshare.engine.SecretShare.PublicInfo;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.exceptions.SecretShareException;
-import com.tiemens.secretshare.math.BigIntUtilities;
+import com.tiemens.secretshare.math.type.BigIntUtilities;
 
 /**
  * Main command line for the "combine" (aka "recover") of a secret.

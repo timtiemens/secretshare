@@ -14,7 +14,7 @@
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  *******************************************************************************/
-package com.tiemens.secretshare.math;
+package com.tiemens.secretshare.math.type;
 
 import java.math.BigInteger;
 
@@ -322,33 +322,9 @@ public final class BigIntStringChecksum
     // non public methods
     // ==================================================
 
-    /* private */static String bytesToHexString(byte... in)
+    /* private */static String bytesToHexString(byte... bytes)
     {
-        String ret = "";
-        for (byte b : in)
-        {
-            ret += byteToHexString(b);
-        }
-        return ret;
-    }
-
-    private static String[] lookup = { "0", "1", "2", "3", "4", "5", "6", "7",
-                                       "8", "9", "A", "B", "C", "D", "E", "F"
-    };
-
-    private static String byteToHexString(byte b)
-    {
-        String ret = "";
-        byte ch = 0x00;
-        ch = (byte) (b & 0xF0); // strip off high
-        ch = (byte) (ch >>> 4); // shift
-        ch = (byte) (ch & 0X0F); // the >>> turned on high bits, get rid of them
-        ret += lookup[ch];
-
-        ch = (byte) (b & 0X0F);
-        ret += lookup[ch];
-
-        return ret;
+        return HexByteUtilities.printAsHex(bytes);
     }
 
     private static String insertDashesIntoHex(final String inAsHex)

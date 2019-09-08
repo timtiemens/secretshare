@@ -27,8 +27,8 @@ import org.junit.Test;
 
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.exceptions.SecretShareException;
-import com.tiemens.secretshare.math.BigIntStringChecksum;
-import com.tiemens.secretshare.math.EasyLinearEquationTest;
+import com.tiemens.secretshare.math.equation.EasyLinearEquationTest;
+import com.tiemens.secretshare.math.type.BigIntStringChecksum;
 
 public class SecretShareTest
 {

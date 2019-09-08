@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
-import com.tiemens.secretshare.math.BigIntUtilities;
+import com.tiemens.secretshare.math.type.BigIntUtilities;
 
 /**
  * Main command line for the "bigintcs" utilities - converting to/from bigintcs, bigint, and String.

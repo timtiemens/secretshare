@@ -21,10 +21,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import com.tiemens.secretshare.engine.SecretShareTest;
-import com.tiemens.secretshare.math.BigIntStringChecksumTest;
-import com.tiemens.secretshare.math.BigIntUtilitiesTest;
-import com.tiemens.secretshare.math.EasyLinearEquationTest;
-import com.tiemens.secretshare.math.PolyEquationImplTest;
+import com.tiemens.secretshare.math.equation.EasyLinearEquationTest;
+import com.tiemens.secretshare.math.equation.PolyEquationImplTest;
+import com.tiemens.secretshare.math.type.BigIntStringChecksumTest;
+import com.tiemens.secretshare.math.type.BigIntUtilitiesTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

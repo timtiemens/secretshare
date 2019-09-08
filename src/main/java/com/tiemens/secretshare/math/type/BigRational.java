@@ -14,7 +14,7 @@
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  *******************************************************************************/
-package com.tiemens.secretshare.math;
+package com.tiemens.secretshare.math.type;
 
 
 import java.math.BigDecimal;

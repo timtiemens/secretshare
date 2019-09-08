@@ -8,10 +8,11 @@ Some notes:
  1. com.tiemens.secretshare - looks odd as a dead-end.  This package only has BuildVersion.java, which seems like a natural place for this class.  It just makes the diagram look a bit strange.
 
 Some To Do Items:
- 1. com.tiemens.secretshare.math - would have been better if split into com.tiemens.secretshare.math.types and com.tiemens.secretshare.math.engine.  As it is, it looks like ".math.matrix" is a higher level than ".math".
+
  1. Logger - since java.util.Logger exists now, add logging to this library.
 
-
+2019/Sep - fixed\
+com.tiemens.secretshare.math - has been split into com.tiemens.secretshare.math.type and com.tiemens.secretshare.math.equation.  Now, ".math" shows as a higher level than ".math.matrix".
 2018/Oct - fixed\
 com.tiemens.secretshare.main.test - contains only "TicketTwoMain.java" (ticket two is a reference to the second GitHub issue).  The name ".main.test" is incorrect - it should be ".main.example"\
 2018/Oct - fixed\

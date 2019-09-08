@@ -14,7 +14,7 @@
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  *******************************************************************************/
-package com.tiemens.secretshare.math;
+package com.tiemens.secretshare.math.type;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

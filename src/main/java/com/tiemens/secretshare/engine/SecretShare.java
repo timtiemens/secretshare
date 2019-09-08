@@ -35,15 +35,15 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
-import com.tiemens.secretshare.math.BigIntStringChecksum;
-import com.tiemens.secretshare.math.BigIntUtilities;
-import com.tiemens.secretshare.math.BigRational;
-import com.tiemens.secretshare.math.CombinationGenerator;
-import com.tiemens.secretshare.math.EasyLinearEquation;
-import com.tiemens.secretshare.math.PolyEquationImpl;
+import com.tiemens.secretshare.math.combination.CombinationGenerator;
+import com.tiemens.secretshare.math.equation.EasyLinearEquation;
+import com.tiemens.secretshare.math.equation.PolyEquationImpl;
 import com.tiemens.secretshare.math.matrix.BigRationalMatrix;
 import com.tiemens.secretshare.math.matrix.NumberMatrix;
 import com.tiemens.secretshare.math.matrix.NumberSimplex;
+import com.tiemens.secretshare.math.type.BigIntStringChecksum;
+import com.tiemens.secretshare.math.type.BigIntUtilities;
+import com.tiemens.secretshare.math.type.BigRational;
 
 /**
  * Main class for the "Shamir's Secret Sharing" implementation.

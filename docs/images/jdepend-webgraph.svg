@@ -1,116 +1,131 @@
-<svg width="654pt" height="404pt" viewBox="0.00 0.00 654.00 404.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="754pt" height="404pt" viewBox="0.00 0.00 754.01 404.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph1" class="graph" transform="scale(1 1) rotate(0) translate(4 400)">
 <title>jdepend</title>
-<polygon fill="white" stroke="white" points="-4,5 -4,-400 651,-400 651,5 -4,5"></polygon>
-<!-- com.tiemens.secretshare.math -->
-<g id="node1" class="node"><title>com.tiemens.secretshare.math</title>
-<ellipse fill="none" stroke="black" cx="446" cy="-162" rx="127.212" ry="18"></ellipse>
-<text text-anchor="middle" x="446" y="-157.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.math</text>
-</g>
-<!-- com.tiemens.secretshare.md5sum -->
-<g id="node3" class="node"><title>com.tiemens.secretshare.md5sum</title>
-<ellipse fill="none" stroke="black" cx="446" cy="-90" rx="141.143" ry="18"></ellipse>
-<text text-anchor="middle" x="446" y="-85.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.md5sum</text>
-</g>
-<!-- com.tiemens.secretshare.math&#45;&gt;com.tiemens.secretshare.md5sum -->
-<g id="edge2" class="edge"><title>com.tiemens.secretshare.math-&gt;com.tiemens.secretshare.md5sum</title>
-<path fill="none" stroke="black" d="M446,-143.697C446,-135.983 446,-126.712 446,-118.112"></path>
-<polygon fill="black" stroke="black" points="449.5,-118.104 446,-108.104 442.5,-118.104 449.5,-118.104"></polygon>
-</g>
-<!-- com.tiemens.secretshare.exceptions -->
-<g id="node5" class="node"><title>com.tiemens.secretshare.exceptions</title>
-<ellipse fill="none" stroke="black" cx="277" cy="-18" rx="149.19" ry="18"></ellipse>
-<text text-anchor="middle" x="277" y="-13.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.exceptions</text>
-</g>
-<!-- com.tiemens.secretshare.math&#45;&gt;com.tiemens.secretshare.exceptions -->
-<g id="edge4" class="edge"><title>com.tiemens.secretshare.math-&gt;com.tiemens.secretshare.exceptions</title>
-<path fill="none" stroke="black" d="M363.967,-148.114C338.966,-140.354 313.498,-127.921 296,-108 281.22,-91.1736 276.982,-65.6941 276.144,-46.303"></path>
-<polygon fill="black" stroke="black" points="279.643,-46.1926 275.982,-36.2502 272.643,-46.3052 279.643,-46.1926"></polygon>
-</g>
-<!-- com.tiemens.secretshare.md5sum&#45;&gt;com.tiemens.secretshare.exceptions -->
-<g id="edge10" class="edge"><title>com.tiemens.secretshare.md5sum-&gt;com.tiemens.secretshare.exceptions</title>
-<path fill="none" stroke="black" d="M406.377,-72.5881C382.414,-62.6626 351.668,-49.9274 326.161,-39.3626"></path>
-<polygon fill="black" stroke="black" points="327.245,-36.0234 316.667,-35.4302 324.567,-42.4906 327.245,-36.0234"></polygon>
-</g>
+<polygon fill="white" stroke="white" points="-4,5 -4,-400 751.005,-400 751.005,5 -4,5"></polygon>
 <!-- com.tiemens.secretshare.main.example -->
-<g id="node6" class="node"><title>com.tiemens.secretshare.main.example</title>
-<ellipse fill="none" stroke="black" cx="162" cy="-378" rx="161.903" ry="18"></ellipse>
-<text text-anchor="middle" x="162" y="-373.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.main.example</text>
+<g id="node1" class="node"><title>com.tiemens.secretshare.main.example</title>
+<ellipse fill="none" stroke="black" cx="203.005" cy="-378" rx="161.903" ry="18"></ellipse>
+<text text-anchor="middle" x="203.005" y="-373.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.main.example</text>
 </g>
 <!-- com.tiemens.secretshare.engine -->
-<g id="node8" class="node"><title>com.tiemens.secretshare.engine</title>
-<ellipse fill="none" stroke="black" cx="369" cy="-306" rx="133.359" ry="18"></ellipse>
-<text text-anchor="middle" x="369" y="-301.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.engine</text>
+<g id="node3" class="node"><title>com.tiemens.secretshare.engine</title>
+<ellipse fill="none" stroke="black" cx="396.005" cy="-306" rx="133.359" ry="18"></ellipse>
+<text text-anchor="middle" x="396.005" y="-301.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.engine</text>
 </g>
 <!-- com.tiemens.secretshare.main.example&#45;&gt;com.tiemens.secretshare.engine -->
-<g id="edge6" class="edge"><title>com.tiemens.secretshare.main.example-&gt;com.tiemens.secretshare.engine</title>
-<path fill="none" stroke="black" d="M210.01,-360.765C240.533,-350.443 280.197,-337.03 312.272,-326.183"></path>
-<polygon fill="black" stroke="black" points="313.612,-329.425 321.964,-322.906 311.37,-322.794 313.612,-329.425"></polygon>
+<g id="edge2" class="edge"><title>com.tiemens.secretshare.main.example-&gt;com.tiemens.secretshare.engine</title>
+<path fill="none" stroke="black" d="M248.255,-360.588C276.283,-350.422 312.437,-337.31 341.966,-326.6"></path>
+<polygon fill="black" stroke="black" points="343.497,-329.768 351.705,-323.068 341.11,-323.187 343.497,-329.768"></polygon>
 </g>
 <!-- com.tiemens.secretshare -->
-<g id="node10" class="node"><title>com.tiemens.secretshare</title>
-<ellipse fill="none" stroke="black" cx="112" cy="-306" rx="105.124" ry="18"></ellipse>
-<text text-anchor="middle" x="112" y="-301.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare</text>
+<g id="node5" class="node"><title>com.tiemens.secretshare</title>
+<ellipse fill="none" stroke="black" cx="139.005" cy="-306" rx="105.124" ry="18"></ellipse>
+<text text-anchor="middle" x="139.005" y="-301.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare</text>
 </g>
 <!-- com.tiemens.secretshare.main.example&#45;&gt;com.tiemens.secretshare -->
-<g id="edge8" class="edge"><title>com.tiemens.secretshare.main.example-&gt;com.tiemens.secretshare</title>
-<path fill="none" stroke="black" d="M149.64,-359.697C143.767,-351.474 136.631,-341.483 130.158,-332.421"></path>
-<polygon fill="black" stroke="black" points="132.878,-330.207 124.217,-324.104 127.182,-334.276 132.878,-330.207"></polygon>
+<g id="edge4" class="edge"><title>com.tiemens.secretshare.main.example-&gt;com.tiemens.secretshare</title>
+<path fill="none" stroke="black" d="M187.513,-360.055C179.767,-351.583 170.245,-341.168 161.694,-331.815"></path>
+<polygon fill="black" stroke="black" points="164.131,-329.294 154.8,-324.275 158.965,-334.017 164.131,-329.294"></polygon>
 </g>
-<!-- com.tiemens.secretshare.engine&#45;&gt;com.tiemens.secretshare.math -->
-<g id="edge12" class="edge"><title>com.tiemens.secretshare.engine-&gt;com.tiemens.secretshare.math</title>
-<path fill="none" stroke="black" d="M425.175,-289.552C443.68,-281.501 462.253,-269.538 473,-252 484.962,-232.478 475.389,-207.277 464.468,-188.678"></path>
-<polygon fill="black" stroke="black" points="467.376,-186.728 459.086,-180.131 461.453,-190.458 467.376,-186.728"></polygon>
+<!-- com.tiemens.secretshare.exceptions -->
+<g id="node8" class="node"><title>com.tiemens.secretshare.exceptions</title>
+<ellipse fill="none" stroke="black" cx="454.005" cy="-18" rx="149.19" ry="18"></ellipse>
+<text text-anchor="middle" x="454.005" y="-13.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.exceptions</text>
 </g>
 <!-- com.tiemens.secretshare.engine&#45;&gt;com.tiemens.secretshare.exceptions -->
-<g id="edge14" class="edge"><title>com.tiemens.secretshare.engine-&gt;com.tiemens.secretshare.exceptions</title>
-<path fill="none" stroke="black" d="M271.162,-293.775C218.852,-285.542 161.975,-272.217 146,-252 90.7194,-182.041 192.211,-85.846 246.289,-42.205"></path>
-<polygon fill="black" stroke="black" points="248.561,-44.8704 254.215,-35.9103 244.207,-39.3889 248.561,-44.8704"></polygon>
+<g id="edge8" class="edge"><title>com.tiemens.secretshare.engine-&gt;com.tiemens.secretshare.exceptions</title>
+<path fill="none" stroke="black" d="M317.249,-291.473C213.976,-271.877 41.79,-232.154 7.00542,-180 -1.87252,-166.689 -2.66558,-156.746 7.00542,-144 48.2687,-89.6148 230.724,-52.4629 349.396,-33.5563"></path>
+<polygon fill="black" stroke="black" points="350.271,-36.9618 359.605,-31.9496 349.183,-30.0469 350.271,-36.9618"></polygon>
+</g>
+<!-- com.tiemens.secretshare.math.type -->
+<g id="node11" class="node"><title>com.tiemens.secretshare.math.type</title>
+<ellipse fill="none" stroke="black" cx="549.005" cy="-162" rx="146.274" ry="18"></ellipse>
+<text text-anchor="middle" x="549.005" y="-157.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.math.type</text>
+</g>
+<!-- com.tiemens.secretshare.engine&#45;&gt;com.tiemens.secretshare.math.type -->
+<g id="edge10" class="edge"><title>com.tiemens.secretshare.engine-&gt;com.tiemens.secretshare.math.type</title>
+<path fill="none" stroke="black" d="M467.043,-290.651C489.763,-282.765 513.115,-270.626 529.005,-252 543.575,-234.922 548.142,-209.47 549.316,-190.153"></path>
+<polygon fill="black" stroke="black" points="552.815,-190.259 549.662,-180.145 545.819,-190.018 552.815,-190.259"></polygon>
+</g>
+<!-- com.tiemens.secretshare.math.equation -->
+<g id="node13" class="node"><title>com.tiemens.secretshare.math.equation</title>
+<ellipse fill="none" stroke="black" cx="179.005" cy="-162" rx="162.216" ry="18"></ellipse>
+<text text-anchor="middle" x="179.005" y="-157.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.math.equation</text>
+</g>
+<!-- com.tiemens.secretshare.engine&#45;&gt;com.tiemens.secretshare.math.equation -->
+<g id="edge12" class="edge"><title>com.tiemens.secretshare.engine-&gt;com.tiemens.secretshare.math.equation</title>
+<path fill="none" stroke="black" d="M286.429,-295.647C255.62,-288.002 224.439,-274.745 202.005,-252 186.025,-235.798 180.712,-210.032 179.139,-190.384"></path>
+<polygon fill="black" stroke="black" points="182.624,-190.001 178.607,-180.197 175.634,-190.366 182.624,-190.001"></polygon>
 </g>
 <!-- com.tiemens.secretshare.math.matrix -->
 <g id="node15" class="node"><title>com.tiemens.secretshare.math.matrix</title>
-<ellipse fill="none" stroke="black" cx="310" cy="-234" rx="154.148" ry="18"></ellipse>
-<text text-anchor="middle" x="310" y="-229.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.math.matrix</text>
+<ellipse fill="none" stroke="black" cx="366.005" cy="-234" rx="154.148" ry="18"></ellipse>
+<text text-anchor="middle" x="366.005" y="-229.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.math.matrix</text>
 </g>
 <!-- com.tiemens.secretshare.engine&#45;&gt;com.tiemens.secretshare.math.matrix -->
-<g id="edge16" class="edge"><title>com.tiemens.secretshare.engine-&gt;com.tiemens.secretshare.math.matrix</title>
-<path fill="none" stroke="black" d="M354.718,-288.055C347.649,-279.668 338.974,-269.376 331.153,-260.096"></path>
-<polygon fill="black" stroke="black" points="333.682,-257.666 324.561,-252.275 328.329,-262.177 333.682,-257.666"></polygon>
+<g id="edge14" class="edge"><title>com.tiemens.secretshare.engine-&gt;com.tiemens.secretshare.math.matrix</title>
+<path fill="none" stroke="black" d="M388.59,-287.697C385.211,-279.813 381.136,-270.304 377.382,-261.546"></path>
+<polygon fill="black" stroke="black" points="380.492,-259.917 373.336,-252.104 374.058,-262.675 380.492,-259.917"></polygon>
 </g>
-<!-- com.tiemens.secretshare.math.matrix&#45;&gt;com.tiemens.secretshare.math -->
-<g id="edge20" class="edge"><title>com.tiemens.secretshare.math.matrix-&gt;com.tiemens.secretshare.math</title>
-<path fill="none" stroke="black" d="M342.575,-216.233C361.163,-206.666 384.651,-194.577 404.543,-184.338"></path>
-<polygon fill="black" stroke="black" points="406.401,-187.318 413.69,-179.63 403.197,-181.094 406.401,-187.318"></polygon>
+<!-- com.tiemens.secretshare.md5sum -->
+<g id="node6" class="node"><title>com.tiemens.secretshare.md5sum</title>
+<ellipse fill="none" stroke="black" cx="539.005" cy="-90" rx="141.143" ry="18"></ellipse>
+<text text-anchor="middle" x="539.005" y="-85.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.md5sum</text>
+</g>
+<!-- com.tiemens.secretshare.md5sum&#45;&gt;com.tiemens.secretshare.exceptions -->
+<g id="edge6" class="edge"><title>com.tiemens.secretshare.md5sum-&gt;com.tiemens.secretshare.exceptions</title>
+<path fill="none" stroke="black" d="M518.429,-72.055C507.651,-63.1785 494.282,-52.1686 482.52,-42.483"></path>
+<polygon fill="black" stroke="black" points="484.631,-39.687 474.687,-36.0316 480.181,-45.0905 484.631,-39.687"></polygon>
+</g>
+<!-- com.tiemens.secretshare.math.type&#45;&gt;com.tiemens.secretshare.md5sum -->
+<g id="edge16" class="edge"><title>com.tiemens.secretshare.math.type-&gt;com.tiemens.secretshare.md5sum</title>
+<path fill="none" stroke="black" d="M546.534,-143.697C545.432,-135.983 544.107,-126.712 542.879,-118.112"></path>
+<polygon fill="black" stroke="black" points="546.328,-117.509 541.449,-108.104 539.398,-118.499 546.328,-117.509"></polygon>
+</g>
+<!-- com.tiemens.secretshare.math.type&#45;&gt;com.tiemens.secretshare.exceptions -->
+<g id="edge18" class="edge"><title>com.tiemens.secretshare.math.type-&gt;com.tiemens.secretshare.exceptions</title>
+<path fill="none" stroke="black" d="M632.86,-147.192C654.699,-139.373 675.786,-127.139 689.005,-108 698.098,-94.835 698.997,-84.4964 689.005,-72 673.671,-52.822 622.963,-40.0866 572.558,-31.9184"></path>
+<polygon fill="black" stroke="black" points="572.912,-28.4314 562.491,-30.3451 571.831,-35.3474 572.912,-28.4314"></polygon>
+</g>
+<!-- com.tiemens.secretshare.math.equation&#45;&gt;com.tiemens.secretshare.exceptions -->
+<g id="edge20" class="edge"><title>com.tiemens.secretshare.math.equation-&gt;com.tiemens.secretshare.exceptions</title>
+<path fill="none" stroke="black" d="M211.36,-144.293C261.423,-118.443 357.612,-68.7742 412.652,-40.3536"></path>
+<polygon fill="black" stroke="black" points="414.494,-43.3412 421.774,-35.6432 411.283,-37.1214 414.494,-43.3412"></polygon>
 </g>
 <!-- com.tiemens.secretshare.math.matrix&#45;&gt;com.tiemens.secretshare.exceptions -->
-<g id="edge18" class="edge"><title>com.tiemens.secretshare.math.matrix-&gt;com.tiemens.secretshare.exceptions</title>
-<path fill="none" stroke="black" d="M303.791,-215.908C295.506,-192.107 281.27,-147.457 276,-108 273.882,-92.1409 275.849,-87.9993 276,-72 276.078,-63.6817 276.226,-54.63 276.384,-46.3999"></path>
-<polygon fill="black" stroke="black" points="279.888,-46.2542 276.594,-36.1846 272.89,-46.1108 279.888,-46.2542"></polygon>
+<g id="edge22" class="edge"><title>com.tiemens.secretshare.math.matrix-&gt;com.tiemens.secretshare.exceptions</title>
+<path fill="none" stroke="black" d="M364.541,-215.727C362.728,-184.769 362.614,-118.706 389.005,-72 395.618,-60.2967 405.915,-50.1417 416.378,-41.9404"></path>
+<polygon fill="black" stroke="black" points="418.758,-44.535 424.739,-35.7896 414.61,-38.8966 418.758,-44.535"></polygon>
+</g>
+<!-- com.tiemens.secretshare.math.matrix&#45;&gt;com.tiemens.secretshare.math.type -->
+<g id="edge24" class="edge"><title>com.tiemens.secretshare.math.matrix-&gt;com.tiemens.secretshare.math.type</title>
+<path fill="none" stroke="black" d="M408.911,-216.588C435.182,-206.539 468.983,-193.61 496.801,-182.969"></path>
+<polygon fill="black" stroke="black" points="498.279,-186.151 506.369,-179.309 495.778,-179.613 498.279,-186.151"></polygon>
 </g>
 <!-- com.tiemens.secretshare.main.cli -->
-<g id="node18" class="node"><title>com.tiemens.secretshare.main.cli</title>
-<ellipse fill="none" stroke="black" cx="506" cy="-378" rx="139.314" ry="18"></ellipse>
-<text text-anchor="middle" x="506" y="-373.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.main.cli</text>
-</g>
-<!-- com.tiemens.secretshare.main.cli&#45;&gt;com.tiemens.secretshare.math -->
-<g id="edge24" class="edge"><title>com.tiemens.secretshare.main.cli-&gt;com.tiemens.secretshare.math</title>
-<path fill="none" stroke="black" d="M508.031,-359.843C509.155,-349.481 510.435,-336.002 511,-324 513.299,-275.155 512.941,-259.183 490,-216 484.728,-206.076 477.398,-196.296 470.231,-187.892"></path>
-<polygon fill="black" stroke="black" points="472.74,-185.447 463.482,-180.296 467.507,-190.097 472.74,-185.447"></polygon>
-</g>
-<!-- com.tiemens.secretshare.main.cli&#45;&gt;com.tiemens.secretshare.exceptions -->
-<g id="edge22" class="edge"><title>com.tiemens.secretshare.main.cli-&gt;com.tiemens.secretshare.exceptions</title>
-<path fill="none" stroke="black" d="M531.007,-360.292C563.187,-336.568 615,-289.853 615,-235 615,-235 615,-235 615,-161 615,-120.553 625.246,-99.9396 596,-72 570.363,-47.5082 492.367,-34.2825 419.921,-27.1677"></path>
-<polygon fill="black" stroke="black" points="420.027,-23.6622 409.742,-26.2038 419.367,-30.631 420.027,-23.6622"></polygon>
+<g id="node21" class="node"><title>com.tiemens.secretshare.main.cli</title>
+<ellipse fill="none" stroke="black" cx="554.005" cy="-378" rx="139.314" ry="18"></ellipse>
+<text text-anchor="middle" x="554.005" y="-373.8" font-family="Times,serif" font-size="14.00">com.tiemens.secretshare.main.cli</text>
 </g>
 <!-- com.tiemens.secretshare.main.cli&#45;&gt;com.tiemens.secretshare.engine -->
-<g id="edge26" class="edge"><title>com.tiemens.secretshare.main.cli-&gt;com.tiemens.secretshare.engine</title>
-<path fill="none" stroke="black" d="M473.533,-360.411C454.594,-350.734 430.519,-338.433 410.248,-328.076"></path>
-<polygon fill="black" stroke="black" points="411.731,-324.903 401.234,-323.47 408.546,-331.137 411.731,-324.903"></polygon>
+<g id="edge30" class="edge"><title>com.tiemens.secretshare.main.cli-&gt;com.tiemens.secretshare.engine</title>
+<path fill="none" stroke="black" d="M516.961,-360.588C494.576,-350.671 465.86,-337.948 442.025,-327.388"></path>
+<polygon fill="black" stroke="black" points="443.378,-324.16 432.817,-323.309 440.542,-330.56 443.378,-324.16"></polygon>
 </g>
 <!-- com.tiemens.secretshare.main.cli&#45;&gt;com.tiemens.secretshare -->
-<g id="edge28" class="edge"><title>com.tiemens.secretshare.main.cli-&gt;com.tiemens.secretshare</title>
-<path fill="none" stroke="black" d="M427.687,-363.087C359.453,-350.964 260.933,-333.46 192.16,-321.242"></path>
-<polygon fill="black" stroke="black" points="192.694,-317.782 182.236,-319.478 191.47,-324.674 192.694,-317.782"></polygon>
+<g id="edge32" class="edge"><title>com.tiemens.secretshare.main.cli-&gt;com.tiemens.secretshare</title>
+<path fill="none" stroke="black" d="M473.004,-363.337C400.349,-351.082 294.234,-333.183 221.212,-320.866"></path>
+<polygon fill="black" stroke="black" points="221.577,-317.378 211.135,-319.166 220.413,-324.281 221.577,-317.378"></polygon>
+</g>
+<!-- com.tiemens.secretshare.main.cli&#45;&gt;com.tiemens.secretshare.exceptions -->
+<g id="edge26" class="edge"><title>com.tiemens.secretshare.main.cli-&gt;com.tiemens.secretshare.exceptions</title>
+<path fill="none" stroke="black" d="M610.573,-361.507C667.209,-342.147 746.005,-302.993 746.005,-235 746.005,-235 746.005,-235 746.005,-161 746.005,-117.633 739.785,-99.1964 706.005,-72 684.201,-54.4446 623.425,-41.3819 567.025,-32.6174"></path>
+<polygon fill="black" stroke="black" points="567.334,-29.1244 556.922,-31.0852 566.284,-36.0452 567.334,-29.1244"></polygon>
+</g>
+<!-- com.tiemens.secretshare.main.cli&#45;&gt;com.tiemens.secretshare.math.type -->
+<g id="edge28" class="edge"><title>com.tiemens.secretshare.main.cli-&gt;com.tiemens.secretshare.math.type</title>
+<path fill="none" stroke="black" d="M554.041,-359.602C554.044,-330.069 553.808,-268.242 552.005,-216 551.718,-207.674 551.26,-198.621 550.787,-190.391"></path>
+<polygon fill="black" stroke="black" points="554.267,-189.948 550.17,-180.177 547.279,-190.37 554.267,-189.948"></polygon>
 </g>
 </g>
 </svg>

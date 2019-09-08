@@ -71,27 +71,37 @@ public class JDependTest extends TestCase
         JavaPackage ssEngine     = constraint.addPackage("com.tiemens.secretshare.engine");
         JavaPackage ssException  = constraint.addPackage("com.tiemens.secretshare.exceptions");
         //JavaPackage ssMain      = constraint.addPackage("com.tiemens.secretshare.main");
-        JavaPackage ssMath       = constraint.addPackage("com.tiemens.secretshare.math");
         JavaPackage ssMd5        = constraint.addPackage("com.tiemens.secretshare.md5sum");
-        JavaPackage ssMathMatrix = constraint.addPackage("com.tiemens.secretshare.math.matrix");
+        //JavaPackage ssMath         = constraint.addPackage("com.tiemens.secretshare.math");
+        JavaPackage ssMathMatrix   = constraint.addPackage("com.tiemens.secretshare.math.matrix");
+        JavaPackage ssMathCombo    = constraint.addPackage("com.tiemens.secretshare.math.combination");
+        JavaPackage ssMathEquation = constraint.addPackage("com.tiemens.secretshare.math.equation");
+        JavaPackage ssMathType     = constraint.addPackage("com.tiemens.secretshare.math.type");
         JavaPackage ssMainTest   = constraint.addPackage("com.tiemens.secretshare.main.test");
         JavaPackage ssMainCli    = constraint.addPackage("com.tiemens.secretshare.main.cli");
 
         ssEngine.dependsUpon(ssException);
-        ssEngine.dependsUpon(ssMath);
+        ssEngine.dependsUpon(ssMathCombo);
+        ssEngine.dependsUpon(ssMathEquation);
         ssEngine.dependsUpon(ssMathMatrix);
+        ssEngine.dependsUpon(ssMathType);
 
         ssMainCli.dependsUpon(ssTop);
         ssMainCli.dependsUpon(ssEngine);
         ssMainCli.dependsUpon(ssException);
-        ssMainCli.dependsUpon(ssMath);
+        ssMainCli.dependsUpon(ssMathType);
 
-        ssMainTest.dependsUpon(ssEngine);
+        //ssMainTest.dependsUpon(ssEngine);
 
-        ssMath.dependsUpon(ssException);
-        ssMath.dependsUpon(ssMd5);
+        ssMathCombo.dependsUpon(ssException);
 
-        ssMathMatrix.dependsUpon(ssMath);
+        ssMathEquation.dependsUpon(ssException);
+
+        ssMathMatrix.dependsUpon(ssException);
+        ssMathMatrix.dependsUpon(ssMathType);
+
+        ssMathType.dependsUpon(ssException);
+        ssMathType.dependsUpon(ssMd5);
 
         ssMd5.dependsUpon(ssException);
 
@@ -163,12 +173,14 @@ public class JDependTest extends TestCase
     }
 
     @SuppressWarnings("unchecked")
-    private Collection<JavaPackage> doAnalyze(JDepend jdepend) {
+    private Collection<JavaPackage> doAnalyze(JDepend jdepend)
+    {
         return (Collection<JavaPackage>) jdepend.analyze();
     }
 
     @SuppressWarnings("unchecked")
-    private Iterator<JavaPackage> doGetPackageIterator(JDepend jdepend) {
+    private Iterator<JavaPackage> doGetPackageIterator(JDepend jdepend)
+    {
         return jdepend.getPackages().iterator();
     }
     /**

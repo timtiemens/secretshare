@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.tiemens.secretshare.math.BigRational;
+import com.tiemens.secretshare.math.type.BigRational;
 
 public class BigRationalMatrixTest
 {

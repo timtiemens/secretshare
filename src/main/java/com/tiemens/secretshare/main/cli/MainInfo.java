@@ -24,7 +24,7 @@ import java.util.Map;
 
 import com.tiemens.secretshare.engine.SecretShare;
 import com.tiemens.secretshare.exceptions.SecretShareException;
-import com.tiemens.secretshare.math.BigIntUtilities;
+import com.tiemens.secretshare.math.type.BigIntUtilities;
 
 /**
  * Main command line for the "info" (aka "information") of secret share program/library.

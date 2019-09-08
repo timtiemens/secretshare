@@ -14,11 +14,10 @@
  * Contributors:
  *     Tim Tiemens - initial API and implementation
  *******************************************************************************/
-package com.tiemens.secretshare.math;
+package com.tiemens.secretshare.math.type;
 
 public final class HexByteUtilities
 {
-
 
     // ==================================================
     // class static data
@@ -52,10 +51,38 @@ public final class HexByteUtilities
       return hexToBytes(hex.toCharArray());
     }
 
+    private static String[] lookup = { "0", "1", "2", "3", "4", "5", "6", "7",
+            "8", "9", "A", "B", "C", "D", "E", "F"
+    };
+
+    private static String byteToHexString(byte b)
+    {
+        String ret = "";
+        byte ch = 0x00;
+        ch = (byte) (b & 0xF0); // strip off high
+        ch = (byte) (ch >>> 4); // shift
+        ch = (byte) (ch & 0X0F); // the >>> turned on high bits, get rid of them
+        ret += lookup[ch];
+
+        ch = (byte) (b & 0X0F);
+        ret += lookup[ch];
+
+        return ret;
+    }
+
     public static String printAsHex(byte[] bytes)
     {
-        String s2 = BigIntStringChecksum.bytesToHexString(bytes);
-        return s2;
+        return bytesToHexString(bytes);
+    }
+
+    public static String bytesToHexString(byte[] bytes)
+    {
+        String ret = "";
+        for (byte b : bytes)
+        {
+            ret += byteToHexString(b);
+        }
+        return ret;
     }
 
 

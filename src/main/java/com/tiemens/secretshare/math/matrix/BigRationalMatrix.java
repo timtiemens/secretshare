@@ -18,7 +18,7 @@ package com.tiemens.secretshare.math.matrix;
 
 import java.math.BigInteger;
 
-import com.tiemens.secretshare.math.BigRational;
+import com.tiemens.secretshare.math.type.BigRational;
 
 public class BigRationalMatrix extends NumberMatrix<BigRational>
 {
