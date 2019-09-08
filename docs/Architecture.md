@@ -12,7 +12,7 @@ Some To Do Items:
  1. Logger - since java.util.Logger exists now, add logging to this library.
 
 2019/Sep - fixed\
-com.tiemens.secretshare.math - has been split into com.tiemens.secretshare.math.type and com.tiemens.secretshare.math.equation.  Now, ".math.matrix" shows as a higher level than ".math.type".
+com.tiemens.secretshare.math - has been split into com.tiemens.secretshare.math.type and com.tiemens.secretshare.math.equation.  Now, ".math.matrix" shows as a higher level than ".math.type"
 2018/Oct - fixed\
 com.tiemens.secretshare.main.test - contains only "TicketTwoMain.java" (ticket two is a reference to the second GitHub issue).  The name ".main.test" is incorrect - it should be ".main.example"\
 2018/Oct - fixed\
