@@ -23,8 +23,8 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.tiemens.secretshare.math.BigIntUtilitiesTest;
-import com.tiemens.secretshare.math.EasyLinearEquationTest;
+import com.tiemens.secretshare.math.equation.EasyLinearEquationTest;
+import com.tiemens.secretshare.math.type.BigIntUtilitiesTest;
 
 public class BuiltinPrimesIntegTest
 {

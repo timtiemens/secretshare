@@ -25,8 +25,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
-import com.tiemens.secretshare.math.BigIntUtilities;
-import com.tiemens.secretshare.math.EasyLinearEquationTest;
+import com.tiemens.secretshare.math.equation.EasyLinearEquationTest;
+import com.tiemens.secretshare.math.type.BigIntUtilities;
 
 public class SecretShareIntegTest
 {
