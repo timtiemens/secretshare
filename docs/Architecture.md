@@ -20,7 +20,7 @@ com.tiemens.secretshare.math.matrix - missing link to ".exceptions", reveals an 
 
 Code
 ====
-See [JDepsTest.java](../src/test/java/com/tiemens/secretshare/JDepsTest.java) for a very easy-to-configure test of package dependencies.
+See [JdepsTest.java](../src/test/java/com/tiemens/secretshare/JdepsTest.java) for a very easy-to-configure test of package dependencies.
 
 
 Command Line
