@@ -20,12 +20,14 @@ com.tiemens.secretshare.math.matrix - missing link to ".exceptions", reveals an 
 
 Code
 ====
-See [JDependTest.java](../src/test/java/com/tiemens/secretshare/JDependTest.java) for a very easy-to-configure test of package dependencies.
+See [JDepsTest.java](../src/test/java/com/tiemens/secretshare/JDepsTest.java) for a very easy-to-configure test of package dependencies.
 
 
 Command Line
 ====
-java -cp $(find $HOME/.gradle/caches -name "jdepend-2.9.1.jar") jdepend.swingui.JDepend ./build/classes
+./gradlew clean build
+jdeps build/classes/java/main | grep -v ' java.'
+
 
 
 Architecture Goals
@@ -35,7 +37,7 @@ Architecture Goals
    Especially useful for [N-version programming](https://en.wikipedia.org/wiki/N-version_programming) where SecretShare is one of the implementation choices, and the goal is to ignore SecretShare-specific exceptions (because there are N-1 other implementations), but not use "catch (Exception e)", since that is over-capturing potential system errors.
 2.  No compile dependencies on 3rd-party libraries\
    Because 3rd-party libraries hinder use of a library, this library shall have no 3rd-party dependencies in order to run.
-   Test dependencies are allowed (JUnit, JDepend)
+   Test dependencies are allowed (JUnit, jdeps)
 3.  Logging\
    Because of "No compile dependencies", there is very little logging implemented in this library.
    Because this library pre-dates java.util.logging.Logger, it does not use this class.

@@ -31,12 +31,11 @@ group = 'com.tiemens'
 archivesBaseName = 'secretshare'
 version = '1.4.5-SNAPSHOT'
 project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 dependencies {
     testCompile group: 'junit',         name: 'junit',          version: '4.11'
-    testCompile group: 'jdepend',       name: 'jdepend',        version: '2.9.1'
 }
 
 repositories {
@@ -127,6 +126,8 @@ task jacocoIntegTestReport(type: JacocoReport) {
 jar {
     manifest {
         attributes("Main-Class" : "com.tiemens.secretshare.main.cli.Main")
+        // we have a module-info.java now:
+        // attributes("Automatic-Module-Name" : "com.tiemens.secretshare")
     }
 }
 
@@ -303,6 +304,7 @@ sonarqube {
 
 checkstyle {
     toolVersion "7.6.1"
+//    toolVersion "8.17"
 
     def dir = "$projectDir/config/checkstyle"
 

@@ -22,27 +22,27 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import jdepend.framework.DependencyConstraint;
-import jdepend.framework.JDepend;
-import jdepend.framework.JavaPackage;
-import jdepend.framework.PackageFilter;
+import com.tiemens.secretshare.jdeps.model.DependencyConstraint;
+import com.tiemens.secretshare.jdeps.model.JDeps;
+import com.tiemens.secretshare.jdeps.model.JavaPackage;
+
 import junit.framework.TestCase;
 
 /**
- * The <code>JDependTest</code> is an example <code>TestCase</code>
- * that demonstrates how to call the JDepend library.
+ * The <code>JdepsTest</code> is an example <code>TestCase</code>
+ * that demonstrates how to call the jdeps command line tool.
  * Some of the tests are:
  * <li>package dependency constraints,
  * <li>existence of cyclic package dependencies,
- * <li>measuring the distance from the main sequence (D)
  *
  * The parts to configure are at the top of the .java file.
  *
  * Prints a DOT digraph of the dependency graph.
- * See http://www.webgraphviz.com/ to create the image of the digraph.
+ * See http://www.webgraphviz.com/ to create the SVG of the digraph.
+ * See https://svgtopng.com/ to convert the SVG to PNG.
  */
 
-public class JDependTest extends TestCase
+public class JdepsTest extends TestCase
 {
 
     // Note: this example does not analyze test classes:
@@ -108,19 +108,19 @@ public class JDependTest extends TestCase
         return constraint;
     }
 
-    // if testDependencyConstraint fails, then set this to true to
-    //    see the mis-match.  Or run the JDepend gui with:
-    // java -cp $(find $HOME/.gradle|grep -i jdep|grep jar) jdepend.swingui.JDepend ./build/classes/
+    // if testDependencyConstraint fails, then set this to true tosee the mis-match.
+    //  Or, run the utility with:
+    //  $ jdeps build/classes/java/main | grep -v ' java.'
     private static boolean debugDump = false;
 
 
     //
     // ===================================
     //
-    private JDepend jdepend;
+    private JDeps jdeps;
 
 
-    public JDependTest(String name)
+    public JdepsTest(String name)
     {
         super(name);
     }
@@ -128,34 +128,14 @@ public class JDependTest extends TestCase
     @Override
     protected void setUp() throws IOException
     {
-        PackageFilter filter = new PackageFilter();
-        for (String pkg : excludes)
-        {
-            filter.addPackage(pkg);
-        }
+        jdeps = JDeps.createFromCommandLine(classesDir);
 
-        jdepend = new JDepend(filter);
+        jdeps.addExcludes(excludes);
 
-        jdepend.addDirectory(classesDir);
+        jdeps.analyze();
     }
 
-    /**
-     * Tests the distance of a single package to a distance
-     * from the main sequence (D) within a tolerance.
-     */
-    public void testOnePackageDistance()
-    {
 
-        double ideal = 0.0;
-        double tolerance = 0.8;
-
-        jdepend.analyze();
-
-        JavaPackage p = jdepend.getPackage("com.tiemens.secretshare.engine");
-
-        assertEquals("Distance exceeded: " + p.getName(),
-                     ideal, p.distance(), tolerance);
-    }
 
     /**
      * Tests that a single package does not contain any
@@ -164,44 +144,10 @@ public class JDependTest extends TestCase
     public void testOnePackageHasNoCycles()
     {
 
-        jdepend.analyze();
-
-        JavaPackage p = jdepend.getPackage("com.tiemens.secretshare.main.cli");
+        JavaPackage p = jdeps.getPackage("com.tiemens.secretshare.engine");
 
         assertEquals("Cycles exist: " + p.getName(),
                      false, p.containsCycle());
-    }
-
-    @SuppressWarnings("unchecked")
-    private Collection<JavaPackage> doAnalyze(JDepend jdepend)
-    {
-        return (Collection<JavaPackage>) jdepend.analyze();
-    }
-
-    @SuppressWarnings("unchecked")
-    private Iterator<JavaPackage> doGetPackageIterator(JDepend jdepend)
-    {
-        return jdepend.getPackages().iterator();
-    }
-    /**
-     * Tests the conformance of all analyzed packages to a
-     * distance from the main sequence (D) within a tolerance.
-     */
-    public void testAllPackagesDistance()
-    {
-
-        double ideal = 0.0;
-        double tolerance = 1.0;
-
-        Collection<JavaPackage> packages = doAnalyze(jdepend);
-        assertNotNull(packages);
-
-        for (Iterator<JavaPackage> iter = packages.iterator(); iter.hasNext();)
-        {
-            JavaPackage p = (JavaPackage) iter.next();
-            assertEquals("Distance exceeded: " + p.getName(),
-                         ideal, p.distance(), tolerance);
-        }
     }
 
     /**
@@ -210,15 +156,13 @@ public class JDependTest extends TestCase
      */
     public void testAllPackagesHaveNoCycles()
     {
-
-        Collection<JavaPackage> packages = doAnalyze(jdepend);
+        Collection<JavaPackage> packages = jdeps.getPackages();
         assertNotNull(packages);
 
-        if (jdepend.containsCycles())
+        if (jdeps.containsCycles())
         {
-            for (Iterator<JavaPackage> i = doGetPackageIterator(jdepend); i.hasNext();)
+            for (JavaPackage jPackage : jdeps.getPackages())
             {
-                JavaPackage jPackage = (JavaPackage) i.next();
                 if (jPackage.containsCycle())
                 {
                     System.out.println("Cycle at " + jPackage.getName());
@@ -226,7 +170,7 @@ public class JDependTest extends TestCase
             }
         }
 
-        assertEquals("Cycles exist", false, jdepend.containsCycles());
+        assertEquals("Cycles exist", false, jdeps.containsCycles());
     }
 
     /**
@@ -240,16 +184,13 @@ public class JDependTest extends TestCase
     {
         DependencyConstraint constraint = createDependencyConstraint();
 
-        jdepend.analyze();
-
-        System.out.println(dumpAsDotString(jdepend, constraint));
+        System.out.println(dumpAsDotString(jdeps, constraint));
 
         if (debugDump)
         {
-            System.out.println("J Packages = " + jdepend.getPackages().size());
-            for (Iterator<JavaPackage> i = doGetPackageIterator(jdepend); i.hasNext();)
+            System.out.println("J Packages = " + jdeps.getPackages().size());
+            for (JavaPackage jPackage : jdeps.getPackages())
             {
-                JavaPackage jPackage = i.next();
                 System.out.println("J.pkg=" + jPackage.getName());
             }
             System.out.println("C Packages = " + constraint.getPackages().size());
@@ -261,10 +202,10 @@ public class JDependTest extends TestCase
         }
 
         assertEquals("Constraint mismatch",
-                true, jdepend.dependencyMatch(constraint));
+                true, jdeps.dependencyMatch(constraint));
     }
 
-    private String dumpAsDotString(JDepend jdepend, DependencyConstraint constraint)
+    private String dumpAsDotString(JDeps jdeps, DependencyConstraint constraint)
     {
         StringBuilder sb = new StringBuilder();
         final String quote = "\"";
@@ -272,7 +213,7 @@ public class JDependTest extends TestCase
 
         sb.append("## DOT/Graphviz format.  See http://www.webgraphviz.com/" + nl);
         sb.append("digraph jdepend {" + nl);
-        for (JavaPackage pkg : new java.util.ArrayList<JavaPackage>(jdepend.getPackages()))
+        for (JavaPackage pkg : new java.util.ArrayList<JavaPackage>(jdeps.getPackages()))
         {
             for (JavaPackage to : new java.util.ArrayList<JavaPackage>(pkg.getEfferents()))
             {
@@ -286,6 +227,6 @@ public class JDependTest extends TestCase
 
     public static void main(String[] args)
     {
-        junit.textui.TestRunner.run(JDependTest.class);
+        junit.textui.TestRunner.run(JdepsTest.class);
     }
 }

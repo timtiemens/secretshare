@@ -4,7 +4,14 @@ Release Notes  --
 
 v1.4.5 (pending)
 ======
-
+ o replace JDepend library with jdeps tool
+ o refactor '.secretshare.math' packages
+ o update to JDK 11
+ o update to gradle 5.6.1
+ o define module in module-info.java
+ o add checkstyle
+ o add 8192 bit prime as built-in
+ 
 v1.4.4
 ======
  o address issue #6 by changing documentation to say "put -prime argument first"
