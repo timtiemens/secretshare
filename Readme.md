@@ -12,7 +12,7 @@ The following are required to run the application in secretshare.jar:
 
 The following are used to compile the project:
  1.  jdk 11 (LTS)
- 2.  gradlew (uses gradle 5.6.1)
+ 2.  gradlew (uses gradle 5.6.2)
 
 
 The following are used to completely build and test the project:

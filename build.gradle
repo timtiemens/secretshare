@@ -13,20 +13,24 @@ buildscript {
     }
 }
 
+// It is hilarious that the actual *Plugin does not have a version number
+//    for most of these cases.
+// e.g. checkstyle has a 'toolVersion', but that is not the version of the
+//    actual CheckstylePlugin.
 plugins {
     id "org.sonarqube" version "2.6.2"
+    id "java"
+    id "eclipse"
+    id "maven-publish"
+    id "jacoco"
+    id "signing"
+    id "maven"
+    id "checkstyle"
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 apply from: "$rootDir/gradle/versioning.gradle"
-apply plugin: 'jacoco'
-//apply plugin: 'sonar-runner'
-apply plugin: 'signing'
-apply plugin: 'maven'
-apply plugin: 'checkstyle'
-    
+
+
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
 version = '1.4.5-SNAPSHOT'
@@ -36,6 +40,9 @@ targetCompatibility = 1.11
 
 dependencies {
     testCompile group: 'junit',         name: 'junit',          version: '4.11'
+    // new syntax requires "1 string", which is NOT an improvement
+    //    testCompile("junit:junit:4.11")
+
 }
 
 repositories {
@@ -76,7 +83,9 @@ test {
     reports.junitXml.destination = file ("$reports.junitXml.destination/test")
 }
 
-task integTest(type: Test, group: 'Build') {
+task integTest(type: Test) {
+    group = 'Verification'
+    description = 'Run integration tests (i.e. longer-running tests)'
     testClassesDirs = sourceSets.integTest.output
     classpath = sourceSets.integTest.runtimeClasspath
     include '**/*IntegTest.class'
@@ -126,7 +135,7 @@ task jacocoIntegTestReport(type: JacocoReport) {
 jar {
     manifest {
         attributes("Main-Class" : "com.tiemens.secretshare.main.cli.Main")
-        // we have a module-info.java now:
+        // we have a module-info.java now, so we don't use the Automatic name:
         // attributes("Automatic-Module-Name" : "com.tiemens.secretshare")
     }
 }
@@ -314,7 +323,16 @@ checkstyle {
     ]
 }
 
-// gradle 5+ now uses    $ gradle wrapper --gradle-version 5.6.1
+task showPluginInfo {
+    doLast {
+        project.plugins.each {
+            println("Plugin " + it.class)
+        }
+        println "org.gradle.api.plugins.quality.CheckstylePlugin=" + org.gradle.api.plugins.quality.CheckstylePlugin.DEFAULT_CHECKSTYLE_VERSION
+    }
+}
+
+// gradle 5+ now uses    $ gradle wrapper --gradle-version 5.6.2
 //task wrapper(type: Wrapper) {
 //    gradleVersion = '4.8'
 //}
