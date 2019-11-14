@@ -25,8 +25,37 @@ See [JdepsTest.java](../src/test/java/com/tiemens/secretshare/JdepsTest.java) fo
 
 Command Line
 ====
-./gradlew clean build
-jdeps build/classes/java/main | grep -v ' java.'
+```
+$ ./gradlew clean build
+$ jdeps build/classes/java/main | grep -v ' java.'
+```
+
+<details>
+   <summary>Sample output from jdeps</summary>
+
+   ```
+com.tiemens.secretshare
+ [file:///home/tim/workspace/secretshare/build/classes/java/main/]
+   com.tiemens.secretshare.engine                     -> com.tiemens.secretshare.exceptions                 com.tiemens.secretshare
+   com.tiemens.secretshare.engine                     -> com.tiemens.secretshare.math.combination           com.tiemens.secretshare
+   com.tiemens.secretshare.engine                     -> com.tiemens.secretshare.math.equation              com.tiemens.secretshare
+   com.tiemens.secretshare.engine                     -> com.tiemens.secretshare.math.matrix                com.tiemens.secretshare
+   com.tiemens.secretshare.engine                     -> com.tiemens.secretshare.math.type                  com.tiemens.secretshare
+   com.tiemens.secretshare.main.cli                   -> com.tiemens.secretshare                            com.tiemens.secretshare
+   com.tiemens.secretshare.main.cli                   -> com.tiemens.secretshare.engine                     com.tiemens.secretshare
+   com.tiemens.secretshare.main.cli                   -> com.tiemens.secretshare.exceptions                 com.tiemens.secretshare
+   com.tiemens.secretshare.main.cli                   -> com.tiemens.secretshare.math.type                  com.tiemens.secretshare
+   com.tiemens.secretshare.main.example               -> com.tiemens.secretshare                            com.tiemens.secretshare
+   com.tiemens.secretshare.main.example               -> com.tiemens.secretshare.engine                     com.tiemens.secretshare
+   com.tiemens.secretshare.math.combination           -> com.tiemens.secretshare.exceptions                 com.tiemens.secretshare
+   com.tiemens.secretshare.math.equation              -> com.tiemens.secretshare.exceptions                 com.tiemens.secretshare
+   com.tiemens.secretshare.math.matrix                -> com.tiemens.secretshare.exceptions                 com.tiemens.secretshare
+   com.tiemens.secretshare.math.matrix                -> com.tiemens.secretshare.math.type                  com.tiemens.secretshare
+   com.tiemens.secretshare.math.type                  -> com.tiemens.secretshare.exceptions                 com.tiemens.secretshare
+   com.tiemens.secretshare.math.type                  -> com.tiemens.secretshare.md5sum                     com.tiemens.secretshare
+   com.tiemens.secretshare.md5sum                     -> com.tiemens.secretshare.exceptions                 com.tiemens.secretshare
+   ```
+</details>
 
 
 
@@ -34,11 +63,11 @@ Architecture Goals
 ==================
  1. Single "library" exception SecretShareException\
    This allows callers to easily isolate SecretShare errors.
-   Especially useful for [N-version programming](https://en.wikipedia.org/wiki/N-version_programming) where SecretShare is one of the implementation choices, and the goal is to ignore SecretShare-specific exceptions (because there are N-1 other implementations), but not use "catch (Exception e)", since that is over-capturing potential system errors.
-2.  No compile dependencies on 3rd-party libraries\
-   Because 3rd-party libraries hinder use of a library, this library shall have no 3rd-party dependencies in order to run.
+   Especially useful for [N-version programming](https://en.wikipedia.org/wiki/N-version_programming) where SecretShare is one of the implementation choices, and the goal is to ignore SecretShare-specific exceptions without having to use "catch (Exception e)".  This goal is important because there are N-1 other implementations, and 1 implementation should not halt processing, but neither should the system be over-capturing and ignoring potential (runtime) Exceptions.
+ 2.  No compile dependencies on 3rd-party libraries\
+   Because 3rd-party libraries hinder use of a library, this library shall have no 3rd-party dependencies for normal use.
    Test dependencies are allowed (JUnit, jdeps)
-3.  Logging\
+ 3.  Logging\
    Because of "No compile dependencies", there is very little logging implemented in this library.
    Because this library pre-dates java.util.logging.Logger, it does not use this class.
    However, as an architectural goal, it should be refactored to use java.util.logging.Logger

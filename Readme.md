@@ -3,6 +3,20 @@ Shamir's Secret Share in Java
 Java implementation of Shamir's Secret Sharing algorithm 
 as described in Applied Cryptography [as LaGrange Interpolating Polynomial Scheme].
 
+Table of contents
+=================
+
+ * [Dependencies](#dependencies)
+ * [Build](#build)
+ * [Officially Released Artifact](#officially-released-artifact)
+ * [Architecture Documentation](#architecture-documentation)
+ * [Use](#use)
+   * [Examples of command line invocations](#examples-of-command-line-invocations)
+   * [A complete scenario](#a-complete-scenario)
+ * [Note on the Modulus](#note-on-the-modulus)
+ * [Note on the size of 'k'](#note-on-the-size-of-k)
+ * [Additional Documentation](#additional-documentation)
+
 
 Dependencies
 -------------
@@ -19,7 +33,7 @@ The following are used to completely build and test the project:
  1.  JUnit 4.x
 This is needed for the (Unit and Integration) Test .java files to compile.
  
-Note: the last version of this library to support jdk 1.6 and jdk 8 was 1.4.4. (https://github.com/timtiemens/secretshare/releases/tag/v1.4.4) or (https://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4).  It is sad to let 1.6 go, but Java SE 6 was released in 2006, and EOL'd in 2013.  Java SE 8 was released in 2014, and Oracle EOL'd in 2019/Jan.
+Note: the last version of this library to support jdk 1.6 (and jdk 8) was 1.4.4 - see [SecretShare 1.4.4 Release Tag] or [SecretShare 1.4.4 Maven Central].  It is sad to let 1.6 go, but Java SE 6 was released in 2006, and EOL'd in 2013.  Java SE 8 was released in 2014, and EOL'd in 2019/Jan.
  
 Build
 ------
@@ -41,8 +55,13 @@ Officially Released Artifact
        name:   secretshare
     version:   1.4.4
 ```
-Central Repository - [SecretShare1.4.4] - to see dependency information
+Central Repository - [SecretShare 1.4.4] - to see dependency information
 formatted for Maven, Ivy, Grape, Gradle, Buildr, etc.
+
+
+Architecture Documentation
+----
+See [Architecture.md](docs/Architecture.md)
 
 
 Use
@@ -61,53 +80,76 @@ Use
    ```
    $ java -jar secretshare.jar combine
    ```
-    
+
 Examples of command line invocations
 -----
 
-  a. Create a share size 6 with threshold 3 with "Cat" as the secret string.   Note: the low modulus of 16639793 limits the size of the secret number, which in turn limits the length of the secret string.
+<details>
+  <summary>a. Create a share size 6 with threshold 3 with "Cat" as the secret string.   Note: the low modulus of 16639793 limits the size of the secret number, which in turn limits the length of the secret string.</summary>
+
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -m 16639793 -sS "Cat"
   ```
+</details>
 
-  b. Create a share size 6 with threshold 3 as above, but pipes the output of "split" to the input of "combine", which then re-creates the secret number and the secret string "Cat".
+<details>
+  <summary>b. Create a share size 6 with threshold 3 as above, but pipes the output of "split" to the input of "combine", which then re-creates the secret number and the secret string "Cat".</summary>
+
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -m 16639793 -sS "Cat" \
    | java -jar secretshare.jar combine -stdin
   ```
+</details>
 
-  c. Create a share size 6 with threshold 3 as above, but with a long secret string.  Note: no modulus was given, so a pre-defined 384-bit prime was used as the modulus.  The 384 bit prime allows 48 characters of secret string.
+<details>
+  <summary>c. Create a share size 6 with threshold 3 as above, but with a long secret string.  Note: no modulus was given, so a pre-defined 384-bit prime was used as the modulus.  The 384 bit prime allows 48 characters of secret string.</summary>
+
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat"
   ```
+</details>
 
-  d. Create the same share as above, then pipes the output of "split" into the input of "combine", which prints out the secret string.
+<details>
+  <summary>d. Create the same share as above, then pipes the output of "split" into the input of "combine", which prints out the secret string.</summary>
+
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -sS "The Cat In The Hat" \
    | java -jar secretshare.jar combine -stdin
   ```
+</details>
 
-  e. Create the same share as above, but use a pre-defined 4096 bit prime modulus.  The 4096 bit prime allows 512 characters of secret string.
+<details>
+  <summary>e. Create the same share as above, but use a pre-defined 4096 bit prime modulus.  The 4096 bit prime allows 512 characters of secret string.</summary>
+
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -prime4096 \
       -sS "The Cat In The Hat 4096bits"
   ```
+</details>
 
-  f. Create the same share as above, but output in a manner better suited for physically splitting up the shares in order to give them out individually with all required information.
+<details>
+  <summary>f. Create the same share as above, but output in a manner better suited for physically splitting up the shares in order to give them out individually with all required information.</summary>
+
   ```
   $ java -jar secretshare.jar split -k 3 -n 6 -prime4096 \
       -sS "The Cat In The Hat 4096bits" -printIndiv
   ```
+</details>
 
-  g. Combine 3 shares to recreate the original secret.  Note: it is important that the -prime argument is specified before -s arguments.
+<details>
+  <summary>g. Combine 3 shares to recreate the original secret.  Note: it is important that the -prime argument is specified before -s arguments.</summary>
+
   ```
   $ java -jar secretshare.jar combine -k 3 -prime384 \
       -s2 1882356874773438980155973947620693982153929916 \
       -s4 1882357204724127580025723830249209987221192644 \
       -s5 1882357444072759374568880025530775541595539408
   ```
+</details>
 
-  h. Combine 4 shares, 3 good and 1 bad, using paranoid combination option.
+<details>
+  <summary>h. Combine 4 shares, 3 good and 1 bad, using paranoid combination option.</summary>
+
   ```
   $ java -jar secretshare.jar combine -k 3 -prime384 \
       -paranoid 4 \
@@ -116,49 +158,28 @@ Examples of command line invocations
       -s4 1882357204724127580025723830249209987221192644 \
       -s5 1882357444072759374568880025530775541595539408
   ```
+</details>
 
-  i. Combine shares, showing examples for the -paranoid argument.   Control how many extra combines to run (110), how many to print (4), and stop when an answer  has been seen at least this many times (30).  Use the -paranoid option if you (1) have extra shares and (2) some of your shares are corrupt.
+<details>
+  <summary>i. Combine shares, showing examples for the -paranoid argument.   Control how many extra combines to run (110), how many to print (4), and stop when an answer  has been seen at least this many times (30).  Use the -paranoid option if you (1) have extra shares and (2) some of your shares are corrupt.</summary>
+
   ```
   $ java -jar secretshare.jar combine -k 3 -m 16639793 \
       -paranoid 110,limitPrint=4,stopCombiningWhenAnyCount=30 \
       -s1 7210616 -s2 11715382 -s3 4444444 -s4 9215151 -s5 2210154 \
       -s6 13554960 -s7 9969983 -s8 8095016 -s9 7654321 -s10 1234567
   ```
+</details>
 
-  j. Print information about Secret Share, including version, 192 bit, 384 bit, 4096 bit and 8192 bit primes.
+<details>
+  <summary>j. Print information about Secret Share, including version, 192 bit, 384 bit, 4096 bit and 8192 bit primes.</summary>
+
   ```
   $ java -jar secretshare.jar info
   ```
+</details>
 
-Important Notes about Shares of the Secret
------
-Note that each share of the secret requires at least these pieces:
- 1. the "prime" modulus value [same for all shares],
- 2. the "k" value [same for all shares],
- 3. the "x" value     [unique for this share],
- 4. the "share" value [unique for this share]
-
-Optional - the UUID of the split [same for all shares]
-  If you have split multiple secrets into shares,
-it is also nice to have the UUID of the split operation,
-so that you can make sure all your shares belong to the same split.
-Due to the nature of the algorithm, shares from different splits
-will 'combine' and will produce a ''secret'' (string or number),
-but it will not be the original secret.
-
-Note on the Prime Modulus
------
-  By default, the 384-bit prime is used for the split/combine operations.
-  Place the "-prime" option before all -s* arguments.
-  If no calculation in the split was larger than the modulus, then it turns out the prime argument is not required.  Determining when this is or is not true is a bit tricky, however.
-
-Note on the Secret
------
-From above, you can see the 4096 bit modulus in use, which only allows 512 characters of secret.  The largest available pre-defined prime modulus is 8192 bits, which only allows 1024 characters of secret.
-In case it isn't obvious, the best way to use the secret share program is to use it to split the secret key that was used by a symmetric encryption program to encrypt the actual secret --  i.e. split and share the key, not the original secret content.
-See gpg -c (aka gpg --symmetric) for an example of symmetric encryption.  See openssl enc for another example of symmetric encryption.
-
-A complete scenario:
+A complete scenario
 -----
 
 ```
@@ -281,8 +302,9 @@ N.B.: Earlier versions of secretshare (1.4.1 and earlier) used a very
         inefficient solving algorithm.  For these versions, your "k" is
         in effect limited to less than k=30, and is probably more like k=20.
 
-ORIGINAL SOLVER (versions 1.4.1 and earlier)
-Value 'k' versus recorded runtimes to complete the "combine" operation:
+<details>
+  <summary>ORIGINAL SOLVER (versions 1.4.1 and earlier)
+Value 'k' versus recorded runtimes to complete the "combine" operation:</summary>
 
 | k     |  seconds   | minutes    | hours    | days     |
 |-------|------------|------------|----------|----------|
@@ -305,14 +327,10 @@ k=24 is the last "measured".
 For k = 90, that works out to be  = 10 * 4^(90 - 20) = 1E42 seconds.
 Since a year has ~3E7 seconds, that will never happen.
 So, k=25 is a pretty good practical limit, or k=20 for "immediate" results.
+</details>
 
 
-Architecture Documentation
-----
-See [Architecture.md](docs/Architecture.md)
-
-
-Documentation
+Additional Documentation
 ----
 [Original Sourceforge Secret Sharing in Java] - original SCM location.  Out-of-date.
 
@@ -324,5 +342,7 @@ Documentation
 [SecretShare1.4.1]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.1
 [SecretShare1.4.2]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.2
 [SecretShare1.4.3]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.3
-[SecretShare1.4.4]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4
+[SecretShare 1.4.4]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4
 [SecretShare1.4.4.alt]:https://search.maven.org/#artifactdetails%7Ccom.tiemens%7Csecretshare%7C1.4.4%7Cjar
+[SecretShare 1.4.4 Release Tag]:https://github.com/timtiemens/secretshare/releases/tag/v1.4.4
+[SecretShare 1.4.4 Maven Central]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4

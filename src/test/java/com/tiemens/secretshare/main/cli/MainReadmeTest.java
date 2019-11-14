@@ -34,7 +34,7 @@ import org.junit.Test;
 import com.tiemens.secretshare.BuildVersion;
 
 /**
- * The purpose of these tests is to run the "Readme.txt" instructions -
+ * The purpose of these tests is to run the "Readme.md" instructions -
  *     and -generate- that section of the file
  *     to make sure the "first experience" works correctly.
  *
@@ -43,6 +43,12 @@ import com.tiemens.secretshare.BuildVersion;
  */
 public class MainReadmeTest
 {
+
+    /**
+     * If true, emit markdown that uses <details><summary>...</summary>...</details>.
+     * This is the "fold" feature of (github) markdown.
+     */
+    private static boolean enableDetails = true;
 
     @BeforeClass
     public static void setUpBeforeClass()
@@ -520,6 +526,8 @@ public class MainReadmeTest
         private final List<String> commands = new ArrayList<String>();
         private final List<String> comments = new ArrayList<String>();
 
+        private boolean enableDetails = MainReadmeTest.enableDetails;
+
         public void output(int index, PrintStream out)
         {
             outputDescription(index, out);
@@ -529,12 +537,23 @@ public class MainReadmeTest
         {
             String indent = "  ";
             String prefix  = "" + (char) (index  + 'a') + ". ";
+            if (enableDetails)
+            {
+                out.println("<details>");
+                out.print(indent + "<summary>");
+                indent = "";
+            }
+
             for (String s : comments)
             {
                 out.print(indent + prefix + s);
                 prefix = "";
                 indent = "";
 
+            }
+            if (enableDetails)
+            {
+                out.print("</summary>");
             }
             out.println("");
         }
@@ -544,6 +563,10 @@ public class MainReadmeTest
             final String indent = "  ";
             String extraIndent = "";
 
+            if (enableDetails)
+            {
+                out.println(""); // need an extra blank line here when using <details><summary>
+            }
             out.println(indent + "```");
             // "commands" are things that need a "|" operator between them (and thus "\" followed by a newline)
             //   each command can have a NEWLINE marker, which needs a "\" and newline, but no "|"
@@ -601,6 +624,10 @@ public class MainReadmeTest
                 }
             }
             out.println(indent + "```");
+            if (enableDetails)
+            {
+                out.println("</details>"); // need a blank line here when using <details><summary>
+            }
         }
 
         public void firstCommand(String[] args)
