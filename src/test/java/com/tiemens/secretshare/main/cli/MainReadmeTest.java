@@ -391,11 +391,14 @@ public class MainReadmeTest
      */
     private void processOutput(TestCollector collect, TestOutput output, boolean collectOutputLines)
     {
+        final String ctrlEll = "\f";
         for (String s : output.getLines())
         {
             System.out.println("FOO:" + s);
             if (collectOutputLines)
             {
+                // github markdown killer character:  ctrl-L !
+                s = s.replace(ctrlEll, "");
                 collect.addOutputLine(s);
             }
         }
