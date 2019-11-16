@@ -17,6 +17,7 @@
 package com.tiemens.secretshare;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -177,16 +178,20 @@ public final class BuildVersion
         }
         catch (Exception e)  // RuntimeException || IOException
         {
+            BuildInfo fallback = createForFallback();
+            BuildInfo fake = createFakeBuildInfo();
+            BuildInfo use = (fallback != null) ? fallback : fake;
+
             String value = System.getProperty(PROPERTY_NAME_FAILURE_ACTION);
             if (("ignore".equalsIgnoreCase(value)) || ignoreFailureUnitTest)
             {
-                ret = createFakeBuildInfo();
+                ret = use;
             }
             else if ("warn".equalsIgnoreCase(value))
             {
                 System.err.println("BuildVersion read error was ignored.");
                 e.printStackTrace(System.err);
-                ret = createFakeBuildInfo();
+                ret = use;
             }
             else
             {
@@ -217,6 +222,40 @@ public final class BuildVersion
         return ret;
     }
 
+
+    private static BuildInfo createForFallback()
+    {
+        BuildInfo ret = null;
+        InputStream inputStream = null;
+        try
+        {
+            File pwd = new File("build");
+            File file = new File(pwd, PROPERTIES_FILE_NAME);
+            inputStream = new FileInputStream(file);
+            Properties props = new Properties();
+            props.load(inputStream);
+            ret = BuildInfo.createFromProperties(props);
+        }
+        catch (Exception e)
+        {
+            ret = null;
+        }
+        finally
+        {
+            try
+            {
+                if (inputStream != null)
+                {
+                    inputStream.close();
+                }
+            }
+            catch (IOException e)
+            {
+                // ignore it
+            }
+        }
+        return ret;
+    }
 
     private static BuildInfo createFakeBuildInfo()
     {

@@ -116,7 +116,6 @@ public class MainReadmeTest
             "Create a share size 6 with threshold 3 with \"Cat\" as the secret string.",
             "   Note: the low modulus of " + smallPrime + " limits the size of the secret number,",
             " which in turn limits the length of the secret string."});
-        collect.finishItem();
 
 
         TestInput input = new TestInput();
@@ -126,6 +125,10 @@ public class MainReadmeTest
         assertSee("n = 6", output);
         assertSee("k = 3", output);
         assertSee("modulus = " + smallPrime, output);
+
+        processOutput(collect, output, true);
+
+        collect.finishItem();
     }
 
     public void testSimpleCatPipe(TestCollector collect)
@@ -139,8 +142,6 @@ public class MainReadmeTest
         collect.comments(new String [] {
                "Create a share size 6 with threshold 3 as above, but pipes the output of \"split\" to the input of \"combine\",",
                " which then re-creates the secret number and the secret string \"Cat\"."});
-        collect.finishItem();
-
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
@@ -155,6 +156,10 @@ public class MainReadmeTest
         TestOutput output2 = new TestOutput();
         Main.main(args2, input2.in(), output2.out(), false);
         assertSee("secret.string = 'Cat'", output2);
+
+        processOutput(collect, output2, true);
+
+        collect.finishItem();
     }
 
 
@@ -170,17 +175,20 @@ public class MainReadmeTest
                "Create a share size 6 with threshold 3 as above, but with a long secret string.",
                "  Note: no modulus was given, so a pre-defined 384-bit prime was used",
                " as the modulus.  The 384 bit prime allows 48 characters of secret string."});
-        collect.finishItem();
 
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(args, input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
         assertContains("modulus = ", output);
         assertContains("Share (x:1) = ", output);
+
+        processOutput(collect, output, true);
+
+        collect.finishItem();
     }
 
 
@@ -195,7 +203,6 @@ public class MainReadmeTest
         collect.comments(new String [] {
                      "Create the same share as above, then pipes the output of \"split\"",
                      " into the input of \"combine\", which prints out the secret string."});
-        collect.finishItem();
 
 
         TestInput input = new TestInput();
@@ -211,7 +218,12 @@ public class MainReadmeTest
         TestOutput output2 = new TestOutput();
         Main.main(args2, input2.in(), output2.out(), false);
         assertSee("secret.string = 'The Cat In The Hat'", output2);
+
+        processOutput(collect, output2, true);
+
+        collect.finishItem();
     }
+
 
 
     public void testSimpleCat4096(TestCollector collect)
@@ -222,16 +234,19 @@ public class MainReadmeTest
         collect.comments(new String [] {
             "Create the same share as above, but use a pre-defined 4096 bit prime modulus.",
             "  The 4096 bit prime allows 512 characters of secret string."});
-        collect.finishItem();
 
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(filterOutNewlines(args), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
         assertContains("modulus = " + "167102221" /*...*/, output);
+
+        processOutput(collect, output, true);
+
+        collect.finishItem();
     }
 
     public void testPrintIndiv(TestCollector collect)
@@ -242,16 +257,19 @@ public class MainReadmeTest
         collect.comments(new String [] {
             "Create the same share as above, but output in a manner better suited for physically splitting up the shares",
             " in order to give them out individually with all required information."});
-        collect.finishItem();
 
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(filterOutNewlines(args), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
         assertContains("modulus = " + "167102221" /*...*/, output);
+
+        processOutput(collect, output, true);
+
+        collect.finishItem();
     }
 
     public void testCombineThreeExplicit(TestCollector collect)
@@ -261,21 +279,24 @@ public class MainReadmeTest
         //   -s4 1882357204724127580025723830249209987221192644 \
         //   -s5 1882357444072759374568880025530775541595539408
         String[] args = {"combine", "-k", "3", "-prime384", NEWLINE,
-                "-s2", "1882356874773438980155973947620693982153929916", NEWLINE,
-                "-s4", "1882357204724127580025723830249209987221192644", NEWLINE,
-                "-s5", "1882357444072759374568880025530775541595539408"};
+                "-s2", "37851134048919502035795818694391308922347316", NEWLINE,
+                "-s4", "121326503220028599861390719386596400481908196", NEWLINE,
+                "-s5", "182930634402895005163851445932787007217693334"};
         collect.firstCommand(args);
         collect.comments(new String [] {
             "Combine 3 shares to recreate the original secret.",
             "  Note: it is important that the -prime argument is specified before -s arguments."});
-        collect.finishItem();
 
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(filterOutNewlines(args), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, false), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
-        assertContains("secret.string = " + "'TheKeyUsedToEncrypt'" /*...*/, output);
+        assertContains("secret.string = " + "'The Cat In The Hat'" /*...*/, output);
+
+        processOutput(collect, output, true);
+
+        collect.finishItem();
     }
 
     public void testCombineThreeExplicitShare3With1Wrong(TestCollector collect)
@@ -291,18 +312,21 @@ public class MainReadmeTest
         collect.firstCommand(args);
         collect.comments(new String [] {
             "Combine 4 shares, 3 good and 1 bad, using paranoid combination option."});
-        collect.finishItem();
 
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(filterOutNewlines(args), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, false), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("combine.4 = x1 = 1882356743151517032574974075571664781995241588 - (validUTF8=true) = 'TheKeyUsedToEncrypt'", output);
         for (String s : output.getLines())
         {
             System.out.println(s);
         }
+
+        processOutput(collect, output, true);
+
+        collect.finishItem();
     }
 
     public void testCombineThreeExplicitShareShowingArguments(TestCollector collect)
@@ -320,12 +344,11 @@ public class MainReadmeTest
             " Control how many extra combines to run (110), how many to print (4), and stop when an answer ",
             " has been seen at least this many times (30).  ",
             "Use the -paranoid option if you (1) have extra shares and (2) some of your shares are corrupt."});
-        collect.finishItem();
 
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(filterOutNewlines(args), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, false), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("paranoid.summary = Disagreement (60 different answers)", output);
         for (String s : output.getLines())
@@ -333,7 +356,9 @@ public class MainReadmeTest
             System.out.println(s);
         }
 
+        processOutput(collect, output, true);
 
+        collect.finishItem();
     }
 
     public void testInfo(TestCollector collect)
@@ -344,23 +369,40 @@ public class MainReadmeTest
         collect.firstCommand(args);
         collect.comments(new String [] {
             "Print information about Secret Share, including version, 192 bit, 384 bit, 4096 bit and 8192 bit primes."});
-        collect.finishItem();
+
 
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(filterOutNewlines(args), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, false), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("Modulus 192 bits = 14976407493557531125525728362448106789840013430353915016137", output);
+        processOutput(collect, output, true);
+
+        collect.finishItem();
+    }
+
+    /**
+     * After the command is run:
+     *   1) print all of the output lines
+     *   2) optionally, put the output lines into the collector
+     * @param collect
+     * @param output
+     */
+    private void processOutput(TestCollector collect, TestOutput output, boolean collectOutputLines) {
         for (String s : output.getLines())
         {
-            System.out.println(s);
+            System.out.println("FOO:" + s);
+            if (collectOutputLines) {
+                collect.addOutputLine(s);
+            }
         }
     }
 
-    private String[] filterOutNewlines(String[] args)
+    private String[] createArgsForMain(String[] args, boolean addRandomSeed)
     {
         List<String> ret = new ArrayList<String>();
+        // filter out new lines
         for (String arg : args)
         {
             if (NEWLINE.equals(arg))
@@ -371,6 +413,13 @@ public class MainReadmeTest
             {
                 ret.add(arg);
             }
+        }
+
+        // add "-r 100" if requested
+        if (addRandomSeed)
+        {
+            ret.add("-r");
+            ret.add("100");
         }
         return ret.toArray(new String[0]);
     }
@@ -515,6 +564,12 @@ public class MainReadmeTest
             current.firstCommand(args);
         }
 
+        public void addOutputLine(String s)
+        {
+            assignCurrent();
+            current.outputLine(s);
+        }
+
         public void finishItem()
         {
             items.add(current);
@@ -525,21 +580,32 @@ public class MainReadmeTest
     {
         private final List<String> commands = new ArrayList<String>();
         private final List<String> comments = new ArrayList<String>();
+        private final List<String> outputLines = new ArrayList<String>();
 
         private boolean enableDetails = MainReadmeTest.enableDetails;
 
         public void output(int index, PrintStream out)
         {
+            if (enableDetails)
+            {
+                out.println("<details>");
+            }
             outputDescription(index, out);
             outputCommandLine(out);
+            outputOutputLines(out);
+            if (enableDetails)
+            {
+                out.println("</blockquote></details>");
+            }
         }
+
+
         private void outputDescription(int index, PrintStream out)
         {
             String indent = "  ";
             String prefix  = "" + (char) (index  + 'a') + ". ";
             if (enableDetails)
             {
-                out.println("<details>");
                 out.print(indent + "<summary>");
                 indent = "";
             }
@@ -553,7 +619,7 @@ public class MainReadmeTest
             }
             if (enableDetails)
             {
-                out.print("</summary>");
+                out.print("</summary><blockquote>");
             }
             out.println("");
         }
@@ -624,9 +690,23 @@ public class MainReadmeTest
                 }
             }
             out.println(indent + "```");
-            if (enableDetails)
+        }
+
+        private void outputOutputLines(PrintStream out)
+        {
+            String indent = "  ";
+
+            if (outputLines.size() > 0)
             {
-                out.println("</details>"); // need a blank line here when using <details><summary>
+                out.println(indent + "<details>" + "<summary>" + "Sample output" + "</summary>");
+                out.println("");
+                out.println(indent + "```");
+                for (String line : outputLines)
+                {
+                    out.println(indent + line);
+                }
+                out.println(indent + "```");
+                out.println(indent + "</details");
             }
         }
 
@@ -656,6 +736,11 @@ public class MainReadmeTest
         private void addCommand(String string)
         {
             commands.add(string);
+        }
+
+        private void outputLine(String string)
+        {
+            outputLines.add(string);
         }
 
         private String args2string(String[] args)
