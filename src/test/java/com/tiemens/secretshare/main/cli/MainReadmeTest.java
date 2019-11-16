@@ -389,11 +389,13 @@ public class MainReadmeTest
      * @param collect
      * @param output
      */
-    private void processOutput(TestCollector collect, TestOutput output, boolean collectOutputLines) {
+    private void processOutput(TestCollector collect, TestOutput output, boolean collectOutputLines)
+    {
         for (String s : output.getLines())
         {
             System.out.println("FOO:" + s);
-            if (collectOutputLines) {
+            if (collectOutputLines)
+            {
                 collect.addOutputLine(s);
             }
         }
