@@ -120,7 +120,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(args, input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -145,7 +145,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(args, input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -207,7 +207,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(args, input.in(), output.out(), false);
+        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -398,7 +398,7 @@ public class MainReadmeTest
             if (collectOutputLines)
             {
                 // github markdown killer character:  ctrl-L !
-                s = s.replace(ctrlEll, "");
+                s = s.replace(ctrlEll, "^L");
                 collect.addOutputLine(s);
             }
         }
