@@ -94,7 +94,7 @@ Examples of command line invocations
 
   ```
   Secret Share version 1.4.5-SNAPSHOT
-  Date                          : 2019-11-17 19:50:35
+  Date                          : 2019-11-17 19:50:36
   UUID                          : f8d4ec0b-f3e0-4946-af1c-6142477beb04
   n = 6
   k = 3
@@ -326,10 +326,10 @@ Examples of command line invocations
   paranoid.allowedCount = 4
   paranoid.count = 4
   paranoid.summary = Disagreement (4 different answers)
-  combine.1 = x1 = 83085671664126938805092614721037843700776366159998897420433674117190427321046833708006542535573073222337983827443095 - (validUTF8=false) = '??щR���Oy=l�?���ΤF��_R:S?�����b=�j��{��r��??�}�'
-  combine.2 = x1 = 16941212862714251189714249745173028423288392004 - (validUTF8=false) = '?���
-  ]�O�^?gT�&��ʉD'
-  combine.3 = x1 = 11294141817878225880787021369072517057803460598 - (validUTF8=false) = '?�rc����� ɠ>�a�{�?�'
+  combine.1 = x1 = 83085671664126938805092614721037843700776366159998897420433674117190427321046833708006542535573073222337983827443095 - (validUTF8=false) = 'щR���Oy=l����ΤF��_R:S�����b=�j��{��r���}�'
+  combine.2 = x1 = 16941212862714251189714249745173028423288392004 - (validUTF8=false) = '���
+  ]�O�^gT�&��ʉD'
+  combine.3 = x1 = 11294141817878225880787021369072517057803460598 - (validUTF8=false) = '�rc����� ɠ>�a�{��'
   combine.4 = x1 = 1882356743151517032574974075571664781995241588 - (validUTF8=true) = 'TheKeyUsedToEncrypt'
   ```
   </details
@@ -356,8 +356,8 @@ Examples of command line invocations
   paranoid.summary = Disagreement (60 different answers)
   combine.1 = x30 = 4415860 - (validUTF8=true) = 'Cat'
   combine.2 = x3 = 4140122 - (validUTF8=true) = '?,Z'
-  combine.3 = x2 = 269137 - (validUTF8=true) = '??Q'
-  combine.4 = x1 = 16592886 - (validUTF8=false) = '?�/�'
+  combine.3 = x2 = 269137 - (validUTF8=true) = 'Q'
+  combine.4 = x1 = 16592886 - (validUTF8=false) = ' �/�'
   ```
   </details
 </blockquote></details>

@@ -22,7 +22,10 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -120,7 +123,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -145,7 +148,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -179,7 +182,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -207,7 +210,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -238,7 +241,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -261,7 +264,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, true), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertSee("n = 6", output);
         assertSee("k = 3", output);
@@ -290,7 +293,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, false), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("secret.string = " + "'The Cat In The Hat'" /*...*/, output);
 
@@ -316,7 +319,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, false), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("combine.4 = x1 = 1882356743151517032574974075571664781995241588 - (validUTF8=true) = 'TheKeyUsedToEncrypt'", output);
         for (String s : output.getLines())
@@ -348,7 +351,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, false), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("paranoid.summary = Disagreement (60 different answers)", output);
         for (String s : output.getLines())
@@ -374,7 +377,7 @@ public class MainReadmeTest
 
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
-        Main.main(createArgsForMain(args, false), input.in(), output.out(), false);
+        Main.main(createArgsForMain(args), input.in(), output.out(), false);
         Assert.assertTrue("output has lines", output.getLines().size() > 0);
         assertContains("Modulus 192 bits = 14976407493557531125525728362448106789840013430353915016137", output);
         processOutput(collect, output, true);
@@ -404,7 +407,7 @@ public class MainReadmeTest
         }
     }
 
-    private String[] createArgsForMain(String[] args, boolean addRandomSeed)
+    private String[] createArgsForMain(String[] args)
     {
         List<String> ret = new ArrayList<String>();
         // filter out new lines
@@ -420,11 +423,36 @@ public class MainReadmeTest
             }
         }
 
-        // add "-r 100" if requested
-        if (addRandomSeed)
+        boolean isSplitCommand = args[0].equals("split");
+
+
+        if (isSplitCommand)
         {
+            // add "-r 100" if requested
             ret.add("-r");
             ret.add("100");
+
+            // set UUID
+            UUID uuid = UUIDGenerator.getInstance().generate();
+            if (uuid != null)
+            {
+                ret.add("-uuid");
+                ret.add(uuid.toString());
+                System.out.println("UUID consumed " + uuid);
+            }
+            else
+            {
+                System.out.println("UUID ran out");
+            }
+
+            // set date TODO
+            Long timemillis = DateGenerator.getInstance().generate();
+            if (timemillis != null)
+            {
+                System.out.println("DATETIME is " + timemillis);
+                ret.add("-timeMillis");
+                ret.add("" + timemillis);
+            }
         }
         return ret.toArray(new String[0]);
     }
@@ -778,6 +806,60 @@ public class MainReadmeTest
                 }
             }
             return ret;
+        }
+    }
+
+    public static class UUIDGenerator
+    {
+        private static UUIDGenerator instance = new UUIDGenerator();
+        public static UUIDGenerator getInstance()
+        {
+            return instance;
+        }
+        private List<String> uuids = List.of("f8d4ec0b-f3e0-4946-af1c-6142477beb04",
+                                             "",  // hidden in pipe
+                                             "613a4311-e093-4ad3-af1a-fcc0d277ac03",
+                                             "", // hidden in pipe
+                                             "100b5d58-de91-4c07-a885-5f75e5221b7a",
+                                             "776b3f86-e58a-4c2f-8c54-0d9ef2972bbf");
+        private Enumeration<String> uuidsEnumeration = Collections.enumeration(uuids);
+
+        public UUID generate()
+        {
+            UUID ret = null;
+            if (uuidsEnumeration.hasMoreElements())
+            {
+                String uuid = uuidsEnumeration.nextElement();
+                if (! uuid.isEmpty())
+                {
+                    ret = UUID.fromString(uuid);
+                }
+            }
+            return ret;
+        }
+        /*
+         *   UUID                          : f8d4ec0b-f3e0-4946-af1c-6142477beb04
+  UUID                          : 613a4311-e093-4ad3-af1a-fcc0d277ac03
+  UUID                          : 100b5d58-de91-4c07-a885-5f75e5221b7a
+  UUID                          : 776b3f86-e58a-4c2f-8c54-0d9ef2972bbf
+  UUID                          : 776b3f86-e58a-4c2f-8c54-0d9ef2972bbf
+         */
+    }
+
+    public static class DateGenerator
+    {
+        private static DateGenerator instance = new DateGenerator();
+        public static DateGenerator getInstance()
+        {
+            return instance;
+        }
+        private static long startMillis = 1574041836000L;
+//      Anchor time is "2019-11-17 19:50:36"
+
+        public Long generate()
+        {
+            long timemillis = startMillis;
+            return timemillis;
         }
     }
 }

@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import com.tiemens.secretshare.engine.SecretShare;
 import com.tiemens.secretshare.engine.SecretShare.ParanoidInput;
@@ -94,6 +95,9 @@ public final class MainSplit
         out.println("  -printOne     put all shares on 1 sheet of paper");
         out.println("  -printIndiv   put 1 share per sheet, use 'n' sheets of paper");
 
+        //  -r <randomSeed>         set the random seed
+        //  -timeMillis <millis>    set the date using time-since-epoch milliseconds
+        //  -uuid <UUID-string>     set the UUID using the UUID string
     }
 
 
@@ -155,6 +159,26 @@ public final class MainSplit
         return ret;
     }
 
+    public static Long parseLong(String argname,
+                                 String[] args,
+                                 int index)
+    {
+        checkIndex(argname, args, index);
+        String value = args[index];
+
+        Long ret = null;
+        try
+        {
+            ret = Long.valueOf(value);
+        }
+        catch (NumberFormatException e)
+        {
+            String m = "The argument of '" + value + "' " +
+                               "is not a number.";
+            throw new SecretShareException(m, e);
+        }
+        return ret;
+    }
 
     public static void checkIndex(String argname,
                                   String[] args,
@@ -223,6 +247,12 @@ public final class MainSplit
         // optional: the random can be seeded
         private Random random;
 
+        // optional: the UUID
+        private UUID uuid;
+
+        // optional: the datetime milliseconds
+        private Long datetimeMillis;
+
         // if true, print on 1 sheet of paper; otherwise use 'n' sheets and repeat the header
         private boolean printAllSharesAtOnce = true;
 
@@ -280,6 +310,16 @@ public final class MainSplit
                     i++;
                     int seed =  parseInt("r", args, i);
                     ret.random = new Random(seed);
+                }
+                else if ("-uuid".equals(args[i]))
+                {
+                    i++;
+                    ret.uuid = UUID.fromString(args[i]);
+                }
+                else if ("-timeMillis".equals(args[i]))
+                {
+                    i++;
+                    ret.datetimeMillis = parseLong("timeMillis", args, i);
                 }
                 else if ("-prime8192".equals(args[i]))
                 {
@@ -434,7 +474,9 @@ public final class MainSplit
                 new SecretShare.PublicInfo(this.n,
                                            this.k,
                                            this.modulus,
-                                           this.description);
+                                           this.description,
+                                           this.uuid,
+                                           this.datetimeMillis);
 
             SecretShare secretShare = new SecretShare(publicInfo);
 

@@ -908,16 +908,39 @@ public class SecretShare
                           final BigInteger inPrimeModulus,
                           final String inDescription)
         {
+            this(inN, inK, inPrimeModulus, inDescription, null, null);
+        }
+
+        public PublicInfo(final Integer inN,
+                final int inK,
+                final BigInteger inPrimeModulus,
+                final String inDescription,
+                final UUID inUUID,
+                final Long inDatetimeMillis)
+        {
             super();
             this.n = inN;
             this.k = inK;
             this.primeModulus = inPrimeModulus;
             this.description = inDescription;
 
-            UUID uuidobj = UUID.randomUUID();
+            final UUID uuidobj;
+            if (inUUID == null)
+            {
+                uuidobj = UUID.randomUUID();
+            }
+            else
+            {
+                uuidobj = inUUID;
+            }
             uuid =  uuidobj.toString();
 
-            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            long datetimeMillis = new Date().getTime();
+            if (inDatetimeMillis != null)
+            {
+                datetimeMillis = inDatetimeMillis;
+            }
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(datetimeMillis));
 
             if (n != null)
             {
