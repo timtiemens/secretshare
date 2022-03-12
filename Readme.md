@@ -86,6 +86,39 @@ See [Architecture.md](docs/Architecture.md)
 ## Examples of command line invocations
 
 
+<details>
+  <summary>a. Create a share size 6 with threshold 3 with "Cat" as the secret string.   Note: the low modulus of 16639793 limits the size of the secret number, which in turn limits the length of the secret string.</summary><blockquote>
+
+  ```
+  $ java -jar secretshare.jar split -k 3 -n 6 -m 16639793 -sS "Cat"
+  ```
+  <details><summary>Sample output</summary>
+
+  ```
+  Secret Share version 1.4.5-SNAPSHOT
+  Date                          : 2019-11-17 19:50:36
+  UUID                          : f8d4ec0b-f3e0-4946-af1c-6142477beb04
+  n = 6
+  k = 3
+  modulus = 16639793
+  modulus = bigintcs:fde731-829FB0
+  
+  Share (x:1) = 9140967
+  Share (x:2) = 4154189
+  Share (x:3) = 6095319
+  Share (x:4) = 14964357
+  Share (x:5) = 14121510
+  Share (x:6) = 3566778
+  Share (x:1) = bigintcs:8b7ae7-32F939
+  Share (x:2) = bigintcs:3f634d-23AA55
+  Share (x:3) = bigintcs:5d01d7-DB6BF4
+  Share (x:4) = bigintcs:e45685-F8C8D8
+  Share (x:5) = bigintcs:d77a26-22E9B6
+  Share (x:6) = bigintcs:366cba-B203FC
+  ```
+  </details>
+</blockquote></details>
+
 
 
 
@@ -168,7 +201,7 @@ So, k=25 is a pretty good practical limit, or k=20 for "immediate" results.
 </details>
 
 
-
+## Additional Documentation
 
 [Original Sourceforge Secret Sharing in Java] - original SCM location.  Out-of-date.
 
