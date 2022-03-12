@@ -290,6 +290,53 @@ See [Architecture.md](docs/Architecture.md)
 </blockquote></details>
 
 
+<details>
+  <summary>g. Combine 3 shares to recreate the original secret.  Note: it is important that the -prime argument is specified before -s arguments.</summary><blockquote>
+
+  ```
+  $ java -jar secretshare.jar combine -k 3 -prime384 \
+      -s2 37851134048919502035795818694391308922347316 \
+      -s4 121326503220028599861390719386596400481908196 \
+      -s5 182930634402895005163851445932787007217693334
+  ```
+  <details><summary>Sample output</summary>
+
+  ```
+  Secret Share version 1.4.5-SNAPSHOT
+  secret.number = '7352955803975354582636321202421046578798964'
+  secret.string = 'The Cat In The Hat'
+  ```
+  </details>
+</blockquote></details>
+
+<details>
+  <summary>h. Combine 4 shares, 3 good and 1 bad, using paranoid combination option.</summary><blockquote>
+
+  ```
+  $ java -jar secretshare.jar combine -k 3 -prime384 \
+      -paranoid 4 \
+      -s2 1882356874773438980155973947620693982153929916 \
+      -s3 12345678912345678912345678912345678 \
+      -s4 1882357204724127580025723830249209987221192644 \
+      -s5 1882357444072759374568880025530775541595539408
+  ```
+  <details><summary>Sample output</summary>
+
+  ```
+  Secret Share version 1.4.5-SNAPSHOT
+  secret.number = null
+  secret.string = null
+  paranoid.totalAvailable = 4
+  paranoid.allowedCount = 4
+  paranoid.count = 4
+  paranoid.summary = Disagreement (4 different answers)
+  combine.1 = x1 = 83085671664126938805092614721037843700776366159998897420433674117190427321046833708006542535573073222337983827443095 - (validUTF8=false) = '^B^[\321\211R\357\277\275\357\277\275\357\277\Oy=l\357\277\275^Q\357\277\275\357\277\275\357\277\275\316\244F\357\277\275\357\277\275_R:S^X\357\277\275\357\277\275\357\277\275\357\277\275\357\277\275b=\357\277\275j\357\277\275\357\277\275{\357\277\275\357\277\275r\357\277\275\357\277\275^Z^P\357\277\275}\357\277\275'
+  combine.2 = x1 = 16941212862714251189714249745173028423288392004 - (validUTF8=false) = '^B\357\277\275\357\277\275\357\277\275]\357\277\275O\357\277\275^FgT\357\277\275&\357\277\275\357\277\275\312\211D'
+  combine.3 = x1 = 11294141817878225880787021369072517057803460598 - (validUTF8=false) = '^A\357\277\275rc\357\277\275\357\277\275\357\277\275\357\277\275\357\277\275 \311\240>\357\277\275a\357\277\275{\357\277\275^_\357\277\275'
+  combine.4 = x1 = 1882356743151517032574974075571664781995241588 - (validUTF8=true) = 'TheKeyUsedToEncrypt'
+  ```
+  </details>
+</blockquote></details>
 
 
 ## Note on the Modulus
