@@ -119,6 +119,22 @@ See [Architecture.md](docs/Architecture.md)
   </details>
 </blockquote></details>
 
+<details>
+  <summary>b. Create a share size 6 with threshold 3 as above, but pipes the output of "split" to the input of "combine", which then re-creates the secret number and the secret string "Cat".</summary><blockquote>
+
+  ```
+  $ java -jar secretshare.jar split -k 3 -n 6 -m 16639793 -sS "Cat" \
+   | java -jar secretshare.jar combine -stdin
+  ```
+  <details><summary>Sample output</summary>
+
+  ```
+  Secret Share version 1.4.5-SNAPSHOT
+  secret.number = '4415860'
+  secret.string = 'Cat'
+  ```
+  </details>
+</blockquote></details>
 
 
 
