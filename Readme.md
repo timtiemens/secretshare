@@ -388,6 +388,73 @@ See [Architecture.md](docs/Architecture.md)
   </details>
 </blockquote></details>
 
+## A complete scenario
+
+```
+  # Encrypt the PAYLOAD.
+$ cat PAYLOAD.txt
+   This is the PAYLOAD
+   Generated Wed May  9 19:58:01 CDT 2018
+   It has spaces at the front of every line
+$ openssl enc -pass pass:TheKeyUsedToEncrypt -aes-256-cbc -salt \
+              -in PAYLOAD.txt -out PAYLOAD.enc
+$ ls -l PAYLOAD.enc
+-rw-r--r--  1 timtiemens  users   128 May  9 19:58 PAYLOAD.enc
+
+  # Create the shares from the key.
+  # Use '-printIndiv' to make it easier to distribute the shares.
+$ PRINT=-printIndiv
+  # For this example, we'll print them all together
+$ PRINT=-printOne
+$ java -jar secretshare.jar split -k 3 -n 6 -sS "TheKeyUsedToEncrypt" $PRINT
+Secret Share version 1.4.4
+Date                          : 2018-05-09 19:59:55
+UUID                          : 5c1ed0de-b281-49db-890c-4fc12321775a
+n = 6
+k = 3
+modulus = 83085671664126938805092614721037843700776366159998897420433674117190444262260240009907206384693584652377753448639527
+modulus = bigintcs:000002-1bd189-52959f-874f79-3d6cf5-11ac82-e6cea4-46c19c-5f523a-5318c7-e0f379-66f9e1-308c61-2d8d0b-dba253-6f54b0-ec6c27-3198DB
+
+Share (x:1) = 5029843236858503316023507982074352651731277871
+Share (x:2) = 11756782766980296102287198955234016324659726464
+Share (x:3) = 22063175333516895391366046995050655800780587367
+Share (x:4) = 35949020936468301183260052101524271080093860580
+Share (x:5) = 53414319575834513477969214274654862162599546103
+Share (x:6) = 74459071251615532275493533514442429048297643936
+Share (x:1) = bigintcs:0000e1-8bc4c6-aff0f0-47d7e4-9c63f3-dceb5a-05182f-086F30
+Share (x:2) = bigintcs:00020f-313f50-ea5144-91be7f-eb359a-28850f-c84880-A92812
+Share (x:3) = bigintcs:0003dd-58d4ea-149a52-511936-40e438-513093-c30167-AC7697
+Share (x:4) = bigintcs:00064c-028592-2ecc19-85e807-9d6fce-56ede5-f542e4-391126
+Share (x:5) = bigintcs:00095b-2e5149-38e69a-302af4-00d85c-39bd06-5f0cf7-80574A
+Share (x:6) = bigintcs:000d0a-dc380f-32e9d4-4fe1fb-6b1de1-f99df5-005fa0-4C058A
+
+  # Give the keys x:1, x:2, x:3, x:4, x:5 and x:6 away.
+  # Give the file PAYLOAD.enc away, or publish it somewhere public.
+
+  #  time passes 
+
+  # Later, somebody acquires 3 shares - for example, x:2, x:4 and x:5 -
+  #  and then does this:
+ 
+$ java -jar secretshare.jar combine -k 3 \
+   -s2 11756782766980296102287198955234016324659726464 \
+   -s4 35949020936468301183260052101524271080093860580 \
+   -s5 53414319575834513477969214274654862162599546103
+Secret Share version 1.4.4
+secret.number = '1882356743151517032574974075571664781995241588'
+secret.string = 'TheKeyUsedToEncrypt'
+
+  # Then, using PAYLOAD.enc and the secret.string, recovers the secret PAYLOAD:
+
+$ openssl enc -d -pass pass:TheKeyUsedToEncrypt -aes-256-cbc \
+              -in PAYLOAD.enc -out RECOVER.txt
+$ cmp PAYLOAD.txt RECOVER.txt 
+$ cat RECOVER.txt
+   This is the PAYLOAD
+   Generated Wed May  9 19:58:01 CDT 2018
+   It has spaces at the front of every line
+```
+
 
 
 ## Note on the Modulus
