@@ -1,0 +1,37 @@
+raspberry pi 400
+  10.0.6.206  "K400"   64bit OS   4GB RAM
+  uname: Linux raspberrypi 5.10.92-v8+ #1514 SMP PREEMPT Mon Jan 17 17:39:38 GMT 2022 aarch64 GNU/Linux
+  Model         : Raspberry Pi 400 Rev 1.0
+  Hardware	: BCM2835
+  BogoMIPS	: 108.00  [4x]
+
+
+real	21m10.270s
+user	0m12.204s
+sys	0m2.432s
+
+
+====
+
+virtual machine
+  model name      : Intel(R) Xeon(R) CPU E5-2640 0 @ 2.50GHz
+  bogomips        : 4987.98
+
+real    8m16.372s
+user    0m4.901s
+sys	0m0.575s
+
+====
+
+  10.0.6.20  "RetroPie"   32bit OS  8GB RAM
+  uname: Linux raspberrypi 5.10.92-v7l+ #1514 SMP Mon Jan 17 17:38:03 GMT 2022 armv7l GNU/Linux
+  Model		: Raspberry Pi 4 Model B Rev 1.4
+  model name	: ARMv7 Processor rev 3 (v7l)   [4x]
+  Hardware	: BCM2711
+
+
+real	41m8.143s
+user	0m11.309s
+sys	0m2.918s
+
+
