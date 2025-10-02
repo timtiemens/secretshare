@@ -162,6 +162,14 @@ public final class MainInfo
 
         public void print(PrintStream out)
         {
+            if (infoInput == null)
+            {
+                throw new SecretShareException("null infoInput");
+            }
+            else
+            {
+                System.out.println(infoInput.getClass());
+            }
             printHeaderInfo(out);
             printBuiltinPrimes(out);
         }

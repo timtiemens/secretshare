@@ -1672,11 +1672,15 @@ public class SecretShare
                     Integer count = entry.getValue();
                     BigInteger secret = entry.getKey();
 
+                    final boolean validUTF = BigIntUtilities.Human.isValidUTF8(secret);
+                    final String humanString = validUTF ?
+                            BigIntUtilities.Human.createHumanString(secret) :
+                            "<GARBAGE>";
                     out.println("combine." + loop + " = x" + count + " = " + secret +
                                 " - (validUTF8=" +
-                               BigIntUtilities.Human.isValidUTF8(secret) + ")" +
+                               validUTF + ")" +
                                 " = '" +
-                                BigIntUtilities.Human.createHumanString(secret) + "'");
+                               humanString + "'");
                     loop++;
 
                     if (limitPrint != null)

@@ -16,17 +16,18 @@
  *******************************************************************************/
 package com.tiemens.secretshare.main.cli;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.BuildVersion;
 import com.tiemens.secretshare.engine.SecretShare.ParanoidInput;
@@ -47,26 +48,26 @@ import com.tiemens.secretshare.main.cli.MainSplit.SplitOutput;
 public class MainCombineParanoidTest
 {
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass()
             throws Exception
     {
         BuildVersion.disableFailureInLoad();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass()
             throws Exception
     {
     }
 
-    @Before
+    @BeforeEach
     public void setUp()
             throws Exception
     {
     }
 
-    @After
+    @AfterEach
     public void tearDown()
             throws Exception
     {

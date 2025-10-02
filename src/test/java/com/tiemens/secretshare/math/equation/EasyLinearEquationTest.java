@@ -17,6 +17,8 @@
 package com.tiemens.secretshare.math.equation;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -29,8 +31,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.math.equation.EasyLinearEquation.EasySolve;
 
@@ -75,12 +76,15 @@ public class EasyLinearEquationTest
                           });
 
         EasySolve solve = ele.solve();
-        Assert.assertEquals("1 should be 6",
-                            BigInteger.valueOf(6), solve.getAnswer(1));
-        Assert.assertEquals("2 should be 3",
-                            BigInteger.valueOf(3), solve.getAnswer(2));
-        Assert.assertEquals("3 should be 7",
-                            BigInteger.valueOf(7), solve.getAnswer(3));
+        assertEquals(BigInteger.valueOf(6), solve.getAnswer(1),
+                     "1 should be 6");
+
+        assertEquals(BigInteger.valueOf(3), solve.getAnswer(2),
+                    "2 should be 3");
+
+        assertEquals(BigInteger.valueOf(7), solve.getAnswer(3),
+                     "3 should be 7");
+
     }
 
     @Test
@@ -104,12 +108,14 @@ public class EasyLinearEquationTest
         System.out.println("answer(1)=" + solve.getAnswer(1));
         System.out.println("answer(2)=" + solve.getAnswer(2));
         System.out.println("answer(3)=" + solve.getAnswer(3));
-        Assert.assertEquals("1 should be 11",
-                            BigInteger.valueOf(11), solve.getAnswer(1));
-        Assert.assertEquals("2 should be 16",
-                            BigInteger.valueOf(16), solve.getAnswer(2));
-        Assert.assertEquals("3 should be 3",
-                            BigInteger.valueOf(3), solve.getAnswer(3));
+        assertEquals(BigInteger.valueOf(11), solve.getAnswer(1),
+                     "1 should be 11");
+
+        assertEquals(BigInteger.valueOf(16), solve.getAnswer(2),
+                     "2 should be 16");
+
+        assertEquals(BigInteger.valueOf(3), solve.getAnswer(3),
+                     "3 should be 3");
     }
 
 
@@ -139,12 +145,15 @@ public class EasyLinearEquationTest
         System.out.println("answer(1)=" + solve.getAnswer(1));
         System.out.println("answer(2)=" + solve.getAnswer(2));
         System.out.println("answer(3)=" + solve.getAnswer(3));
-        Assert.assertEquals("1 should be 45654",
-                            BigInteger.valueOf(45654), solve.getAnswer(1));
-        Assert.assertEquals("2 should be 1",
-                            BigInteger.valueOf(1), solve.getAnswer(2));
-        Assert.assertEquals("3 should be 7",
-                            BigInteger.valueOf(7), solve.getAnswer(3));
+        assertEquals(BigInteger.valueOf(45654), solve.getAnswer(1),
+                "1 should be 45654");
+
+        assertEquals(BigInteger.valueOf(1), solve.getAnswer(2),
+                "2 should be 1");
+
+        assertEquals(BigInteger.valueOf(7), solve.getAnswer(3),
+                "3 should be 7");
+
     }
 
     /**
@@ -177,14 +186,17 @@ public class EasyLinearEquationTest
         System.out.println("answer(1)=" + solve.getAnswer(1));
         System.out.println("answer(2)=" + solve.getAnswer(2));
         System.out.println("answer(3)=" + solve.getAnswer(3));
-        Assert.assertEquals("1 should be 45654",   // the secret
-                            BigInteger.valueOf(45654), solve.getAnswer(1));
+        assertEquals(BigInteger.valueOf(45654), solve.getAnswer(1),
+                "1 should be 45654");   // the secret
+
         // without the modulus, the answer would be -36300
         BigInteger two = BigInteger.valueOf(-36300).mod(modulus);
-        Assert.assertEquals("2 should be " + two,
-                            two, solve.getAnswer(2));
-        Assert.assertEquals("3 should be 15335",
-                            BigInteger.valueOf(15335), solve.getAnswer(3));
+        assertEquals(two, solve.getAnswer(2),
+                "2 should be " + two);
+
+        assertEquals(BigInteger.valueOf(15335), solve.getAnswer(3),
+                "3 should be 15335");
+
     }
 
 
@@ -233,12 +245,15 @@ public class EasyLinearEquationTest
         ele = EasyLinearEquation.createForPolynomial(xarray, fofxarray);
 
         EasySolve solve = ele.solve();
-        Assert.assertEquals("1 should be 1234",
-                            BigInteger.valueOf(1234), solve.getAnswer(1));
-        Assert.assertEquals("2 should be 166",
-                            BigInteger.valueOf(166), solve.getAnswer(2));
-        Assert.assertEquals("3 should be 94",
-                            BigInteger.valueOf(94), solve.getAnswer(3));
+        assertEquals(BigInteger.valueOf(1234), solve.getAnswer(1),
+                "1 should be 1234");
+
+        assertEquals(BigInteger.valueOf(166), solve.getAnswer(2),
+                "2 should be 166");
+
+        assertEquals(BigInteger.valueOf(94), solve.getAnswer(3),
+                "3 should be 94");
+
     }
 
 

@@ -16,10 +16,12 @@
  *******************************************************************************/
 package com.tiemens.secretshare.math.equation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.math.BigInteger;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 
 public class PolyEquationImplTest
 {
@@ -71,6 +73,6 @@ public class PolyEquationImplTest
                          BigInteger expected)
     {
         BigInteger actual = poly.calculateFofX(BigInteger.valueOf(x));
-        Assert.assertEquals("test x=" + x, expected, actual);
+        assertEquals(expected, actual, "test x=" + x);
     }
 }

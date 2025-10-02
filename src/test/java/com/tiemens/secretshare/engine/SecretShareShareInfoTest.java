@@ -16,10 +16,11 @@
  *******************************************************************************/
 package com.tiemens.secretshare.engine;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import java.math.BigInteger;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.engine.SecretShare.PublicInfo;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
@@ -66,7 +67,7 @@ public class SecretShareShareInfoTest
         ShareInfo s1 = new ShareInfo(/*x*/ 1, bigintShare, publicInfo1);
         ShareInfo s2 = new ShareInfo(/*x*/ 1, bigintShare, publicInfo2);
 
-        Assert.assertNotEquals(s1, s2);
+        assertNotEquals(s1, s2);
     }
 
     // ==================================================

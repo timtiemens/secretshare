@@ -20,8 +20,9 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 import com.tiemens.secretshare.math.equation.EasyLinearEquationTest;
 import com.tiemens.secretshare.math.type.BigIntUtilitiesTest;
@@ -140,7 +141,7 @@ public class BuiltinPrimesIntegTest
     private void subtest(String where, BigInteger prime, int iterations)
     {
         boolean b = BigIntUtilitiesTest.passesMillerRabin(prime, iterations, generateWithFixedSeed());
-        Assert.assertTrue("Rabin-Miller (" + iterations + ") failed on " + where, b);
+        assertTrue(b, "Rabin-Miller (" + iterations + ") failed on " + where);
     }
 
     private Random generateWithFixedSeed()

@@ -16,15 +16,16 @@
  *******************************************************************************/
 package com.tiemens.secretshare.math.type;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 
@@ -66,7 +67,7 @@ public class BigIntStringChecksumTest
         String s = BigIntStringChecksum.create(bint).toString();
         /// System.out.println("val=" + bint + " string='" + s + "'");
         BigInteger read = BigIntStringChecksum.fromString(s).asBigInteger();
-        Assert.assertEquals(bint, read);
+        assertEquals(bint, read);
 
         // now test the checksum:
         subtestGood(-100, "bigintcs:-000064-BBC6EC");
@@ -93,11 +94,11 @@ public class BigIntStringChecksumTest
     {
         String s = "bigintcs:-000000-000064-F913AE";
         BigInteger b = BigIntStringChecksum.fromString(s).asBigInteger();
-        Assert.assertNotNull(b);
+        assertNotNull(b);
         s = "bigintcs:-000064-BBC6EC";
-        Assert.assertEquals("leading 0s different value",
-                            b,
-                            BigIntStringChecksum.fromString(s).asBigInteger());
+        assertEquals(b,
+                     BigIntStringChecksum.fromString(s).asBigInteger(),
+                     "leading 0s different value");
     }
 
     /**
@@ -135,7 +136,7 @@ public class BigIntStringChecksumTest
                 try
                 {
                     bisc.asBigInteger();   // should throw exception
-                    Assert.fail("Really bad input '" + reallyBad[i] + "' failed to fail");
+                    fail("Really bad input '" + reallyBad[i] + "' failed to fail");
                 }
                 catch (SecretShareException e)
                 {
@@ -178,14 +179,14 @@ public class BigIntStringChecksumTest
         // insert a leading "-", parse is OK:
         BigInteger okNeg100 = BigIntStringChecksum.fromString("bigintcs:" +
                        "-" + sameValue + sameChecksum).asBigInteger();
-        Assert.assertEquals("-100 failed", new BigInteger("-100"), okNeg100);
+        assertEquals(new BigInteger("-100"), okNeg100, "-100 failed");
 
         // without a leading "-", parse FAILS:
         try
         {
             BigInteger failNeg100 = BigIntStringChecksum.fromString("bigintcs:" + "" +
                        sameValue + sameChecksum).asBigInteger();
-            Assert.fail("100 has checksum error, but did not throw exception: " + failNeg100);
+            fail("100 has checksum error, but did not throw exception: " + failNeg100);
         }
         catch (SecretShareException e)
         {
@@ -221,7 +222,7 @@ public class BigIntStringChecksumTest
         {
             // 1st test: this one should throw an exception:
             BigIntStringChecksum bics = BigIntStringChecksum.fromString(s);
-            Assert.fail("Checksum failed to throw exception on s='" + s + "' bint=" + bics);
+            fail("Checksum failed to throw exception on s='" + s + "' bint=" + bics);
         }
         catch (SecretShareException e)
         {
@@ -229,7 +230,7 @@ public class BigIntStringChecksumTest
 
             // 2nd test: this one should NOT throw an exception; it should return null:
             BigIntStringChecksum mustbenull = BigIntStringChecksum.fromStringOrNull(s);
-            Assert.assertNull(mustbenull);
+            assertNull(mustbenull);
         }
     }
 
@@ -248,7 +249,7 @@ public class BigIntStringChecksumTest
                              String s)
     {
         BigInteger bint = BigIntStringChecksum.fromString(s).asBigInteger();
-        Assert.assertEquals(expected, bint);
+        assertEquals(expected, bint);
     }
 
 

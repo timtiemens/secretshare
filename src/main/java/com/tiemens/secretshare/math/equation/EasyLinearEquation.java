@@ -464,6 +464,7 @@ public final class EasyLinearEquation
         /**
          * Original implementation.  Wrong.
          */
+        /*
         public static List<Trial> createList2(final BigInteger original,
                                              final BigInteger divideby,
                                              final BigInteger useModulus)
@@ -488,7 +489,9 @@ public final class EasyLinearEquation
             }
             return list;
         }
+        */
     }
+
 
     private static class Row
     {

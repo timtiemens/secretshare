@@ -27,12 +27,14 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 import com.tiemens.secretshare.BuildVersion;
 
@@ -53,26 +55,26 @@ public class MainReadmeTest
      */
     private static boolean enableDetails = true;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass()
             throws Exception
     {
         BuildVersion.disableFailureInLoad();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass()
             throws Exception
     {
     }
 
-    @Before
+    @BeforeEach
     public void setUp()
             throws Exception
     {
     }
 
-    @After
+    @AfterEach
     public void tearDown()
             throws Exception
     {
@@ -81,6 +83,8 @@ public class MainReadmeTest
     @Test
     public void test()
     {
+        System.out.println("Enter .test");
+
         TestCollector collect = new TestCollector();
 
         testSimpleCat(collect);
@@ -124,7 +128,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertSee("n = 6", output);
         assertSee("k = 3", output);
         assertSee("modulus = " + smallPrime, output);
@@ -149,7 +153,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertSee("n = 6", output);
         assertSee("k = 3", output);
 
@@ -183,7 +187,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertSee("n = 6", output);
         assertSee("k = 3", output);
         assertContains("modulus = ", output);
@@ -211,7 +215,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertSee("n = 6", output);
         assertSee("k = 3", output);
 
@@ -242,7 +246,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertSee("n = 6", output);
         assertSee("k = 3", output);
         assertContains("modulus = " + "167102221" /*...*/, output);
@@ -265,7 +269,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertSee("n = 6", output);
         assertSee("k = 3", output);
         assertContains("modulus = " + "167102221" /*...*/, output);
@@ -294,7 +298,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertContains("secret.string = " + "'The Cat In The Hat'" /*...*/, output);
 
         processOutput(collect, output, true);
@@ -320,7 +324,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertContains("combine.4 = x1 = 1882356743151517032574974075571664781995241588 - (validUTF8=true) = 'TheKeyUsedToEncrypt'", output);
         for (String s : output.getLines())
         {
@@ -352,7 +356,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertContains("paranoid.summary = Disagreement (60 different answers)", output);
         for (String s : output.getLines())
         {
@@ -378,7 +382,7 @@ public class MainReadmeTest
         TestInput input = new TestInput();
         TestOutput output = new TestOutput();
         Main.main(createArgsForMain(args), input.in(), output.out(), false);
-        Assert.assertTrue("output has lines", output.getLines().size() > 0);
+        assertTrue(output.getLines().size() > 0, "output has lines");
         assertContains("Modulus 192 bits = 14976407493557531125525728362448106789840013430353915016137", output);
         processOutput(collect, output, true);
 
@@ -475,7 +479,7 @@ public class MainReadmeTest
                 System.out.println("LINE: '" + line + "'");
             }
         }
-        Assert.assertTrue("output failed to find exactly '" + mustFind + "'", seen);
+        assertTrue(seen, "output failed to find exactly '" + mustFind + "'");
     }
     private void assertContains(String partialMatch, TestOutput output)
     {
@@ -495,7 +499,7 @@ public class MainReadmeTest
                 System.out.println("LINE: '" + line + "'");
             }
         }
-        Assert.assertTrue("output failed to contain '" + partialMatch + "'", seen);
+        assertTrue(seen, "output failed to contain '" + partialMatch + "'");
     }
 
 
@@ -739,7 +743,7 @@ public class MainReadmeTest
                     out.println(indent + line);
                 }
                 out.println(indent + "```");
-                out.println(indent + "</details");
+                out.println(indent + "</details>");
             }
         }
 

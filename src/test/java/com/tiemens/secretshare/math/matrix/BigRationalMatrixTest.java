@@ -18,34 +18,36 @@ package com.tiemens.secretshare.math.matrix;
 
 
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
 
 import com.tiemens.secretshare.math.type.BigRational;
 
 public class BigRationalMatrixTest
 {
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception
     {
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception
     {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception
     {
     }
@@ -60,9 +62,9 @@ public class BigRationalMatrixTest
                        4, 5, 6);
         matrix.printResult(System.out);
         BigRational det1122 = matrix.determinant(matrix.getArray(), 0, 0, 1, 1);
-        Assert.assertEquals(new BigRational(5 - 8), det1122);
+        assertEquals(new BigRational(5 - 8), det1122);
         BigRational det1123 = matrix.determinant(matrix.getArray(), 0, 0, 1, 2);
-        Assert.assertEquals(new BigRational(6 - 12), det1123);
+        assertEquals(new BigRational(6 - 12), det1123);
     }
 
     @Test
@@ -82,14 +84,14 @@ public class BigRationalMatrixTest
 
         BigRational[][] actual = matrixA.addMatrix(matrixAarray, matrix1array);
 
-        Assert.assertEquals("i dim", h, actual.length);
-        Assert.assertEquals("j dim", w, actual[0].length);
+        assertEquals(h, actual.length, "i dim");
+        assertEquals(w, actual[0].length, "j dim");
         for (int y = 0; y < h; y++)
         {
             for (int x = 0;  x < w; x++)
             {
                 BigRational expected = matrixAarray[y][x].add(matrix1array[y][x]);
-                Assert.assertEquals("y=" + y + " x=" + x, expected, actual[y][x]);
+                assertEquals(expected, actual[y][x], "y=" + y + " x=" + x);
             }
         }
     }
@@ -125,8 +127,8 @@ public class BigRationalMatrixTest
         BigRational[][] expectedArray = expected.getArray();
         BigRational[][] actualArray = actual.getArray();
 
-        Assert.assertEquals("i dim", expectedArray.length, actualArray.length);
-        Assert.assertEquals("j dim", expectedArray[0].length, actualArray[0].length);
+        assertEquals(expectedArray.length, actualArray.length, "i dim");
+        assertEquals(expectedArray[0].length, actualArray[0].length, "j dim");
         int h = expectedArray.length;
         int w = expectedArray[0].length;
 
@@ -134,7 +136,7 @@ public class BigRationalMatrixTest
         {
             for (int x = 0; x < w; x++)
             {
-                Assert.assertEquals("y=" + y + " x=" + x, expectedArray[y][x], actualArray[y][x]);
+                assertEquals(expectedArray[y][x], actualArray[y][x], "y=" + y + " x=" + x);
             }
         }
     }
