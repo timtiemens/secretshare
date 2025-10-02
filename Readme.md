@@ -551,14 +551,5 @@ Additional Documentation
 [SecretShare1.4.4.alt]:https://search.maven.org/#artifactdetails%7Ccom.tiemens%7
 
 
-
-
-
-
-
-
-
-
-Csecretshare%7C1.4.4%7Cjar
 [SecretShare 1.4.4 Release Tag]:https://github.com/timtiemens/secretshare/releases/tag/v1.4.4
 [SecretShare 1.4.4 Maven Central]:http://mvnrepository.com/artifact/com.tiemens/secretshare/1.4.4
