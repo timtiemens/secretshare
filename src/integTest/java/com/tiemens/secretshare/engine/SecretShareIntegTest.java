@@ -21,8 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.math.equation.EasyLinearEquationTest;
@@ -110,7 +115,7 @@ public class SecretShareIntegTest
 
             if (secret.signum() <= 0)
             {
-                Assert.fail("Secret cannot be negative");
+                fail("Secret cannot be negative");
             }
             SecretShare.SplitSecretOutput generate = secretShare.split(secret, random);
 
@@ -119,7 +124,7 @@ public class SecretShareIntegTest
 
             BigInteger reconstructed = subtestReconstruction(generate.getShareInfos());
 
-            Assert.assertEquals("Secrets do not match", secret, reconstructed);
+            assertEquals(secret, reconstructed, "Secrets do not match");
         }
     }
 
@@ -183,7 +188,7 @@ public class SecretShareIntegTest
 
         BigInteger reconstructed = subtestReconstruction(generate.getShareInfos());
 
-        Assert.assertEquals("Secrets do not match", secret, reconstructed);
+        assertEquals(secret, reconstructed, "Secrets do not match");
     }
 
     /**
@@ -237,7 +242,7 @@ public class SecretShareIntegTest
         SecretShare solver = new SecretShare(publicInfo);
 
         BigInteger secret = solver.combineParanoid(shares).getAgreedAnswer();
-        Assert.assertNotNull(secret);
+        assertNotNull(secret);
     }
 
 
@@ -267,7 +272,7 @@ public class SecretShareIntegTest
                 if (! ok)
                 {
                     System.out.println(which + " failed at secret size bits=" + bits);
-                    Assert.fail("just too much output");
+                    fail("just too much output");
                     break;
                 }
             }
@@ -321,8 +326,8 @@ public class SecretShareIntegTest
             BigInteger secret = base.add(add);
 
             BigInteger mod = SecretShare.createRandomModulusForSecret(secret);
-            Assert.assertTrue("modulus " + mod + " is incorrect for secret " + secret,
-                              (mod.compareTo(secret) > 0));
+            assertTrue(mod.compareTo(secret) > 0,
+                       "modulus " + mod + " is incorrect for secret " + secret);
 
             bits += 10;
             System.out.print(".");
@@ -352,7 +357,7 @@ public class SecretShareIntegTest
         {
             int n = k; // do this and there are only enough shares for 1 reconstruction == fast
             n = k + 1; // do this to allow "paranoid" to test extra combinations in reconstruction == slower
-            Assert.assertTrue("failed at k=" + k + " bits=" + bits, subsubtestStress(n, k, prime, random, secret));
+            assertTrue(subsubtestStress(n, k, prime, random, secret), "failed at k=" + k + " bits=" + bits);
         }
     }
 
@@ -398,7 +403,7 @@ public class SecretShareIntegTest
 
             // Arbitrarily set the maximum acceptable "leak" at 2 bytes:
             //   (The current implementation usually "leaks" at most 1 bit - but, coefficients are randomly picked)
-            Assert.assertFalse("Too Many Leaked Bytes", s.startsWith("AB"));
+            assertFalse(s.startsWith("AB"), "Too Many Leaked Bytes");
         }
     }
 
@@ -414,14 +419,14 @@ public class SecretShareIntegTest
     }
     private void assertGreaterThan(String where, int big, int small)
     {
-        Assert.assertTrue(where + " big=" + big + " small=" + small + " failed", big > small);
+        assertTrue(big > small, where + " big=" + big + " small=" + small + " failed");
     }
 
     private BigInteger getAbcdSecret(int bits)
     {
         BigInteger ret = null;
         int bytes = bits / 8;
-        Assert.assertEquals(bytes * 8, bits);
+        assertEquals(bytes * 8, bits);
         String secretString = getAbcdSecretAsString(bytes);
         ret = BigIntUtilities.Human.createBigInteger(secretString);
         return ret;

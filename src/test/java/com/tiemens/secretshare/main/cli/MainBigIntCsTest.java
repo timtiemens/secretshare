@@ -16,11 +16,12 @@
  *******************************************************************************/
 package com.tiemens.secretshare.main.cli;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.main.cli.MainBigIntCs.Type;
 
@@ -85,7 +86,7 @@ public class MainBigIntCsTest
     {
         // Test the low-level routine:
         String actual = MainBigIntCs.BigIntCsOutput.convert(input, inType, outType);
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
 
         // Test the command-line args[] interface:
         String mode = inType.toString() + "2" + outType.toString();
@@ -98,8 +99,8 @@ public class MainBigIntCsTest
         Main.main(args.toArray(new String[0]), System.in, testOutput.out(), false);
         //System.out.println("out.size=" + testOutput.getLines().size());
         //System.out.println("out.(0)=" + testOutput.getLines().get(0));
-        Assert.assertEquals("size wrong", 1, testOutput.getLines().size());
-        Assert.assertEquals("expected wrong", expected, testOutput.getLines().get(0));
+        assertEquals(1, testOutput.getLines().size(), "size wrong");
+        assertEquals(expected, testOutput.getLines().get(0), "expected wrong");
 
         // second command-line args test
         args = new ArrayList<String>();
@@ -111,8 +112,8 @@ public class MainBigIntCsTest
         args.add(outType.toString());
         args.add(input);
         Main.main(args.toArray(new String[0]), System.in, testOutput.out(), false);
-        Assert.assertEquals("2nd size wrong", 1, testOutput.getLines().size());
-        Assert.assertEquals("2nd expected wrong", expected, testOutput.getLines().get(0));
+        assertEquals(1, testOutput.getLines().size(), "2nd size wrong");
+        assertEquals(expected, testOutput.getLines().get(0), "2nd expected wrong");
 
     }
 

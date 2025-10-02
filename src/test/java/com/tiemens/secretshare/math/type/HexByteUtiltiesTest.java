@@ -16,10 +16,11 @@
  *******************************************************************************/
 package com.tiemens.secretshare.math.type;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.math.BigInteger;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HexByteUtiltiesTest
 {
@@ -62,7 +63,7 @@ public class HexByteUtiltiesTest
             bytes[i] = int2byte(list[i]);
         }
         String bytesAsHex = BigIntStringChecksum.bytesToHexString(bytes);
-        Assert.assertEquals(expected, bytesAsHex);
+        assertEquals(expected, bytesAsHex);
 
     }
 
@@ -106,7 +107,7 @@ public class HexByteUtiltiesTest
         System.out.println("fromBin:  hex='" +
                            HexByteUtilities.printAsHex(fromBigInteger.getBytes(utf8)) +
                            "' biginteger=" + biginteger);
-        Assert.assertEquals(description, fromHex, fromBigInteger);
+        assertEquals(fromHex, fromBigInteger, description);
     }
 
     // ==================================================

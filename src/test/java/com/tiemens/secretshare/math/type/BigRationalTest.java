@@ -19,32 +19,33 @@ package com.tiemens.secretshare.math.type;
 
 import java.math.BigInteger;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class BigRationalTest
 {
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception
     {
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception
     {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception
     {
     }
@@ -53,63 +54,63 @@ public class BigRationalTest
     public void test12p13e56()
     {
         BigRational actual = new BigRational(1, 2).add(new BigRational(1, 3));
-        Assert.assertEquals(new BigRational(5, 6), actual);
+        assertEquals(new BigRational(5, 6), actual);
     }
 
     @Test
     public void test23p13e1()
     {
         BigRational actual = new BigRational(2, 3).add(new BigRational(1, 3));
-        Assert.assertEquals(new BigRational(1), actual);
+        assertEquals(new BigRational(1), actual);
     }
 
     @Test
     public void test2kp3ke12k()
     {
         BigRational actual = new BigRational(1, 200000000).add(new BigRational(1, 300000000));
-        Assert.assertEquals(new BigRational(1, 120000000), actual);
+        assertEquals(new BigRational(1, 120000000), actual);
     }
 
     @Test
     public void test120p130e112()
     {
         BigRational actual = new BigRational(1073741789, 20).add(new BigRational(1073741789, 30));
-        Assert.assertEquals(new BigRational(1073741789, 12), actual);
+        assertEquals(new BigRational(1073741789, 12), actual);
     }
 
     @Test
     public void test417t174e1()
     {
         BigRational actual = new BigRational(4, 17).multiply(new BigRational(17, 4));
-        Assert.assertEquals(new BigRational(1), actual);
+        assertEquals(new BigRational(1), actual);
     }
 
     @Test
     public void test3k3t3k3e841961()
     {
         BigRational actual = new BigRational(3037141, 3247033).multiply(new BigRational(3037547, 3246599));
-        Assert.assertEquals(new BigRational(841, 961), actual);
+        assertEquals(new BigRational(841, 961), actual);
     }
 
     @Test
     public void test16m48e13()
     {
         BigRational actual = new BigRational(1, 6).subtract(new BigRational(-4, -8));
-        Assert.assertEquals(new BigRational(-1, 3), actual);
+        assertEquals(new BigRational(-1, 3), actual);
     }
 
     @Test
     public void testn12pn13en6()
     {
         BigRational actual = new BigRational(-1, 200000000).add(new BigRational(1, 300000000));
-        Assert.assertEquals(new BigRational(-1, 600000000), actual);
+        assertEquals(new BigRational(-1, 600000000), actual);
     }
 
     @Test
     public void testn13t79e727()
     {
         BigRational actual = new BigRational(1, 3).multiply(new BigRational(7, 9));
-        Assert.assertEquals(new BigRational(7, 27), actual);
+        assertEquals(new BigRational(7, 27), actual);
     }
 
     @Test
@@ -117,8 +118,8 @@ public class BigRationalTest
     {
         BigRational oneThree = new BigRational(1, 3);
         BigRational sevenNine = new BigRational(7, 9);
-        Assert.assertEquals(-1, oneThree.compareTo(sevenNine));
-        Assert.assertEquals(1,  sevenNine.compareTo(oneThree));
+        assertEquals(-1, oneThree.compareTo(sevenNine));
+        assertEquals(1,  sevenNine.compareTo(oneThree));
     }
 
 
@@ -126,13 +127,13 @@ public class BigRationalTest
     public void testZero()
     {
         BigRational actual = new BigRational(0, 5);
-        Assert.assertEquals(BigRational.ZERO, actual);
-        Assert.assertEquals(BigRational.ZERO, actual.add(actual));
+        assertEquals(BigRational.ZERO, actual);
+        assertEquals(BigRational.ZERO, actual.add(actual));
 
         try
         {
             actual.reciprocal();
-            Assert.fail("1/0 should throw exception");
+            fail("1/0 should throw exception");
         }
         catch (ArithmeticException e)
         {
@@ -149,8 +150,8 @@ public class BigRationalTest
 
     private void assertIsCanonicalZero(BigRational zero)
     {
-        Assert.assertEquals(BigInteger.ZERO, zero.getNumerator());
-        Assert.assertEquals(BigInteger.ONE, zero.getDenominator());
+        assertEquals(BigInteger.ZERO, zero.getNumerator());
+        assertEquals(BigInteger.ONE, zero.getDenominator());
     }
 
     @Test
@@ -162,7 +163,7 @@ public class BigRationalTest
 
     private void assertGCD(BigRational bigRational, int num, int denom)
     {
-        Assert.assertEquals(BigInteger.valueOf(num), bigRational.getNumerator());
-        Assert.assertEquals(BigInteger.valueOf(denom), bigRational.getDenominator());
+        assertEquals(BigInteger.valueOf(num), bigRational.getNumerator());
+        assertEquals(BigInteger.valueOf(denom), bigRational.getDenominator());
     }
 }

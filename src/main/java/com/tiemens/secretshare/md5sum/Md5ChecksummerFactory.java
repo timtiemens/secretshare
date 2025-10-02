@@ -16,6 +16,9 @@
  *******************************************************************************/
 package com.tiemens.secretshare.md5sum;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import com.tiemens.secretshare.exceptions.SecretShareException;
 
 public final class Md5ChecksummerFactory
@@ -75,7 +78,9 @@ public final class Md5ChecksummerFactory
             Class<?> c = Class.forName(cname);
             if (Md5Checksummer.class.isAssignableFrom(c))
             {
-                return (Md5Checksummer) c.newInstance();
+                // Get a specific constructor
+                Constructor<?> constructor = c.getDeclaredConstructor();
+                return (Md5Checksummer) constructor.newInstance();
             }
             else
             {
@@ -94,6 +99,22 @@ public final class Md5ChecksummerFactory
         catch (ClassNotFoundException e)
         {
             throw new SecretShareException(msg + "class not found", e);
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new SecretShareException(msg + " no such method", e);
+        }
+        catch (SecurityException e)
+        {
+            throw new SecretShareException(msg + " security", e);
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new SecretShareException(msg + " illegal argument", e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new SecretShareException(msg + " invocation target", e);
         }
     }
 

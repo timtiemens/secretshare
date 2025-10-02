@@ -16,12 +16,16 @@
  *******************************************************************************/
 package com.tiemens.secretshare;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 import java.util.Properties;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.BuildVersion.BuildInfo;
 
@@ -49,7 +53,7 @@ public class BuildVersionTest
     // constructors
     // ==================================================
 
-    @Before
+    @BeforeEach
     public void disableFailureInLoad()
     {
         BuildVersion.disableFailureInLoad();
@@ -69,7 +73,7 @@ public class BuildVersionTest
 
         BuildVersion.BuildInfo buildInfo = BuildVersion.BuildInfo.createFromProperties(props);
 
-        Assert.assertEquals(version, buildInfo.getVersion());
+        assertEquals(version, buildInfo.getVersion());
     }
 
     @Test
@@ -117,10 +121,10 @@ public class BuildVersionTest
     {
         BuildVersion.BuildInfo buildinfo = BuildVersion.BuildInfo.create("a.b.c");
         Map<Object, Object> map = buildinfo.convertToMap();
-        Assert.assertNotNull(map);
+        assertNotNull(map);
 
         Properties props = buildinfo.convertToProperties();
-        Assert.assertNotNull(props);
+        assertNotNull(props);
     }
 
     @Test
@@ -130,7 +134,7 @@ public class BuildVersionTest
         // there was a bug: when explicitly set buildNumber to null, convertToProperties() would fail.
         buildinfo.setBuildNumber(null);
         Properties props = buildinfo.convertToProperties();
-        Assert.assertNotNull(props);
+        assertNotNull(props);
     }
     // ==================================================
     // non public methods
@@ -154,18 +158,18 @@ public class BuildVersionTest
                 final String msg = description + " field '" + fieldName + "'";
                 if (expected != null)
                 {
-                        Assert.assertEquals(msg, expected, actual);
+                    assertEquals(expected, actual, msg);
                 }
                 else
                 {
                         if ("uiVersion".equals(fieldName))
                         {
                                 // uiVersion is never null
-                                Assert.assertTrue(msg + "uiversion.length", actual.length() > 0);
+                                assertTrue(actual.length() > 0, msg + "uiversion.length");
                         }
                         else
                         {
-                                Assert.assertNull(msg + "(null)", actual);
+                            assertNull(actual, msg + "(null)");
                         }
 
                 }

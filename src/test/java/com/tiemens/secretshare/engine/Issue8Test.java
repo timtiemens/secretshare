@@ -16,11 +16,12 @@
  *******************************************************************************/
 package com.tiemens.secretshare.engine;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.math.type.BigIntUtilities;
 
@@ -95,7 +96,7 @@ public class Issue8Test
 
             // Arbitrarily set the maximum acceptable "leak" at 4 bytes:
             //   (The current implementation usually "leaks" at most 1 bit - but coefficients are randomly picked)
-            Assert.assertFalse("Too Many Leaked Bytes", s.startsWith("ABCD"));
+            assertFalse(s.startsWith("ABCD"), "Too Many Leaked Bytes");
         }
 
 

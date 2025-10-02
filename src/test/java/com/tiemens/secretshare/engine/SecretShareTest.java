@@ -16,14 +16,19 @@
  *******************************************************************************/
 package com.tiemens.secretshare.engine;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
 import com.tiemens.secretshare.exceptions.SecretShareException;
@@ -65,7 +70,7 @@ public class SecretShareTest
     public void testStandard192prime()
     {
         BigInteger p = SecretShare.getPrimeUsedFor192bitSecretPayload();
-        Assert.assertNotNull(p);
+        assertNotNull(p);
     }
 
     @Test
@@ -90,7 +95,7 @@ public class SecretShareTest
 
         BigInteger reconstructed = subtestReconstruction(generate.getShareInfos());
 
-        Assert.assertEquals("Secrets do not match", secret, reconstructed);
+        assertEquals(secret, reconstructed, "Secrets do not match");
 
         subtestDuplicateSharesReconstruction(generate.getShareInfos());
     }
@@ -115,7 +120,7 @@ public class SecretShareTest
         try
         {
             SecretShare.CombineOutput solved = solver.combine(usetheseshares);
-            Assert.fail("Failed too few secrets test. solved=" + solved);
+            fail("Failed too few secrets test. solved=" + solved);
         }
         catch (SecretShareException e)
         {
@@ -127,7 +132,7 @@ public class SecretShareTest
         try
         {
             SecretShare.CombineOutput solved = solver.combine(usetheseshares);
-            Assert.fail("Failed duplicate secrets test. solved=" + solved);
+            fail("Failed duplicate secrets test. solved=" + solved);
         }
         catch (SecretShareException e)
         {
@@ -189,7 +194,7 @@ public class SecretShareTest
         SecretShare solver = new SecretShare(publicInfo);
 
         BigInteger secret = solver.combineParanoid(shares).getAgreedAnswer();
-        Assert.assertNotNull(secret);
+        assertNotNull(secret);
     }
 
 
@@ -240,10 +245,10 @@ public class SecretShareTest
             BigInteger expected = new BigInteger(secret4expected[i + 1]);
 
             BigInteger actual = SecretShare.createRandomModulusForSecret(secret, random);
-            Assert.assertEquals("secret=" + secret, expected, actual);
-            Assert.assertTrue("not bigger than", actual.compareTo(secret) > 0);
-            Assert.assertTrue("isTheModulusAppropriateForSecret",
-                              SecretShare.isTheModulusAppropriateForSecret(actual, secret));
+            assertEquals(expected, actual, "secret=" + secret);
+            assertTrue(actual.compareTo(secret) > 0, "not bigger than");
+            assertTrue(SecretShare.isTheModulusAppropriateForSecret(actual, secret),
+                    "isTheModulusAppropriateForSecret");
         }
     }
 
@@ -251,9 +256,9 @@ public class SecretShareTest
     public void testIsTheModulusAppropriateForSecret()
     {
         BigInteger secret = new BigInteger("100");
-        Assert.assertFalse(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("99"), secret));
-        Assert.assertFalse(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("100"), secret));
-        Assert.assertTrue(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("101"), secret));
+        assertFalse(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("99"), secret));
+        assertFalse(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("100"), secret));
+        assertTrue(SecretShare.isTheModulusAppropriateForSecret(new BigInteger("101"), secret));
     }
 
 
@@ -264,9 +269,9 @@ public class SecretShareTest
         BigInteger p384 = SecretShare.getPrimeUsedFor384bitSecretPayload();
         BigInteger p192 = SecretShare.getPrimeUsedFor192bitSecretPayload();
 
-        Assert.assertNotNull(p4096);
-        Assert.assertNotNull(p384);
-        Assert.assertNotNull(p192);
+        assertNotNull(p4096);
+        assertNotNull(p384);
+        assertNotNull(p192);
     }
 
     private BigInteger bi(int a)
@@ -307,7 +312,7 @@ public class SecretShareTest
         shares = Arrays.asList(s1, s2, s3);
         SecretShare secretShare = new SecretShare(publicInfo);
         SecretShare.CombineOutput combine = secretShare.combine(shares);
-        Assert.assertEquals("baseline failed", secret, combine.getSecret());
+        assertEquals(secret, combine.getSecret(), "baseline failed");
         assertOk("baseline failed 2", secret, publicInfo, shares);
         //assertThrows("baseline failed 2", secret, publicInfo, shares);
 
@@ -362,7 +367,7 @@ public class SecretShareTest
         try
         {
             SecretShare.CombineOutput combine = secretShare.combine(shares);
-            Assert.fail(where + ": should have thrown exception, but did not, instead returned=" + combine);
+            fail(where + ": should have thrown exception, but did not, instead returned=" + combine);
         }
         catch (SecretShareException sse)
         {
@@ -377,7 +382,7 @@ public class SecretShareTest
     {
         SecretShare secretShare = new SecretShare(publicInfo);
         SecretShare.CombineOutput combine = secretShare.combine(shares);
-        Assert.assertEquals(where, secret, combine.getSecret());
+        assertEquals(secret, combine.getSecret(), where);
     }
     // ==================================================
     // non public methods

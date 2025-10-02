@@ -16,6 +16,11 @@
  *******************************************************************************/
 package com.tiemens.secretshare.math.type;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -23,8 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.exceptions.SecretShareException;
 
@@ -69,7 +73,7 @@ public class BigIntUtilitiesTest
             bytes[i] = int2byte(list[i]);
         }
         String bytesAsHex = BigIntStringChecksum.bytesToHexString(bytes);
-        Assert.assertEquals(expected, bytesAsHex);
+        assertEquals(expected, bytesAsHex);
 
     }
 
@@ -114,8 +118,8 @@ public class BigIntUtilitiesTest
             BigIntStringChecksum.PREFIX_BIGINT_DASH_CHECKSUM +
             "b6cefd-b34d49-3b20e5-d6f4a3-ec9c67-427b48-46bb1b-bdb465-" + csexpected;
 
-        Assert.assertEquals("expected='" + expected + "' actual='" + cs + "'",
-                            expected, cs);
+        assertEquals(expected, cs,
+                     "expected='" + expected + "' actual='" + cs + "'");
 
 
         // This big integer was created with probablePrime(194-bits)
@@ -124,17 +128,17 @@ public class BigIntUtilitiesTest
         cs = BigIntUtilities.Checksum.createMd5CheckSumString(p194bits);
         expected =
             "bigintcs:000002-62c8fd-6ec81b-3c0584-136789-80ad34-9269af-da237f-8ff3c9-12BCCD";
-        Assert.assertEquals("expected='" + expected + "' actual='" + cs + "'",
-                            expected, cs);
+        assertEquals(expected, cs,
+                     "expected='" + expected + "' actual='" + cs + "'");
 
         // is this actually bigger than 2^192?
         BigInteger two192 = BigInteger.valueOf(2).pow(192);
-        Assert.assertTrue("Not actually bigger", p194bits.compareTo(two192) == 1);
+        assertTrue(p194bits.compareTo(two192) == 1, "Not actually bigger");
 
         if (runPassesMillerRabin)
         {
             // 10000 iterations takes 3 seconds:
-            Assert.assertTrue(passesMillerRabin(p194bits, 10000, null));
+            assertTrue(passesMillerRabin(p194bits, 10000, null));
         }
 
 
@@ -150,13 +154,13 @@ public class BigIntUtilitiesTest
             "bigintcs:000002-1bd189-52959f-874f79-3d6cf5-11ac82-e6cea4-46c19c-5f523a-5318c7-" +
             "e0f379-66f9e1-308c61-2d8d0b-dba253-6f54b0-ec6c27-3198DB";
 
-        Assert.assertEquals("expected='" + expected + "' actual='" + cs + "'",
-                            expected, cs);
+        assertEquals(expected, cs,
+                "expected='" + expected + "' actual='" + cs + "'");
         if (runPassesMillerRabin)
         {
             // 10000 iterations takes 51 seconds for 386 bits:
             // 100000 iterations takes 392 seconds for 386 bits:
-            Assert.assertTrue(passesMillerRabin(p386bits, 10000, null));
+            assertTrue(passesMillerRabin(p386bits, 10000, null));
         }
 
 
@@ -172,7 +176,7 @@ public class BigIntUtilitiesTest
             BigInteger bi = BigInteger.probablePrime(100, random);
             String bics = BigIntUtilities.Checksum.createMd5CheckSumString(bi);
             BigInteger read = BigIntUtilities.Checksum.createBigInteger(bics);
-            Assert.assertEquals(bi, read);
+            assertEquals(bi, read);
 
         }
 
@@ -181,7 +185,7 @@ public class BigIntUtilitiesTest
             BigInteger bi = BigInteger.valueOf(i);
             String bics = BigIntUtilities.Checksum.createMd5CheckSumString(bi);
             BigInteger read = BigIntUtilities.Checksum.createBigInteger(bics);
-            Assert.assertEquals(bi, read);
+            assertEquals(bi, read);
         }
 
         for (int c = 0, i = -123456789; c < 10; c++, i--)
@@ -191,11 +195,11 @@ public class BigIntUtilitiesTest
             // make sure it is "big enough" to get into 2nd "bucket"
             // i.e. "bigintcs:-123456-123456-ABCDEF"  is good enough for test
             //      "bigintcs:-789ABC-ABCDEF"         is not a good enough test
-            Assert.assertTrue("size is wrong", bics.length() > 24);
+            assertTrue(bics.length() > 24, "size is wrong");
 
             BigInteger read = BigIntUtilities.Checksum.createBigInteger(bics);
-            Assert.assertEquals("big negative failed, i=" + i,
-                                bi, read);
+            assertEquals(bi, read,
+                         "big negative failed, i=" + i);
         }
     }
 
@@ -262,7 +266,7 @@ public class BigIntUtilitiesTest
         two = new BigInteger("1229148547440409489619281705118933783");
         BigInteger multex = new BigInteger("1038153317035172738059682655695039749481297254608774273985162888512579599");
 
-        Assert.assertEquals(multex, one.multiply(two));
+        assertEquals(multex, one.multiply(two));
 
     }
     private static final int HEX_RADIX = 16;
@@ -320,15 +324,15 @@ public class BigIntUtilitiesTest
         System.out.println("  (messed up) String='" + fromBigInteger + "'");
         if (shouldsucceed)
         {
-            Assert.assertEquals(description, fromHex, fromBigInteger);
+            assertEquals(fromHex, fromBigInteger, description);
 
         }
         else
         {
             if (fromHex.equals(fromBigInteger))
             {
-                Assert.fail("Should fail (" + description  +
-                            ")  but didn't on " + fromHex + ", " + fromBigInteger);
+                fail("Should fail (" + description  +
+                     ")  but didn't on " + fromHex + ", " + fromBigInteger);
             }
         }
     }
@@ -341,8 +345,9 @@ public class BigIntUtilitiesTest
         BigInteger expectedBiggerThan = new BigInteger("37");
         // actual will be 37, 41, 47, 53, etc., depending on Random we don't control
         BigInteger actual = BigIntUtilities.createPrimeBigger(value);
-        Assert.assertTrue("actual=" + actual + " expected=" + expectedBiggerThan,
-                           actual.compareTo(expectedBiggerThan) >= 0);
+        assertTrue(actual.compareTo(expectedBiggerThan) >= 0, 
+                   "actual=" + actual + " expected=" + expectedBiggerThan);
+                    
     }
 
 
@@ -362,7 +367,7 @@ public class BigIntUtilitiesTest
             BigInteger value = new BigInteger("" + intvalue);
             BigInteger actual = BigIntUtilities.createPrimeBigger(value, random);
             System.out.println(" value=" + value + " actual=" + actual);
-            Assert.assertEquals("bits=" + bits + " value=" + value, bits2prime.get(bits), actual);
+            assertEquals(bits2prime.get(bits), actual, "bits=" + bits + " value=" + value);
         }
     }
 
@@ -401,13 +406,13 @@ public class BigIntUtilitiesTest
         try
         {
             BigInteger ret = BigIntUtilities.Checksum.createBigInteger(input);
-            Assert.assertNotNull(ret);
+            assertNotNull(ret);
         }
         catch (SecretShareException e)
         {
             e.printStackTrace();
 
-            Assert.fail("Case sensitivity failed for " + input);
+            fail("Case sensitivity failed for " + input);
         }
     }
 
@@ -418,7 +423,7 @@ public class BigIntUtilitiesTest
         System.out.println("bi.actual.tohex =" + actual.toString(HEX_RADIX));
         System.out.println("bi.actual.tobics=" +
                            BigIntUtilities.Checksum.createMd5CheckSumString(actual));
-        Assert.assertEquals("test s=" + in, expected, actual);
+        assertEquals(expected, actual, "test s=" + in);
     }
 
 

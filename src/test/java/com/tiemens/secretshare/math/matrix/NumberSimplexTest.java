@@ -18,34 +18,35 @@ package com.tiemens.secretshare.math.matrix;
 
 
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.math.type.BigRational;
 
 public class NumberSimplexTest
 {
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception
     {
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception
     {
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception
     {
     }
@@ -69,9 +70,9 @@ public class NumberSimplexTest
         simplex = new NumberSimplex<BigRational>(matrix, 3);
         simplex.initForSolve(System.out);
         simplex.solve(System.out);
-        Assert.assertEquals(new BigRational(2), simplex.getAnswer(0));
-        Assert.assertEquals(new BigRational(-1), simplex.getAnswer(1));
-        Assert.assertEquals(new BigRational(-3), simplex.getAnswer(2));
+        assertEquals(new BigRational(2), simplex.getAnswer(0));
+        assertEquals(new BigRational(-1), simplex.getAnswer(1));
+        assertEquals(new BigRational(-3), simplex.getAnswer(2));
 
     }
 
@@ -94,9 +95,9 @@ public class NumberSimplexTest
         simplex = new NumberSimplex<BigRational>(matrix, 3);
         simplex.initForSolve(System.out);
         simplex.solve(System.out);
-        Assert.assertEquals(new BigRational(2), simplex.getAnswer(0));
-        Assert.assertEquals(new BigRational(1), simplex.getAnswer(1));
-        Assert.assertEquals(new BigRational(-1), simplex.getAnswer(2));
+        assertEquals(new BigRational(2), simplex.getAnswer(0));
+        assertEquals(new BigRational(1), simplex.getAnswer(1));
+        assertEquals(new BigRational(-1), simplex.getAnswer(2));
     }
 
 
@@ -119,9 +120,9 @@ public class NumberSimplexTest
         simplex = new NumberSimplex<BigRational>(matrix, 3);
         simplex.initForSolve(System.out);
         simplex.solve(System.out);
-        Assert.assertEquals(new BigRational(-2), simplex.getAnswer(0));
-        Assert.assertEquals(new BigRational(3), simplex.getAnswer(1));
-        Assert.assertEquals(new BigRational(7), simplex.getAnswer(2));
+        assertEquals(new BigRational(-2), simplex.getAnswer(0));
+        assertEquals(new BigRational(3), simplex.getAnswer(1));
+        assertEquals(new BigRational(7), simplex.getAnswer(2));
     }
 
     // 3 -6 1 = 7
@@ -143,8 +144,8 @@ public class NumberSimplexTest
         simplex = new NumberSimplex<BigRational>(matrix, 3);
         simplex.initForSolve(System.out);
         simplex.solve(System.out);
-        Assert.assertEquals(new BigRational(5), simplex.getAnswer(0));
-        Assert.assertEquals(new BigRational(1), simplex.getAnswer(1));
-        Assert.assertEquals(new BigRational(-2), simplex.getAnswer(2));
+        assertEquals(new BigRational(5), simplex.getAnswer(0));
+        assertEquals(new BigRational(1), simplex.getAnswer(1));
+        assertEquals(new BigRational(-2), simplex.getAnswer(2));
     }
 }

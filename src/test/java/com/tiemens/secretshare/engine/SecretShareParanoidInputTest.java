@@ -16,10 +16,11 @@
  *******************************************************************************/
 package com.tiemens.secretshare.engine;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.math.BigInteger;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.tiemens.secretshare.engine.SecretShare.ParanoidInput;
 
@@ -78,9 +79,9 @@ public class SecretShareParanoidInputTest
         ParanoidInput actual = ParanoidInput.parseForCombine("paranoid", arg);
         BigInteger expectMax = (expectMaxInt == null) ? null : BigInteger.valueOf(expectMaxInt);
 
-        Assert.assertEquals(expectMax, actual.getMaximumCombinationsToTest());
-        Assert.assertEquals(expectStopWhenCount, actual.getStopCombiningWhenAnyCount());
-        Assert.assertEquals(expectLimitPrint, actual.getLimitPrint());
+        assertEquals(expectMax, actual.getMaximumCombinationsToTest());
+        assertEquals(expectStopWhenCount, actual.getStopCombiningWhenAnyCount());
+        assertEquals(expectLimitPrint, actual.getLimitPrint());
     }
 
 
