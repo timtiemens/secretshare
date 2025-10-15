@@ -35,7 +35,6 @@ apply from: "$rootDir/gradle/versioning.gradle"
 
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
-//version = '1.4.5-SNAPSHOT'
 version = '1.4.5'
 project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 sourceCompatibility = 1.21
