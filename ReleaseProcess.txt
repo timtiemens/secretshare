@@ -1,4 +1,20 @@
 
+NEW instructions - 
+
+o gpg keys -
+  + add matching email address to gpg key
+      timtiemens@fakeusers.noreply.github.com
+      FC76F04F
+  + add GPG key to github - now has 2 addresses
+       timremote@gmail.com
+       timtiemens@fakeusers.noreply.github.com
+  + tell git about your GPG key
+     $ git config --unset gpg.format
+     $ gpg config user.signingkey FC76F04F
+     $ git config commit.gpgsign true
+     $ git config tag.gpgSign true
+      
+OLD instructions, circa ~2010
 o ./gradlew uploadArchives
 
 o https://oss.sonatype.org
