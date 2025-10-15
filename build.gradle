@@ -46,7 +46,9 @@ dependencies {
    testRuntimeOnly 'org.junit.platform:junit-platform-engine:1.12.2'
    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.2'
    // dependabot
-   implementation("commons-beanutils:commons-beanutils:1.9.2")
+   implementation("commons-beanutils:commons-beanutils:1.11.0") {
+     exclude(group: "commons-collections", module: "commons-collections")
+   }
 }
 
 repositories {
@@ -364,7 +366,8 @@ sonarqube {
 }
 
 checkstyle {
-    toolVersion "7.6.1"
+    toolVersion "10.5.0"
+//    toolVersion "7.6.1"
 //    toolVersion "8.17"
 
     def dir = "$projectDir/config/checkstyle"
