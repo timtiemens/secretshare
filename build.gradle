@@ -45,6 +45,8 @@ dependencies {
    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.13.0")
    testRuntimeOnly 'org.junit.platform:junit-platform-engine:1.12.2'
    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.2'
+   // dependabot
+   implementation("commons-beanutils:commons-beanutils:1.9.2")
 }
 
 repositories {
