@@ -1,7 +1,8 @@
 // target:  'build'          - does not run integration tests
 // target:  'integTest'      - runs integration tests (about 5 minutes worth)
-// target:  'publish'        - push to local (archiva, as guest)
-// target:  'uploadArchives' - push to maven central (sonatype, as user)
+// target:  'artifactoryPublish'  - push to local (archiva)
+// 
+// \\ target:  'uploadArchives'      - push to maven central (sonatype, as user)
 // target:  'jacocoTestReport'      - code coverage from unit tests
 // target:  'jacocoIntegTestReport' - coverage from integration tests and UTs
 //\\ target:  'sonarRunner'    - publish data to locally running SonarCube
@@ -25,6 +26,7 @@ plugins {
     id "jacoco"
     id "signing"
     id "checkstyle"
+    id "com.jfrog.artifactory" version '5.2.5'   // version '6.0.0' '4.29.0' 
 }
 
 apply from: "$rootDir/gradle/versioning.gradle"
@@ -32,7 +34,7 @@ apply from: "$rootDir/gradle/versioning.gradle"
 
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
-version = '1.5.0-SNAPSHOT'
+version = '1.4.6'
 project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 sourceCompatibility = 1.21
 targetCompatibility = 1.21
@@ -45,11 +47,20 @@ dependencies {
 
 repositories {
     if (project.hasProperty('archivaBaseUrl') ) {
-        maven { url project.archivaBaseUrl + "/internal" }
-        maven { url project.archivaBaseUrl + "/snapshots" }
+//        maven { url project.archivaBaseUrl + "/libs-release-local" }
+//        maven { url project.archivaBaseUrl + "/libs-snapshot-local" }
+	  maven {
+	    url project.archivaBaseUrl + "/libs-release"
+	    allowInsecureProtocol = true
+	    credentials {
+	      username System.getenv("JFROG_USERNAME") ?: project.findProperty("jfrogUser")
+	      password System.getenv("JFROG_PASSWORD") ?: project.findProperty("jfrogPass")
+	    }
+	  }
     } else {
-        mavenCentral()
-    }    
+
+    }
+    mavenCentral()
 }
 
 // if you need any compiler flags turned on:
@@ -96,7 +107,7 @@ test {
 //    reports.junitXml.destination = file ("$reports.junitXml.destination/test")
 }
 
-// on xeon e5-2680v2 2.8Ghz this takes 6m40s (virtual machine)
+// 2025/09/18: on xeon e5-2680v2 2.8Ghz this takes 6m40s (virtual machine)
 task integTest(type: Test) {
     group = 'Verification'
     description = 'Run integration tests (i.e. longer-running tests)'
@@ -109,6 +120,7 @@ task integTest(type: Test) {
     // Your choice on when to run integTest:
     //  a) check.dependsOn integTest -
     //         causes 'build' -> check -> integTest     and runs in 5 minutes
+    //    OR
     //  b) comment out // check.dependsOn integTest -
     //         causes 'build' -> check                  and runs in 12 seconds
     //comment out// check.dependsOn integTest
@@ -266,6 +278,69 @@ signing {
 //     }
 // }
 
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+
+            pom {
+                name.set("SecretShare Library")
+                description.set("Shamir's Secret Share in Java")
+                url.set("https://github.com/timtiemens/secretshare")
+                licenses {
+                    license {
+                        name.set("GNU Lesser General Public License (LGPL), Version 2.1")
+                        url.set("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("timtiemens")
+                        name.set("Tim Tiemens")
+                        email.set("timremote@gmail.com")
+			url.set("https://github.com/timtiemens")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/timtiemens/secretshare.git")
+                    developerConnection.set("scm:git:git@github.com:timtiemens/secretshare.git")
+                    url.set('https://github.com/timtiemens/secretshare/tree/' +
+                             'v' + version + '/')
+                }
+            }
+        }
+    }
+}
+
+// --- Artifactory configuration ---
+artifactory {
+//  contextUrl = "http://10.0.1.71:8081/artifactory" 
+    publish {
+        contextUrl = project.archivaBaseUrl
+        repository {
+	    String libstr = project.ext.isReleaseVersion ?
+	                      "libs-release-local" :
+			      "libs-snapshot-local"
+            setRepoKey(libstr) 
+            setUsername(System.getenv("JFROG_USERNAME") ?: project.findProperty("jfrogUser"))
+            setPassword(System.getenv("JFROG_PASSWORD") ?: project.findProperty("jfrogPass"))
+        }
+        defaults {
+            publications('mavenJava')
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+
+  // // Found: "The resolverconfiguration is now implicitly linked to the std
+  // //         repositories block.
+  // //         Older versions used a resolver closure, but this is deprecated."
+}
+
 ext.useOssrhUsername = 
    project.hasProperty("ossrhUsername") ? ossrhUsername : "fake"
 ext.useOssrhPassword = 
@@ -285,7 +360,8 @@ sonarqube {
 }
 
 checkstyle {
-    toolVersion "7.6.1"
+    toolVersion "10.5.0"
+//    toolVersion "7.6.1"
 //    toolVersion "8.17"
 
     def dir = "$projectDir/config/checkstyle"
