@@ -327,7 +327,8 @@ publishing {
 artifactory {
 //  contextUrl = "http://10.0.1.71:8081/artifactory" 
     publish {
-        contextUrl = project.archivaBaseUrl
+        contextUrl = project.hasProperty('archivaBaseUrl') ?
+	              project.archivaBaseUrl : ""
         repository {
 	    String libstr = project.ext.isReleaseVersion ?
 	                      "libs-release-local" :
