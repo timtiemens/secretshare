@@ -7,6 +7,9 @@
 // target:  'jacocoIntegTestReport' - coverage from integration tests and UTs
 //\\ target:  'sonarRunner'    - publish data to locally running SonarCube
 // target:  'signArchives'   - test signature operation
+//   OLD target:  'publish'        - push to local (archiva, as guest)
+//   OLD target:  'uploadArchives' - push to maven central (sonatype, as user)
+
 //
 
 buildscript {
@@ -34,7 +37,7 @@ apply from: "$rootDir/gradle/versioning.gradle"
 
 group = 'com.tiemens'
 archivesBaseName = 'secretshare'
-version = '1.4.6'
+version = '1.4.5'
 project.ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 sourceCompatibility = 1.21
 targetCompatibility = 1.21
@@ -43,6 +46,9 @@ dependencies {
    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.13.0")
    testRuntimeOnly 'org.junit.platform:junit-platform-engine:1.12.2'
    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.2'
+   // dependabot
+   implementation("commons-beanutils:commons-beanutils:1.11.0")
+   checkstyle 'com.puppycrawl.tools:checkstyle:12.0.1'
 }
 
 repositories {
